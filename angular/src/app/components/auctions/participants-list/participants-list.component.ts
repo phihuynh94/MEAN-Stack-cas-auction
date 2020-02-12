@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 
 // get components
-import { AuctionService } from '../service/auction.service';
-import { User } from '../user/model/user.model';
+import { AuctionService } from '../../service/auction.service';
+import { User } from '../../user/model/user.model';
 
 @Component({
   selector: 'app-participants-list',

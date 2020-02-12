@@ -3515,6 +3515,7 @@ input, select, textarea {
 						#header nav > ul > li > a.menuToggle {
 							outline: 0;
 							position: relative;
+							cursor: pointer;
 						}
 
 							#header nav > ul > li > a.menuToggle:after {

@@ -15,6 +15,15 @@ var userSchema = new mongoose.Schema({
         required: 'Last name can\'t be empty'
     },
     
+    alias: {
+        type: String,
+        required: 'Alias can\'t be empty',
+        unique: true,
+        minlength: [3, 'Alias must be 3 characters!'],
+        maxlength: [3, 'Alias must be 3 characters!'],
+        uppercase: true,
+    },
+
     email: {
         type: String,
         required: 'Email can\'t be empty',
@@ -51,6 +60,12 @@ userSchema.path('email').validate((val) => {
     emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return emailRegex.test(val);
 }, 'Invalid e-mail.');
+
+// Custom validation for alias
+userSchema.path('alias').validate((val) => {
+    aliasRegex = /[A-Za-z]{3}/;
+    return aliasRegex.test(val);
+}, 'Invalid alias.');
 
 // Verify password method
 userSchema.methods.verifyPassword = function (password) {

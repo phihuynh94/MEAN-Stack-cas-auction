@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 
 // get components
-import { ItemService } from '../service/item.service';
-import { Item } from '../model/item.model';
+import { ItemService } from '../../service/item.service';
+import { Item } from '../../model/item.model';
 
 @Component({
   selector: 'app-item-list',
@@ -21,7 +21,7 @@ export class ItemListComponent implements OnInit {
 
   // Variables
   itemInfo;
-  auctionId = this.route.snapshot.paramMap.get('id');;
+  auctionID = this.route.snapshot.paramMap.get('id');
 
   ngOnInit() {
     this.getItems();
@@ -29,7 +29,7 @@ export class ItemListComponent implements OnInit {
 
   // get all of item's info in the Auction
   getItems() {
-    this.itemService.getItemsInAuction(this.auctionId).subscribe(
+    this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
         this.itemInfo = res as Item[];
       },
@@ -42,5 +42,14 @@ export class ItemListComponent implements OnInit {
   // refresh item list
   refresh() {
     this.getItems();
+  }
+
+  deleteItem(itemID){
+    if (confirm('Are you sure to delete this record?') === true){
+      console.log('delete item');
+      console.log(itemID);
+      // this.itemService.deleteItem().subscribe(() => {
+      // });
+    }
   }
 }

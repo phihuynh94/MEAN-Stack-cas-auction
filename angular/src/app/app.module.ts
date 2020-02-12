@@ -20,14 +20,18 @@ import { AdminComponent } from './components/admin/admin.component';
 import { CreateAuctionComponent } from './components/admin/create-auction/create-auction.component';
 import { AuctionsComponent } from './components/auctions/auctions.component';
 import { AuctionsListComponent } from './components/auctions-list/auctions-list.component';
-import { AddItemComponent } from './components/add-item/add-item.component';
-import { CartComponent } from './components/cart/cart.component';
-import { ItemListComponent } from './components/item-list/item-list.component';
-import { AuctionEditComponent } from './components/auction-edit/auction-edit.component';
+import { AddItemComponent } from './components/auctions/add-item/add-item.component';
+import { CartComponent } from './components/dashboard/cart/cart.component';
+import { ItemListComponent } from './components/auctions/item-list/item-list.component';
+import { AuctionEditComponent } from './components/auctions/auction-edit/auction-edit.component';
 import { AddStaffComponent } from './components/admin/add-staff/add-staff.component';
-import { ParticipantsListComponent } from './components/participants-list/participants-list.component';
-import { LiveAuctionComponent } from './components/live-auction/live-auction.component';
-import { CheckOutComponent } from './components/check-out/check-out.component';
+import { ParticipantsListComponent } from './components/auctions/participants-list/participants-list.component';
+import { LiveAuctionComponent } from './components/auctions/live-auction/live-auction.component';
+import { CheckOutComponent } from './components/dashboard/cart/check-out/check-out.component';
+import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
+import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
+import { SellerItemsListComponent } from './components/auctions/seller-items-list/seller-items-list.component';
+import { ItemPageComponent } from './components/auctions/item-page/item-page.component';
 
 // routes
 const appRoutes: Routes = [
@@ -47,6 +51,15 @@ const appRoutes: Routes = [
   {
     path: 'user', component: UserComponent,
     children: [{ path: 'signin', component: SignInComponent }]
+  },
+  // url: 'user/forgotPassword'
+  {
+    path: 'user', component: UserComponent,
+    children: [{ path: 'forgotPassword', component: ForgotPasswordComponent }]
+  },
+  // url: 'user-profile'
+  {
+    path: 'user-profile', component: UserProfileComponent,
   },
   // url: 'dashboard'
   { 
@@ -76,6 +89,10 @@ const appRoutes: Routes = [
   // url: 'check-out'
   {
     path: 'checkout', component: CheckOutComponent
+  },
+  // url: 'item-page'
+  {
+    path: 'itemPage/:id', component: ItemPageComponent
   }
 ]
 
@@ -98,7 +115,11 @@ const appRoutes: Routes = [
     AddStaffComponent,
     ParticipantsListComponent,
     LiveAuctionComponent,
-    CheckOutComponent
+    CheckOutComponent,
+    UserProfileComponent,
+    ForgotPasswordComponent,
+    SellerItemsListComponent,
+    ItemPageComponent
   ],
   imports: [
     BrowserModule,

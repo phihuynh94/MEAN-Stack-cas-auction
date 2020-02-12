@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // get components
-import { Auction } from '../model/auction.model';
-import { AuctionService } from '../service/auction.service';
-import { ItemService } from '../service/item.service';
-import { Item } from '../model/item.model';
-import { User } from '../user/model/user.model';
+import { Auction } from '../../model/auction.model';
+import { AuctionService } from '../../service/auction.service';
+import { ItemService } from '../../service/item.service';
+import { Item } from '../../model/item.model';
+import { User } from '../../user/model/user.model';
 
 @Component({
   selector: 'app-live-auction',

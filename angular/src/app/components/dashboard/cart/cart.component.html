@@ -1,7 +1,6 @@
 <div class="px-4 px-lg-0">
     <div class="container py-5 text-center">
-        <h1 class="display-4">CAS SHOPPING CART</h1>
-        {{ userDetails.firstName }}
+        <h1 class="display-4">{{ userDetails.firstName }} SHOPPING CART</h1>
     </div>
   
     <div class="pb-5">
@@ -56,12 +55,10 @@
             <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
             <div class="p-4">
               <ul class="list-unstyled mb-4">
-                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>$390.00</strong></li>
-                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>$0.00</strong></li>
                 <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                  <h5 class="font-weight-bold">$400.00</h5>
+                  <h5 class="font-weight-bold">{{ total | currency }}</h5>
                 </li>
-              </ul><a href="#" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
+              </ul><a routerLink="/checkout" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
             </div>
           </div>
         </div>

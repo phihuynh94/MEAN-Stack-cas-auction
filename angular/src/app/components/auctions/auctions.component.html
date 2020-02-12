@@ -37,7 +37,7 @@
                 <h1 class="h2">Auction Name: {{ auctionInfo.auctionName }}</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                    <span>Welcome! <a href="#">{{ userDetails.firstName }}</a> [ {{ userDetails.type }} ]</span>
+                    <span>Welcome! <a routerLink="/user-profile">{{ userDetails.firstName }}</a> [ {{ userDetails.type }} ]</span>
                 </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
               </button>
               <button type="button" class="btn btn-primary" routerLink="/live/{{ auctionInfo._id }}">
                 <img src="../../../assets/icons/play-white.svg">
-                Start Auction
+                Start
               </button>
             </div>
 
@@ -104,6 +104,10 @@
             
             <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
               <app-participants-list></app-participants-list>
+            </div>
+
+            <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+              <app-seller-items-list></app-seller-items-list>  
             </div>
         </main>
       </div>

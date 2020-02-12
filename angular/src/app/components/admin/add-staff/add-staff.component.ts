@@ -14,6 +14,7 @@ import { User } from '../../user/model/user.model';
 export class AddStaffComponent implements OnInit {
 
   emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  aliasRegex = /[A-Za-z]{3}/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
 
@@ -26,6 +27,7 @@ export class AddStaffComponent implements OnInit {
     _id: '',
     firstName: '',
     lastName: '',
+    alias: '',
     email: '',
     password: '',
     type: '',
@@ -53,6 +55,7 @@ export class AddStaffComponent implements OnInit {
       _id: '',
       firstName: '',
       lastName: '',
+      alias: '',
       email: '',
       password: '',
       type: '',

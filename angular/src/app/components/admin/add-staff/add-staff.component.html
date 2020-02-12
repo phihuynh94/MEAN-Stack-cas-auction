@@ -32,6 +32,18 @@
                 </div>
                 
                 <div class="form-group">
+                    <label>Alias:</label>
+                    <!--Get staff alias-->
+                    <input type="text" #alias="ngModel" [(ngModel)]="staff.alias" name="alias" placeholder="Alias" class="form-control"
+                    required  [ngClass]="{'invalid-textbox': addStaffForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="3">
+                    <!--Validate staff alias input-->
+                    <div *ngIf="addStaffForm.submitted && !alias.valid">
+                        <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
+                        <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label>Email:</label>
                     <!--Get staff email-->
                     <input type="text" #email="ngModel" [(ngModel)]="staff.email" name="email" placeholder="Email"

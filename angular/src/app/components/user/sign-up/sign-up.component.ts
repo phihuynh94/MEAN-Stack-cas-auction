@@ -1,6 +1,7 @@
 // get built-in
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 // get components
 import { UserService } from '../service/user.service';
@@ -14,10 +15,14 @@ import { User } from '../model/user.model';
 
 export class SignUpComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    ) { }
 
   // Variables
   emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  aliasRegex = /[A-Za-z]{3}/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
 
@@ -26,6 +31,7 @@ export class SignUpComponent implements OnInit {
     _id: '',
     firstName: '',
     lastName: '',
+    alias: '',
     email: '',
     password: '',
     type: '',
@@ -42,6 +48,7 @@ export class SignUpComponent implements OnInit {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
         this.resetForm(form);
+        setTimeout(() => this.router.navigateByUrl('/user/signin'), 4000);
       },
       err => {
         if (err.status === 422) {
@@ -59,6 +66,7 @@ export class SignUpComponent implements OnInit {
       _id: '',
       firstName: '',
       lastName: '',
+      alias: '',
       email: '',
       password: '',
       type: '',

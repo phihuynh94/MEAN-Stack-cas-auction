@@ -14,13 +14,13 @@ auctionRouter.post('/createAuction', (req, res, next) => {
     
     // get auction values from the request
     var newAuction = new Auction();
+
     newAuction.auctionName = req.body.auctionName;
-    newAuction.organizer = req.body.organizer;
     newAuction.maxItems = req.body.maxItems;
     newAuction.address = req.body.address;
     newAuction.dateTime = req.body.dateTime;
     newAuction.fee = req.body.fee;
-
+    
     // save the auction to the database
     newAuction.save((err, doc) => {
         if (!err){
@@ -67,7 +67,6 @@ auctionRouter.put('/editAuction/:id', (req, res) => {
     var editAuction = new Auction({
         _id: req.body._id,
         auctionName: req.body.auctionName,
-        organizer: req.body.organizer,
         maxItems: req.body.maxItems,
         address: req.body.address,
         dateTime: req.body.dateTime,

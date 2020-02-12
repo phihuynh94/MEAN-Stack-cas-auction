@@ -21,6 +21,15 @@
         <label class="validation-message">This field is required.</label>
     </div>
 
+    <!--Get user alias-->
+    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias" maxlength="3"
+    required  [ngClass]="{'invalid-textbox': signUpForm.submitted && !alias.valid }" [pattern]="aliasRegex">
+    <!--Validate user alias input-->
+    <div *ngIf="signUpForm.submitted && !alias.valid">
+        <label *ngIf="alias.errors.required" class="validation-message">This field is required.</label>
+        <label *ngIf="alias.errors.pattern" class="validation-message">Invalid alias, must be 3 letters.</label>
+    </div>
+
     <!--Get user email-->
     <input type="text" #email="ngModel" [(ngModel)]="user.email" name="email" placeholder="Email"
     required [pattern]="emailRegex"  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !email.valid }">
@@ -45,7 +54,7 @@
 
 <!-- Success message -->
 <div class="success" *ngIf="showSucessMessage">
-    Saved successfully
+    Sign up successfully
 </div>
 
 <!-- Error message -->

@@ -19,17 +19,6 @@
                         <label class="text-danger">This field is required.</label>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Organizer:</label>
-                    <!--Get organizer-->
-                    <input type="text" #organizer="ngModel" [(ngModel)]="auction.organizer" name="organizer" placeholder="Organizer"
-                    required  [ngClass]="{'invalid-textbox' :createAuctionForm.submitted && !organizer.valid }" class="form-control">
-                    <!--Validate organizer input-->
-                    <div *ngIf="createAuctionForm.submitted && !auctionName.valid">
-                        <label class="text-danger">This field is required.</label>
-                    </div>
-                </div>
     
                 <div class="form-group">
                     <label>Max Items:</label>

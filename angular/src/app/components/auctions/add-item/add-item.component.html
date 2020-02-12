@@ -9,18 +9,6 @@
         
         <div class="modal-body">
             <form #addItemForm="ngForm" (ngSubmit)="addItemForm.valid && onSubmit(addItemForm)">
-                
-                <div class="form-group">
-                    <label>Item Code:</label>
-                    <!--Get item code-->
-                    <input type="text" #itemCode="ngModel" [(ngModel)]="item.itemCode" name="itemCode" placeholder="Item Code"
-                    required  [ngClass]="{'invalid-textbox' :addItemForm.submitted && !itemCode.valid }" class="form-control">
-                    <!--Validate item code input-->
-                    <div *ngIf="addItemForm.submitted && !itemCode.valid">
-                        <label class="text-danger">This field is required.</label>
-                    </div>
-                </div>
-                
                 <div class="form-group">
                     <label>Item Name:</label>
                     <!--Get item name-->
@@ -28,17 +16,6 @@
                     required  [ngClass]="{'invalid-textbox' :addItemForm.submitted && !itemName.valid }" class="form-control">
                     <!--Validate item name input-->
                     <div *ngIf="addItemForm.submitted && !itemName.valid">
-                        <label class="text-danger">This field is required.</label>
-                    </div>
-                </div>
-    
-                <div class="form-group">
-                    <label>Price:</label>
-                    <!--Get item price-->
-                    <input type="number" #price="ngModel" [(ngModel)]="item.price" name="price" placeholder="Price"
-                    required  [ngClass]="{'invalid-textbox' :addItemForm.submitted && !price.valid }" class="form-control">
-                    <!--Validate item name input-->
-                    <div *ngIf="addItemForm.submitted && !price.valid">
                         <label class="text-danger">This field is required.</label>
                     </div>
                 </div>
@@ -64,7 +41,30 @@
                         <label class="text-danger">This field is required.</label>
                     </div>
                 </div>
-    
+
+                <div class="form-group">
+                    <label>Upload Images:</label>
+                    <input type="file" #image accept="image/*" (change)="selectImage(image)" class="form-control">
+                </div>
+
+                <div class="form-group text-center">
+                    <img style="width: 90px; height:90px" [src]="imageSrc" (click)="image.click()">
+                    <input type="button" (click)="uploadImage()" value="Upload">
+                </div>
+                
+
+                <div class="form-group progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
+                </div>
+
+                <div class="form-group">
+                    <img style="width: 90px; height:90px" [src]="this.imagesListSrc">
+                    <img style="width: 90px; height:90px">
+                    <img style="width: 90px; height:90px">
+                    <img style="width: 90px; height:90px">
+                    <img style="width: 90px; height:90px">
+                </div>
+                
                 <div class="text-center">
                     <!--Submit button-->
                     <input class="btn btn-primary" type="submit" value="Add Item">

@@ -6,11 +6,6 @@ text-align: center;
 font-family: arial;
 }
 
-.number {
-color: grey;
-font-size: 12px;
-}
-
 p {
 font-size: 12px;
 }
@@ -58,10 +53,6 @@ box-shadow: 0 4px 17px rgba(black, 0.35);
 
 .card-container .card:not(.highlight-card):hover .material-icons path {
 fill: rgb(105, 103, 103);
-}
-
-.info {
-color: red;
 }
 
 .card-img {

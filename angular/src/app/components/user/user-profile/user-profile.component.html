@@ -1,0 +1,195 @@
+<body class="d-flex flex-column h-100">
+    <main role="main" class="flex-shrink-0">
+        <div class="container">
+            <h1 class="mt-4 text-center">User Profile</h1>
+
+            <div class="lead border">
+                <div class="form-row mt-3 text-center">
+                    <div class="col">
+                        <label>First Name: </label>
+                    </div>
+
+                    <div class="col">
+                        {{ userDetails.firstName }}
+                    </div>
+                </div>
+
+                <div class="form-row text-center">
+                    <div class="col">
+                        <label>Last Name: </label>
+                    </div>
+
+                    <div class="col">
+                        {{ userDetails.lastName }}
+                    </div>
+                </div>
+                
+                <div class="form-row text-center">
+                    <div class="col">
+                        <label>Alias: </label>
+                    </div>
+
+                    <div class="col">
+                        {{ userDetails.alias }}
+                    </div>
+                </div>
+
+                <div class="form-row text-center">
+                    <div class="col">
+                        <label>Email: </label>
+                    </div>
+
+                    <div class="col">
+                        {{ userDetails.email }}
+                    </div>
+                </div>
+
+                <div class="form-row text-center mb-3">
+                    <div class="col">
+                        <button class="btn btn-primary" data-toggle="collapse" href="#editProfileCollapse" aria-expanded="false" aria-controls="editProfileCollapse">Edit Profile</button>
+                    </div>
+
+                    <div class="col">
+                        <button class="btn btn-primary" data-toggle="collapse" href="#changePasswordCollapse" aria-expanded="false" aria-controls="changePasswordCollapse">Change Password</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lead border mt-3">
+                <div class="collapse" id="editProfileCollapse">
+                    <div class="card card-body">
+                        <h3 class="text-center">Edit Profile</h3>
+
+                        <form #editProfileForm="ngForm" (ngSubmit)="editProfileForm.valid && onEditProfileSubmit(editProfileForm)">
+
+                            <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="userDetails._id">
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>First Name: </label>
+                                </div>
+                                <div class="col">
+                                    <!--Get user first name-->
+                                    <input type="text" #firstName="ngModel" [(ngModel)]="userDetails.firstName" name="firstName" placeholder="First Name"
+                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !firstName.valid }">
+                                    <!--Validate user first name input-->
+                                    <div *ngIf="editProfileForm.submitted && !firstName.valid">
+                                        <label class="text-danger">This field is required.</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>Last Name: </label>
+                                </div>
+                                <div class="col">
+                                    <!--Get user last name-->
+                                    <input type="text" #lastName="ngModel" [(ngModel)]="userDetails.lastName" name="lastName" placeholder="Last Name"
+                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !lastName.valid }">
+                                    <!--Validate user last name input-->
+                                    <div *ngIf="editProfileForm.submitted && !lastName.valid">
+                                        <label class="text-danger">This field is required.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>Alias: </label>
+                                </div>
+                                <div class="col">
+                                    <!--Get user alias-->
+                                    <input type="text" #alias="ngModel" [(ngModel)]="userDetails.alias" name="alias" placeholder="Alias"
+                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="3">
+                                    <!--Validate user alias input-->
+                                    <div *ngIf="editProfileForm.submitted && !alias.valid">
+                                        <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
+                                        <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Submit button-->
+                            <div class="mt-2 text-center">
+                                <input type="submit" class="btn btn-primary" value="Edit">
+                            </div>
+
+                            <!-- Success message -->
+                            <div class="alert alert-success" *ngIf="showSucessMessage">
+                                Edited successfully
+                            </div>
+
+                            <!-- Error message -->
+                            <div class="alert alert-danger" *ngIf="serverErrorMessages">
+                                {{serverErrorMessages}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="collapse" id="changePasswordCollapse">
+                    <div class="card card-body">
+                        <h3 class="text-center">Change Password</h3>
+
+                        <form #changePasswordForm="ngForm" (ngSubmit)="changePasswordForm.valid && changePasswordSubmit(changePasswordForm)">
+
+                            <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="userDetails._id">
+                            <input type="hidden" name="email" #email="ngModel" [(ngModel)]="userDetails.email">
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>Current password: </label>
+                                </div>
+                                <div class="col">
+                                    <!-- Get user current password -->
+                                    <input type="password" #password="ngModel" [(ngModel)]="userDetails.password" name="password" placeholder="Current Password"
+                                    required  [ngClass]="{'invalid-textbox': changePasswordForm.submitted && !password.valid }">
+                                    <!--Validate user current password input-->
+                                    <div *ngIf="changePasswordForm.submitted && !password.valid">
+                                        <label class="text-danger">This field is required.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>New password: </label>
+                                </div>
+                                <div class="col">
+                                    <!-- Get user new password -->
+                                    <input type="password" #newPass="ngModel" [(ngModel)]="newPassword" name="newPass" placeholder="New Password"
+                                    required  [ngClass]="{'invalid-textbox': changePasswordForm.submitted && !newPass.valid }">
+                                    <!-- Validate user new password input -->
+                                    <div *ngIf="changePasswordForm.submitted && !newPass.valid">
+                                        <label class="text-danger">This field is required.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--Submit button-->
+                            <div class="mt-2 text-center">
+                                <input type="submit" class="btn btn-primary" value="Change Password">
+                            </div>
+
+                            <!-- Success message -->
+                            <div class="alert alert-success" *ngIf="showSucessMessage">
+                                Edited successfully
+                            </div>
+
+                            <!-- Error message -->
+                            <div class="alert alert-danger" *ngIf="serverErrorMessages">
+                                {{serverErrorMessages}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-secondary text-center" routerLink="/dashboard">
+            <img src="../../../assets/icons/home-black.svg">
+            < Dashboard
+        </button>
+    </main>
+</body>

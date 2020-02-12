@@ -3,14 +3,13 @@ const mongoose = require('mongoose'); // call mongoose
 
 // items schema
 var itemSchema = new mongoose.Schema({
-    auctionId: {
+    auctionID: {
         type: String,
         required: 'Auction id can\'t be empty'
     },
     itemCode: {
         type: String,
         require: 'Item code can\'t be empty',
-        unique: true
     },
     itemName: {
         type: String,
@@ -20,10 +19,6 @@ var itemSchema = new mongoose.Schema({
         type: String,
     },
     price: {
-        type: Number,
-        require: 'Price can\'t be empty'
-    },
-    finalPrice: {
         type: Number,
     },
     quantity: {

@@ -32,6 +32,22 @@ export class UserService {
     return this.http.get(environment.userUrl + '/dashboard');
   }
 
+  editUser(user: User){
+    return this.http.put(environment.userUrl + '/editUser', user);
+  }
+
+  changePassword(token, newPassword: String){
+    return this.http.put(environment.userUrl + '/changePassword/' + token, { newPassword });
+  }
+
+  forgotPassword(email: String){
+    return this.http.post(environment.userUrl + '/forgotPassword', email);
+  }
+
+  getUserById(id: String){
+    return this.http.get(environment.userUrl + '/getUserById/' + id);
+  }
+
   // Helper Methods
   setToken(token: string){
     localStorage.setItem('token', token);

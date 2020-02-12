@@ -1,0 +1,27 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+    <h3>Items:</h3>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <!--Refresh button-->
+        <button (click)="refresh()" class="btn-refresh">
+          <img src="../../../assets/icons/refresh-cw.svg">
+          Refresh</button>
+      </div>
+    </div>
+</div>
+
+<!--Display items in a card container-->
+<div class="card-container">
+  <!--Display each items in the list-->
+    <div class="card" *ngFor="let item of itemInfo">
+        <img src="../../../assets/auction-fish.jpeg" routerLink="/itemPage/{{ item._id }}" class="card-img" >
+        <h5><b>{{ item.itemName }}</b></h5>
+        <p>Qty: {{ item.quantity }}</p>
+        <p>Code: {{ item.itemCode }}</p>
+        
+        <div class="border-top text-center">
+          <img class="mt-1 mr-2 border" src="../../../assets/icons/edit-2.svg">
+          <img class="mt-1 ml-2 border" src="../../../assets/icons/trash-2.svg" (click)="deleteItem(item._id)">
+        </div>
+    </div>
+</div>

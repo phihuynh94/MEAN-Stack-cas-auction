@@ -1,0 +1,78 @@
+<div class="container">
+  <div class="text-center" style="background-color: grey;">
+      <h1 class="pt-3">LIVE AUCTIONING</h1>
+      <h1 class="pb-3">{{ auction.auctionName }}</h1>
+  </div>
+
+  <!-- Search form -->
+  <form class="form-inline border border-secondary rounded mt-3 mb-3">
+    <img src="../../../assets/icons/search.svg">
+    <input class="form-control form-control-sm ml-3 w-75 mr-3" type="text" placeholder="Search"
+      aria-label="Search">
+    <button class="btn btn-dark">Search</button>
+  </form>
+  
+  <div class="row mt-3">
+    <div class="col-md-8 border">
+      <div class="text-center">
+          <img class="img-fluid" src="../../../assets/auction-fish.jpeg" width="350">
+      </div>
+    </div>
+
+    <div class="col-md-4 border text-center">
+      <div class="mt-5">
+        <h3><p>{{ items && items[i].itemName }}</p></h3>
+        <p>
+          <label>Code:</label>
+          {{ items && items[i].itemCode }}
+        </p>
+        <p>
+          <label>Quantity:</label>
+          {{ items && items[i].quantity }}
+        </p>
+        <p>
+          <label>Description:</label><br>
+          {{ items && items[i].description }}
+        </p>
+
+        <div class="form-group">
+          <label>Final Price:</label>
+          <input type="number" placeholder="Final Price" #price="ngModel" [(ngModel)]="items && items[i].price"
+          name="price" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label>Winner Number:</label>
+          <input type="number" placeholder="Winner Number" [(ngModel)]="winnerNum" class="form-control" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 border text-center pt-3 pb-3">
+      Image List
+    </div>
+  
+    <div class="col-md-4 border text-center pt-3 pb-3">
+      <button class="btn btn-primary" (click)="onSubmit()">Submit</button>
+    </div>
+  </div>
+  
+  <div class="row mt-2">
+    <div class="col text-center">
+      <button (click)="onPrev()"><img src="../../../assets/icons/chevron-left.svg"></button>
+    
+      {{ i + 1 }} / {{ items && items.length }}
+    
+      <button (click)="onNext()"><img src="../../../assets/icons/chevron-right.svg"></button>
+    </div>
+  </div>
+  
+
+  <div class="mt-5">
+    <app-participants-list></app-participants-list>
+  </div>
+  
+  <app-item-list></app-item-list>
+</div>

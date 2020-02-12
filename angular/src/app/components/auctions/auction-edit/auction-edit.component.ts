@@ -5,8 +5,8 @@ import { NgForm } from '@angular/forms';
 import { Location } from '@angular/common';
 
 // get components
-import { Auction } from '../model/auction.model';
-import { AuctionService } from '../service/auction.service';
+import { Auction } from '../../model/auction.model';
+import { AuctionService } from '../../service/auction.service';
 
 @Component({
   selector: 'app-auction-edit',

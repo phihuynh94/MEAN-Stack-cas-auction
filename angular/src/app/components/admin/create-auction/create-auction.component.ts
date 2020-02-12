@@ -23,12 +23,10 @@ export class CreateAuctionComponent implements OnInit {
   auction: Auction = {
     _id: '',
     auctionName: '',
-    organizer: '',
     maxItems: null,
     address: '',
     dateTime: new Date(),
     fee: null,
-    participantID: [],
   }
 
   ngOnInit() {
@@ -55,12 +53,10 @@ export class CreateAuctionComponent implements OnInit {
     this.auction = {
       _id: '',
       auctionName: '',
-      organizer: '',
       maxItems: null,
       address: '',
       dateTime: new Date(),
       fee: null,
-      participantID: [],
     };
     form.resetForm();
     this.serverErrorMessages = '';

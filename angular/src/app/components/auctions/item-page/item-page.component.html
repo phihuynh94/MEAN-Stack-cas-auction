@@ -1,0 +1,133 @@
+<div class="container">
+    <h1 class="text-center">Item Info</h1>
+
+    <button class="btn btn-secondary text-center" (click)="onBackBtn()">
+        < Back
+    </button>
+
+    <div class="row mt-3">
+        <div class="col-md-8 border">
+          <div class="text-center">
+              <img class="img-fluid" src="../../../assets/auction-fish.jpeg" width="350">
+          </div>
+        </div>
+    
+        <div class="col-md-4 border text-center">
+            <div class="mt-5">
+                <h3><p>{{ itemInfo.itemName }}</p></h3>
+                <p>
+                <label>Item Code:</label>
+                {{ itemInfo.itemCode }}
+                </p>
+                <p>
+                <label>Quantity:</label>
+                {{ itemInfo.quantity }}
+                </p>
+                <p>
+                    <label>Seller:</label>
+                    {{ sellerInfo.firstName }} {{ sellerInfo.lastName }}
+                </p>
+                <p>
+                <label>Description:</label><br>
+                {{ itemInfo.description }}
+                </p>
+
+                <div class="form-row text-center mt-5">
+                    <div class="col">
+                        <button class="btn btn-primary" data-toggle="collapse" href="#editItemCollapse" aria-expanded="false" aria-controls="editItemCollapse">Edit</button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lead border mt-3">
+        <div class="collapse" id="editItemCollapse">
+            <div class="card card-body">
+                <h3 class="text-center">Edit Item</h3>
+
+                <form #editItemForm="ngForm" (ngSubmit)="editItemForm.valid && onEditItemSubmit(editItemForm)">
+                    <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="itemInfo._id">
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Item Name: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get item name-->
+                            <input type="text" #itemName="ngModel" [(ngModel)]="itemInfo.itemName" name="itemName" placeholder="Item Name"
+                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !itemName.valid }">
+                            <!--Validate item name input-->
+                            <div *ngIf="editItemForm.submitted && !itemName.valid">
+                                <label class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Item Code: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get item code-->
+                            <input type="text" #itemCode="ngModel" [(ngModel)]="itemInfo.itemCode" name="itemCode" placeholder="Item Code"
+                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !itemCode.valid }">
+                            <!--Validate item code input-->
+                            <div *ngIf="editItemForm.submitted && !itemCode.valid">
+                                <label class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Quantity: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get item quantity-->
+                            <input type="number" #quantity="ngModel" [(ngModel)]="itemInfo.quantity" name="quantity" placeholder="Quantity"
+                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !quantity.valid }">
+                            <!--Validate item quantity input-->
+                            <div *ngIf="editItemForm.submitted && !quantity.valid">
+                                <label class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Description: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get item description-->
+                            <textarea type="text" #description="ngModel" [(ngModel)]="itemInfo.description" name="description" placeholder="Description"
+                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !description.valid }"></textarea>
+                            <!--Validate item description input-->
+                            <div *ngIf="editItemForm.submitted && !description.valid">
+                                <label class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Submit button-->
+                    <div class="mt-2 text-center">
+                        <input type="submit" class="btn btn-primary mt-3" value="Edit">
+                    </div>
+
+                    <!-- Success message -->
+                    <div class="alert alert-success mt-3" *ngIf="showSucessMessage">
+                        Edited successfully
+                    </div>
+
+                    <!-- Error message -->
+                    <div class="alert alert-danger" *ngIf="serverErrorMessages">
+                        {{serverErrorMessages}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

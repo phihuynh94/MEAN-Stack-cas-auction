@@ -1,7 +1,7 @@
 <div class="container">
-    <h1>Edit Auction</h1>
+    <h1 class="mt-5">Edit Auction</h1>
 
-    <form #editAuctionForm="ngForm" (ngSubmit)="editAuctionForm.valid && onSubmit(editAuctionForm)">
+    <form #editAuctionForm="ngForm" (ngSubmit)="editAuctionForm.valid && onSubmit(editAuctionForm)" class="mt-3">
         <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="auction._id">
         <input type="hidden" name="participantID" #participantID="ngModel" [(ngModel)]="auction.participantID">
 
@@ -38,28 +38,6 @@
                     <label class="text-danger">This field is required.</label>
                 </div>
             </div>
-        </div>
-
-        
-        <div class="form-row border">
-            <div class="col">
-                <label>Organizer:</label>
-            </div>
-
-            <div class="col">
-                {{ auction.organizer }}
-            </div>
-
-            <div class="col">
-                <!--Get organizer-->
-                <input type="text" #organizer="ngModel" [(ngModel)]="auction.organizer" name="organizer" placeholder="Organizer"
-                required  [ngClass]="{'invalid-textbox' :editAuctionForm.submitted && !organizer.valid }" class="form-control">
-                <!--Validate organizer input-->
-                <div *ngIf="editAuctionForm.submitted && !organizer.valid">
-                    <label class="text-danger">This field is required.</label>
-                </div>
-            </div>
-
         </div>
 
         <div class="form-row border">
@@ -143,7 +121,7 @@
             </div>
         </div>
 
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mt-3 mr-5 ml-5">
 
             <!--Submit button-->
             <input class="btn btn-primary" type="submit" value="Edit Auction">
@@ -156,12 +134,12 @@
     </form>
 
     <!-- Success message -->
-    <div class="success" *ngIf="showSucessMessage">
+    <div class="alert alert-success" *ngIf="showSucessMessage">
         Edited successfully
     </div>
 
     <!-- Error message -->
-    <div class="alert" *ngIf="serverErrorMessages">
+    <div class="alert alert-danger" *ngIf="serverErrorMessages">
         {{serverErrorMessages}}
     </div>
 </div>

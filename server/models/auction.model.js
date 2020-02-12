@@ -8,10 +8,6 @@ var auctionSchema = new mongoose.Schema({
         required: 'Auction name can\'t be empty',
         unique: true
     },
-    organizer: {
-        type: String,
-        required: 'Organizer can\'t be empty',
-    },
     maxItems: {
         type: Number,
         required: 'Need at least one item'

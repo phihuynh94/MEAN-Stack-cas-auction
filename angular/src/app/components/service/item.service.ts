@@ -18,8 +18,8 @@ export class ItemService {
     return this.http.post(environment.itemUrl + '/addItem', item);
   }
 
-  getItemsInAuction(auctionId: String){
-    return this.http.get(environment.itemUrl + '/findItemsInAuction/' + auctionId);
+  getItemsInAuction(auctionID: String){
+    return this.http.get(environment.itemUrl + '/findItemsInAuction/' + auctionID);
   }
 
   sellItem(item: Item){
@@ -28,5 +28,17 @@ export class ItemService {
 
   getBuyerItems(buyerID: String){
     return this.http.get(environment.itemUrl + '/getBuyerItems/' + buyerID);
+  }
+
+  getSellerItemsInAuction(item: Item){
+    return this.http.post(environment.itemUrl + '/getSellerItemsInAuction/', item);
+  }
+
+  getItemInfoById(id: String){
+    return this.http.get(environment.itemUrl + '/getItemInfoById/' + id);
+  }
+
+  editItem(item: Item){
+    return this.http.put(environment.itemUrl + '/editItem', item);
   }
 }

@@ -46,10 +46,6 @@
                 <table class="table table-striped table-sm">
                     <tbody>
                         <tr>
-                            <td>Organizer:</td>
-                            <td>{{ auctionInfo.organizer }}</td>
-                        </tr>
-                        <tr>
                             <td>Max Items:</td>
                             <td>{{ auctionInfo.maxItems }}</td>
                         </tr>
@@ -70,32 +66,61 @@
             </div>
 
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-                
-              <button type="button" class="btn btn-outline-primary" (click)="onParticipate()">
-                <img src="../../../assets/icons/check-blue.svg">
-                Participate
-              </button>
 
               <button type="button" class="btn btn-primary" routerLink="/dashboard">
                 <img src="../../../assets/icons/home-white.svg">
                 Dashboard
               </button>
-              <button type="button" class="btn btn-primary" routerLink="/editAuction/{{ auctionInfo._id }}">
-                <img src="../../../assets/icons/edit-white.svg">
-                Edit
-              </button>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sellItemModal">
-                <img src="../../../assets/icons/tag-white.svg">
-                Sell item
-              </button>
-              <button type="button" class="btn btn-primary" routerLink="/live/{{ auctionInfo._id }}">
-                <img src="../../../assets/icons/play-white.svg">
-                Start
-              </button>
+
+              <div *ngIf="!isParticipate">
+                <button type="button" class="btn btn-primary" (click)="onParticipate()">
+                  <img src="../../../assets/icons/check-white.svg">
+                  Participate
+                </button>
+              </div>
+
+              <div *ngIf="isParticipate">
+                <button type="button" class="btn btn-danger" (click)="onNotParticipate()">
+                  <img src="../../../assets/icons/x-white.svg">
+                  Not Participate
+                </button>
+              </div>
+
+              <div *ngIf="isParticipate">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sellItemModal">
+                  <img src="../../../assets/icons/tag-white.svg">
+                  Sell item
+                </button>
+              </div>
+
+              <div *ngIf="staff">
+                <button type="button" class="btn btn-primary" routerLink="/editAuction/{{ auctionInfo._id }}">
+                  <img src="../../../assets/icons/edit-white.svg">
+                  Edit
+                </button>
+              </div>
+
+              <div *ngIf="staff">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#quickSellModal">
+                  <img src="">
+                  Quick Sell
+                </button>
+              </div>
+             
+              <div *ngIf="staff">
+                <button type="button" class="btn btn-primary" routerLink="/live/{{ auctionInfo._id }}">
+                  <img src="../../../assets/icons/play-white.svg">
+                  Start
+                </button>
+              </div>
             </div>
 
             <div class="modal fade" id="sellItemModal" tabindex="-1" role="dialog" aria-labelledby="sellItemModal" aria-hidden="true">        
                 <app-add-item></app-add-item>
+            </div>
+
+            <div class="modal fade" id="quickSellModal" tabindex="-1" role="dialog" aria-labelledby="quickSellModalLabel" aria-hidden="true">
+              <app-quick-sell></app-quick-sell>
             </div>
             
             <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">

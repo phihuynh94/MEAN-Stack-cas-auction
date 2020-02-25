@@ -9,6 +9,9 @@
 
         <div class="modal-body">
             <form #addStaffForm="ngForm" (ngSubmit)="addStaffForm.valid && onSubmit(addStaffForm)">
+
+                <input type="hidden" #type=ngModel [(ngModel)]="staff.type" name="type">
+
                 <div class="form-group">
                     <label>First Name:</label>
                     <!--Get staff first name-->
@@ -59,11 +62,11 @@
                     <label>Password:</label>
                     <!--Get staff password-->
                     <input type="password" #password="ngModel" [(ngModel)]="staff.password" name="password" placeholder="Password"
-                    minlength="4" required [ngClass]="{'invalid-textbox' :addStaffForm.submitted && !password.valid }" class="form-control">
+                    minlength="6" required [ngClass]="{'invalid-textbox' :addStaffForm.submitted && !password.valid }" class="form-control">
                     <!--Validate staff password-->
                     <div *ngIf="addStaffForm.submitted && password.errors">
                         <label *ngIf="password.errors.required" class="text-danger">This field is required.</label>
-                        <label *ngIf="password.errors.minlength" class="text-danger">Enter atleast 4 characters.</label>
+                        <label *ngIf="password.errors.minlength" class="text-danger">Enter atleast 6 characters.</label>
                     </div>
                 </div>
             

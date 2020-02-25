@@ -7,9 +7,9 @@
   <!-- Search form -->
   <form class="form-inline border border-secondary rounded mt-3 mb-3">
     <img src="../../../assets/icons/search.svg">
-    <input class="form-control form-control-sm ml-3 w-75 mr-3" type="text" placeholder="Search"
-      aria-label="Search">
-    <button class="btn btn-dark">Search</button>
+    <input class="form-control form-control-sm ml-3 w-75 mr-3" type="text" placeholder="Search Item Code"
+      aria-label="Search" [(ngModel)]="search" name="search">
+    <button class="btn btn-dark" (click)="onSearch()">Search</button>
   </form>
   
   <div class="row mt-3">

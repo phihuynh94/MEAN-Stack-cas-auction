@@ -25,7 +25,6 @@ var auctionSchema = new mongoose.Schema({
     },
     participantID: [{
         type: String,
-        unique: true
     }],
 });
 

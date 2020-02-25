@@ -12,12 +12,12 @@ import { Auction } from '../model/auction.model';
 })
 export class AuctionsListComponent implements OnInit {
 
-  auctionsInfo;
-
   constructor(
     private auctionService: AuctionService,
   ) { }
 
+  auctionsInfo;
+  
   ngOnInit() {
     this.getAuctions();
   }
@@ -27,9 +27,6 @@ export class AuctionsListComponent implements OnInit {
     this.auctionService.getAllAuctionsInfo().subscribe(
       res => {
         this.auctionsInfo = res as Auction[];
-      },
-      err => {
-        console.log(err);
       }
     );
   }

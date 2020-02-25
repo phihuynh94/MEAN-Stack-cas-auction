@@ -32,9 +32,6 @@ export class ParticipantsListComponent implements OnInit {
     this.auctionService.getAuctionParticipants(this.auctionId).subscribe(
       res => {
         this.participantsInfo = res as User[];
-      },
-      err => {
-        console.log(err);
       }
     )
   }

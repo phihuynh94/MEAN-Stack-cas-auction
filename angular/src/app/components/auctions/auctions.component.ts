@@ -19,6 +19,9 @@ export class AuctionsComponent implements OnInit {
   auctionId = this.route.snapshot.paramMap.get('id');
   auctionInfo = new Auction();
   userDetails = new User();
+  participantList;
+  isParticipate = false;
+  staff: boolean;
 
   constructor(
     private auctionService: AuctionService,
@@ -28,7 +31,6 @@ export class AuctionsComponent implements OnInit {
   )
   {}
 
-  // Load the selected auction info
   ngOnInit() {
     this.getAuction();
     this.getUser();
@@ -38,9 +40,6 @@ export class AuctionsComponent implements OnInit {
     this.auctionService.getAuctionInfoById(this.auctionId).subscribe(
       res => {
         this.auctionInfo = res as Auction;
-      },
-      err => {
-        console.log(err);
       }
     )
   }
@@ -49,9 +48,9 @@ export class AuctionsComponent implements OnInit {
     this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res['user'];
-      },
-      err => { 
-        console.log(err);
+
+        this.ifParticipated();
+        this.isStaff();
       }
     );
   }
@@ -61,7 +60,41 @@ export class AuctionsComponent implements OnInit {
     this.router.navigate(['/user/signin']);
   }
 
+  ifParticipated(){
+    this.auctionService.getAuctionParticipants(this.auctionId).subscribe(
+      res => {
+        this.participantList = res as User[];
+
+        for (let part in this.participantList){
+
+          if (this.userDetails._id == this.participantList[part]._id){
+            this.isParticipate = true;
+          }
+        }
+      }
+    )
+  }
+
   onParticipate(){
-    this.auctionService.participateAuction(this.auctionId, this.userDetails._id).subscribe();
+    this.auctionService.participateAuction(this.auctionId, this.userDetails._id).subscribe(
+      res => {
+        this.isParticipate = true;
+      }
+    );
+  }
+
+  onNotParticipate(){
+    this.auctionService.notParticipate(this.auctionId, this.userDetails._id).subscribe(
+      res => {
+        this.isParticipate = false;
+      }
+    );
+  }
+
+  isStaff(){
+    if (this.userDetails.type == 'staff')
+      this.staff = true;
+    else
+      this.staff = false;
   }
 }

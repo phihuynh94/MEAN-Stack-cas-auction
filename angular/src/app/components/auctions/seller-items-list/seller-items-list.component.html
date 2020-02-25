@@ -14,14 +14,9 @@
 <div class="card-container">
   <!--Display each items in the list-->
     <div class="card" *ngFor="let item of sellerItems">
-        <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+        <img src="../../../assets/auction-fish.jpeg" routerLink="/itemPage/{{ item._id }}" class="card-img" >
         <h5><b>{{ item.itemName }}</b></h5>
         <p>Qty: {{ item.quantity }}</p>
         <p>Code: {{ item.itemCode }}</p>
-        
-        <div class="border-top text-center">
-          <img class="mt-1 mr-2 border" src="../../../assets/icons/edit-2.svg">
-          <img class="mt-1 ml-2 border" src="../../../assets/icons/trash-2.svg" (click)="deleteItem(item._id)">
-        </div>
     </div>
 </div>

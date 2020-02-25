@@ -52,10 +52,11 @@
             <div class="col">
                 <!--Get max items-->
                 <input type="number" #maxItems="ngModel" [(ngModel)]="auction.maxItems" name="maxItems" placeholder="Max Items"
-                required  [ngClass]="{'invalid-textbox' :editAuctionForm.submitted && !maxItems.valid }" class="form-control">
+                required [pattern]="numRegex" [ngClass]="{'invalid-textbox' :editAuctionForm.submitted && !maxItems.valid }" class="form-control">
                 <!--Validate max items input-->
-                <div *ngIf="editAuctionForm.submitted && !maxItems.valid">
-                    <label class="text-danger">This field is required.</label>
+                <div *ngIf="editAuctionForm.submitted && maxItems.errors">
+                    <label *ngIf="maxItems.errors.required" class="text-danger">This field is required.</label>
+                    <label *ngIf="maxItems.errors.pattern" class="text-danger">Invalid max items input.</label>
                 </div>
             </div>
         </div>
@@ -113,10 +114,11 @@
             <div class="col">
                 <!--Get fee-->
                 <input type="number" #fee="ngModel" [(ngModel)]="auction.fee" name="fee" placeholder="Fee"
-                required  [ngClass]="{'invalid-textbox' :editAuctionForm.submitted && !fee.valid }" class="form-control">
+                required [pattern]="numRegex" [ngClass]="{'invalid-textbox' :editAuctionForm.submitted && !fee.valid }" class="form-control">
                 <!--Validate fee input-->
-                <div *ngIf="editAuctionForm.submitted && !fee.valid">
-                    <label class="text-danger">This field is required.</label>
+                <div *ngIf="editAuctionForm.submitted && fee.errors">
+                    <label *ngIf="fee.errors.required" class="text-danger">This field is required.</label>
+                    <label *ngIf="fee.errors.pattern" class="text-danger">Invalid fee input.</label>
                 </div>
             </div>
         </div>

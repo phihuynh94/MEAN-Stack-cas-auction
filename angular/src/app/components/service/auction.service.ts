@@ -41,4 +41,8 @@ export class AuctionService {
   getAuctionParticipants(id: String){
     return this.http.get(environment.auctionUrl + '/auctionParticipants/' + id);
   }
+
+  notParticipate(auctionID: String, participantID: String){
+    return this.http.put(environment.auctionUrl + '/notParticipate/' + auctionID, { participantID });
+  }
 }

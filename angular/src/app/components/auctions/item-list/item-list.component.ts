@@ -15,7 +15,7 @@ export class ItemListComponent implements OnInit {
 
   constructor(
     private itemService: ItemService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) 
   {}
 
@@ -32,9 +32,6 @@ export class ItemListComponent implements OnInit {
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
         this.itemInfo = res as Item[];
-      },
-      err => {
-        console.log(err);
       }
     );
   }
@@ -42,14 +39,5 @@ export class ItemListComponent implements OnInit {
   // refresh item list
   refresh() {
     this.getItems();
-  }
-
-  deleteItem(itemID){
-    if (confirm('Are you sure to delete this record?') === true){
-      console.log('delete item');
-      console.log(itemID);
-      // this.itemService.deleteItem().subscribe(() => {
-      // });
-    }
   }
 }

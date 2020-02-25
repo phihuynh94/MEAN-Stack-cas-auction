@@ -13,28 +13,23 @@ import { User } from '../../user/model/user.model';
 })
 export class AddStaffComponent implements OnInit {
 
+  constructor(
+    private userService: UserService,
+  ) { }
+
   emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   aliasRegex = /[A-Za-z]{3}/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
-
-  constructor(private userService: UserService) { }
+  staff = new User();
 
   ngOnInit() {
   }
 
-  staff: User = {
-    _id: '',
-    firstName: '',
-    lastName: '',
-    alias: '',
-    email: '',
-    password: '',
-    type: '',
-  }
-
   onSubmit(form : NgForm) {
-    this.userService.addStaff(form.value).subscribe(
+    form.value.type = 'staff';
+
+    this.userService.addUser(form.value).subscribe(
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
@@ -51,16 +46,7 @@ export class AddStaffComponent implements OnInit {
   }
 
   resetForm(form: NgForm) {
-    this.staff = {
-      _id: '',
-      firstName: '',
-      lastName: '',
-      alias: '',
-      email: '',
-      password: '',
-      type: '',
-    };
-
+    this.staff = new User();
     form.resetForm();
     this.serverErrorMessages = '';
   }

@@ -8,6 +8,8 @@ import { Item } from '../../model/item.model';
 import { ItemService } from '../../service/item.service';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/model/user.model';
+import { AuctionService } from '../../service/auction.service';
+import { Auction } from '../../model/auction.model';
 
 @Component({
   selector: 'app-add-item',
@@ -15,6 +17,14 @@ import { User } from '../../user/model/user.model';
   styleUrls: ['./add-item.component.css']
 })
 export class AddItemComponent implements OnInit {
+
+  constructor(
+    private itemService: ItemService,
+    private route: ActivatedRoute,
+    private userService: UserService,
+    private auctionService: AuctionService,
+    )
+    {}
 
   showSucessMessage: boolean;
   serverErrorMessages: string;
@@ -25,39 +35,23 @@ export class AddItemComponent implements OnInit {
   numOfImages = 0;
   imagesListSrc: String;
   sellerItems;
-
-  constructor(
-    private itemService: ItemService,
-    private route: ActivatedRoute,
-    private userService: UserService,
-    )
-    {}
-
-  item: Item = {
-    _id: '',
-    auctionID: this.auctionID,
-    itemCode: '',
-    itemName: '',
-    description: '',
-    price: null,
-    quantity: null,
-    sellerID: '',
-    buyerID: '',
-    images: [],
-  }
+  auctionDetails = new Auction();
+  item = new Item();
 
   ngOnInit() {
     this.item.auctionID = this.auctionID;
     this.getUser();
+    this.getAuctionInfo();
   }
 
   onSubmit(form: NgForm) {
     this.item.auctionID = this.auctionID;
-    this.item.itemCode = this.userDetails.alias + '-' + (this.sellerItems.length + 1);
+    this.item.itemCode = this.userDetails.alias;
     this.item.itemName = form.value.itemName;
     this.item.description = form.value.description;
     this.item.quantity = form.value.quantity;
     this.item.sellerID = this.userDetails._id;
+    this.item.type = 'auction';
 
     this.itemService.addItem(this.item).subscribe(
       res => {
@@ -70,25 +64,13 @@ export class AddItemComponent implements OnInit {
           this.serverErrorMessages = err.error.join('<br/>');
         }
         else
-          this.serverErrorMessages = 'Something went wrong. Please contact admin.';
+          this.serverErrorMessages = err.error.text;
       }
     );
   }
 
   resetForm(form: NgForm) {
-    this.item = {
-      _id: '',
-      auctionID: this.auctionID,
-      itemCode: '',
-      itemName: '',
-      description: '',
-      price: null,
-      quantity: null,
-      sellerID: '',
-      buyerID: '',
-      images: [],
-    };
-
+    this.item = new Item();
     form.resetForm();
     this.serverErrorMessages = '';
   }
@@ -97,23 +79,14 @@ export class AddItemComponent implements OnInit {
     this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res['user'];
-        this.getSellerItems();
-      },
-      err => { 
-        console.log(err);
       }
     );
   }
 
-  getSellerItems(){
-    this.item.sellerID = this.userDetails._id;
-
-    this.itemService.getSellerItemsInAuction(this.item).subscribe(
+  getAuctionInfo(){
+    this.auctionService.getAuctionInfoById(this.auctionID).subscribe(
       res => {
-        this.sellerItems = res as Item[];
-      },
-      err => {
-        console.log(err);
+        this.auctionDetails = res as Auction;
       }
     );
   }

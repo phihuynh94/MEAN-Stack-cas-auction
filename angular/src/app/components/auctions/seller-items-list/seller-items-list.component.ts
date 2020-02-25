@@ -23,7 +23,7 @@ export class SellerItemsListComponent implements OnInit {
 
   // Variables
   sellerItems;
-  sellerDetails;
+  sellerDetails = new User();
   item = new Item();
   auctionID = this.route.snapshot.paramMap.get('id');
 
@@ -36,9 +36,6 @@ export class SellerItemsListComponent implements OnInit {
       res => {
         this.sellerDetails = res['user'];
         this.getSellerItems();
-      },
-      err => { 
-        console.log(err);
       }
     );
   }
@@ -50,15 +47,12 @@ export class SellerItemsListComponent implements OnInit {
     this.itemService.getSellerItemsInAuction(this.item).subscribe(
       res => {
         this.sellerItems = res as Item[];
-      },
-      err => {
-        console.log(err);
       }
     );
   }
 
-    // refresh item list
-    refresh() {
-      this.getSellerItems();
-    }
+  // refresh item list
+  refresh() {
+    this.getSellerItems();
+  }
 }

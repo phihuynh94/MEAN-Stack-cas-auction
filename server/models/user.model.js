@@ -41,7 +41,9 @@ var userSchema = new mongoose.Schema({
         required: 'User type can\'t be empty',
     },
 
-    saltSecret: String
+    saltSecret: String,
+    resetPasswordToken: String,
+    resetPasswordTokenExpire: Date,
 });
 
 // Generate salt and hash password

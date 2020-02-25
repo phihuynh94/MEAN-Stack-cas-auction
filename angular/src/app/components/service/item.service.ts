@@ -41,4 +41,12 @@ export class ItemService {
   editItem(item: Item){
     return this.http.put(environment.itemUrl + '/editItem', item);
   }
+
+  deleteItemById(id: String){
+    return this.http.delete(environment.itemUrl + '/deleteItemById/' + id);
+  }
+
+  getItemByItemCode(itemCode: String){
+    return this.http.get(environment.itemUrl + '/getItemByItemCode/' + itemCode);
+  }
 }

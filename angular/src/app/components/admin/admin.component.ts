@@ -16,15 +16,17 @@ export class AdminComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { }
 
   userDetails = new User;
+  staff: boolean;
 
   ngOnInit() {
+    this.getUser();
+  }
+
+  getUser(){
     this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res['user'];
-      },
-      err => { 
-        console.log(err);
-        
+        this.isStaff();
       }
     );
   }
@@ -32,5 +34,12 @@ export class AdminComponent implements OnInit {
   onLogout(){
     this.userService.deleteToken();
     this.router.navigate(['/user/signin']);
+  }
+
+  isStaff(){
+    if (this.userDetails.type == 'staff')
+      this.staff = true;
+    else
+      this.router.navigate(['/dashboard']);
   }
 }

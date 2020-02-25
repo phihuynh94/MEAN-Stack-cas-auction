@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
     ) { }
 
   userDetails = new User;
-  staff;
+  staff : boolean;
 
   ngOnInit() {
     this.getUser();
@@ -31,9 +31,6 @@ export class DashboardComponent implements OnInit {
         this.userDetails = res['user'];
 
         this.isStaff(); 
-      },
-      err => { 
-        console.log(err);
       }
     );
   }

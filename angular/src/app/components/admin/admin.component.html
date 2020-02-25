@@ -51,6 +51,14 @@
                         <img src="../../../assets/icons/user-plus.svg">
                         Add Staff
                     </button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMemberModal">
+                        <img src="../../../assets/icons/user-plus.svg">
+                        Add Member
+                    </button>
+                    <button type="button" class="btn btn-primary" routerLink="/viewUsers">
+                        <img src="../../../assets/icons/users.svg">
+                        View All Users
+                    </button>
                 </div>
 
                 <div class="modal fade" id="createAuctionModal" tabindex="-1" role="dialog" aria-labelledby="createAuctionModalLabel" aria-hidden="true">
@@ -59,6 +67,10 @@
                 
                 <div class="modal fade" id="addStaffModal" tabindex="-1" role="dialog" aria-labelledby="addStaffModalLabel" aria-hidden="true">
                     <app-add-staff></app-add-staff>
+                </div>
+
+                <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="addMemberModalLabel" aria-hidden="true">
+                    <app-add-member></app-add-member>
                 </div>
 
                 <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">

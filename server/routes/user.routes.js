@@ -4,7 +4,6 @@ const userRouter = express.Router(); // get an instance of express router
 const passport = require('passport'); // call passport
 const _ = require('lodash'); // call lodash
 const bcrypt = require('bcryptjs'); // call bcrypt
-const randomString = require('randomstring'); // call randomstring
 var nodemailer = require('nodemailer'); // call nodemailer
 
 // get files
@@ -23,43 +22,26 @@ userRouter.post('/register', (req, res, next) => {
     newUser.alias = req.body.alias;
     newUser.email = req.body.email;
     newUser.password = req.body.password;
-    newUser.type = 'member';
+    newUser.type = req.body.type;
 
     // Save to the database
-    newUser.save((err, doc) => {
-        if (!err)
-            res.send(doc);
+    newUser.save((err, user) => {
+        if (user)
+            // Send the user info through response
+            res.send(user);
         else
         {
-            console.log(err);
-            if (err.code == 11000)
-                res.status(422).send(['Duplicate email address or alias found.']);
-            else
-                return next(err);
-        }
-    });
-});
+            // If there is a duplicate error
+            if (err.code == 11000) {
 
-// Add Staff route
-userRouter.post('/addStaff', (req, res, next) => {
+                if (err.keyPattern.email){
+                    res.status(422).send(['Duplicate email address found.']);
+                }
+               else {
+                    res.status(422).send(['Duplicate alias found.']);
+               }
 
-    // Get new staff details
-    var newStaff = new User();
-    newStaff.firstName = req.body.firstName;
-    newStaff.lastName = req.body.lastName;
-    newStaff.alias = req.body.alias;
-    newStaff.email = req.body.email;
-    newStaff.password = req.body.password;
-    newStaff.type = 'staff';
-
-    // Save to the databse
-    newStaff.save((err, staff) => {
-        if (!err)
-            res.send(staff);
-        else
-        {
-            if (err.code == 11000)
-                res.status(422).send(['Duplicate email address or alias found.']);
+            }
             else
                 return next(err);
         }
@@ -98,11 +80,11 @@ userRouter.get('/dashboard', jwt.verifyJwtToken, (req, res, next) => {
 // Get user by id
 userRouter.get('/getUserById/:id', (req, res) => {
     User.findById(req.params.id, (err, user) => {
-        if (user){
+        if (!err){
             res.send(user);
         }
         else {
-            console.log(err);
+            res.send(err);
         }
     });
 });
@@ -119,9 +101,11 @@ userRouter.put('/editUser', (req, res) => {
     })
 
     // Find user by id and update
-    User.findByIdAndUpdate(req.body._id, { $set: editUser }, { new: true }, (err, doc) => {
-        if (!err) { res.send(doc); }
-        else { console.log('Error in updating user:' + JSON.stringify(err, undefined, 2)); }
+    User.findByIdAndUpdate(req.body._id, { $set: editUser }, { new: true }, (err, user) => {
+        if (!err) { res.send(user); }
+        else { 
+            res.send('Alias already taken.');
+        }
     });
 });
 
@@ -138,11 +122,7 @@ userRouter.put('/changePassword/:token', jwt.verifyJwtToken, (req, res, next) =>
             User.findOneAndUpdate({ _id: req._id }, { $set: { password: this.newPassword, saltSecret: this.saltSecret }}, { new: true},
                 (err, user) => {
                     if (!err){
-                        console.log(user);
                         res.send(user);
-                    }
-                    else{
-                        console.log('Error in updating user:' + JSON.stringify(err, undefined, 2));
                     }
             });
         });
@@ -152,32 +132,118 @@ userRouter.put('/changePassword/:token', jwt.verifyJwtToken, (req, res, next) =>
 // Forgot Password
 userRouter.post('/forgotPassword', (req, res) => {
 
-    var code = randomString.generate(5);
+    userEmail = req.body.email;
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: 'cas.liveauction@gmail.com',
-          pass: 'CUdenver'
+          pass: 'CASliveauction2020'
         }
     });
 
-    var mailOptions = {
-        from: 'cas.liveauction@gmail.com',
-        to: req.body.email,
-        subject: 'CAS reset password',
-        text: 'Enter this code to reset your password: ' + code,
-      };
+    User.findOne({ email: userEmail },
+        (err, user) => {
+            if (user) {
+                token = user.generateJwt();
+                dateTime = new Date();
 
-    transporter.sendMail(mailOptions, function(err, info){
+                User.findOneAndUpdate({ email: userEmail},
+                    {$set: { resetPasswordToken: token, resetPasswordTokenExpire: dateTime}}, {new: true},
+                    (err, user) => {
+                        if (user){
+                            
+                            var mailOptions = {
+                                from: 'cas.liveauction@gmail.com',
+                                to: userEmail,
+                                subject: 'CAS reset password',
+                                text: 'Click the link to reset password ' + "http://localhost:4200/user/resetPassword/" + token,
+                            };
 
-        if (err){
-            console.log(err);
+                            transporter.sendMail(mailOptions, function(err, info){
+                                if (err){
+                                    return res.status(404).json({ status: false, message: 'Could not send email' });
+                                }
+                                else {
+                                    return res.status(200).json({ message: 'Email Sent' });
+                                }
+                            });
+                        }
+                        else {
+                            res.send(err);
+                        }
+                });
+            }
+            else {
+                return res.status(404).json({ status: false, message: 'Email not found.' });
+            }
+    });
+});
+
+// Reset password
+userRouter.put('/resetPassword/:token', (req, res, next) => {
+    
+    var token = req.params.token;
+
+    User.findOne({resetPasswordToken: token}, (err, user) => {
+        if (user){
+            var time = Math.abs(user.resetPasswordTokenExpire - new Date())/3600000;
+
+            if(time < 1){
+                
+                var password;
+                var saltSecret;
+                
+                //bcrypt password
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(req.body.newPassword, salt, (err, hash) => {
+                        password = hash;
+                        saltSecret = salt;
+
+                        User.findOneAndUpdate({ "email": user.email }, { $set: { "password": password, "saltSecret": saltSecret, "resetPasswordToken": null, "resetPasswordTokenExpire": null} }, { new: true },
+                            (err, user) => {
+                                if (!user) {
+                                    return res.status(404).json({ "message": "Password change was unsuccessfull" })
+                                } else {
+                                    return res.status(200).json({ "message": "Password changed" });
+                                }
+                            })
+                    });
+                });
+            }
+            else{
+                return res.status(404).json({ status: false, message: 'Reset time has expired.' });
+            }
         }
         else {
-            console.log('Email sent: ' + info.response);
+            return res.status(404).json({ status: false, message: 'User record not found.' });
+        }
+    });
+});
+
+// Find all users
+userRouter.get('/getUsers', (req, res) => {
+    User.find((err, users) => {
+        if (users){
+            res.send(users);
+        }
+        else {
+            res.send(err);
         }
     })
-})
+});
+
+// Delete user by id
+userRouter.delete('/deleteUser/:id', (req, res) => {
+    User.findByIdAndDelete(req.params.id, (err, user) => {
+        if (user) {
+            res.send(user);
+        }
+        else {
+            res.send(err);
+        }
+    })
+});
+
 // return the router
 module.exports = userRouter;

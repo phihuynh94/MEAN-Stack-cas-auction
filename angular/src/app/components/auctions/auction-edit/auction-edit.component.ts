@@ -7,6 +7,8 @@ import { Location } from '@angular/common';
 // get components
 import { Auction } from '../../model/auction.model';
 import { AuctionService } from '../../service/auction.service';
+import { UserService } from '../../user/service/user.service';
+import { User } from '../../user/model/user.model';
 
 @Component({
   selector: 'app-auction-edit',
@@ -15,25 +17,31 @@ import { AuctionService } from '../../service/auction.service';
 })
 export class AuctionEditComponent implements OnInit {
 
-  id = this.route.snapshot.paramMap.get('id');
-  auction = new Auction();
-  showSucessMessage: boolean;
-  serverErrorMessages: string;
-
   constructor(
     private auctionService: AuctionService,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
+    private userService: UserService,
   ) { }
 
+  id = this.route.snapshot.paramMap.get('id');
+  auction = new Auction();
+  showSucessMessage: boolean;
+  serverErrorMessages: string;
+  userDetails = new User();
+  numRegex = /^[1-9][0-9]*$/;
+  staff: boolean;
+  
   ngOnInit() {
+    this.getUser();
+    this.getAuctionInfo();
+  }
+
+  getAuctionInfo(){
     this.auctionService.getAuctionInfoById(this.id).subscribe(
       res => {
         this.auction = res as Auction;
-      },
-      err => {
-        console.log(err);
       }
     )
   }
@@ -43,16 +51,12 @@ export class AuctionEditComponent implements OnInit {
       (res) => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
-
-        this.router.navigate(['/auctions/', this.id])
+        this.serverErrorMessages = '';
       },
       err => {
-        if (err.status === 422) {
-          this.serverErrorMessages = err.error.join('<br/>');
-        }
-        else
-          this.serverErrorMessages = 'Something went wrong.Please contact admin.';
-      });
+          this.serverErrorMessages = err.error.text;
+      }
+    );
   }
 
   deleteAuction() {
@@ -65,5 +69,21 @@ export class AuctionEditComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  getUser(){
+    this.userService.getUserProfile().subscribe(
+      res => {
+        this.userDetails = res['user'];
+        this.isStaff();
+      }
+    );
+  }
+
+  isStaff(){
+    if (this.userDetails.type == 'staff')
+      this.staff = true;
+    else
+      this.router.navigate(['/dashboard']);
   }
 }

@@ -1,6 +1,7 @@
 // get built-in
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 // get components
 import { Auction } from '../../model/auction.model';
@@ -8,6 +9,7 @@ import { AuctionService } from '../../service/auction.service';
 import { ItemService } from '../../service/item.service';
 import { Item } from '../../model/item.model';
 import { User } from '../../user/model/user.model';
+import { UserService } from '../../user/service/user.service';
 
 @Component({
   selector: 'app-live-auction',
@@ -20,6 +22,8 @@ export class LiveAuctionComponent implements OnInit {
     private route: ActivatedRoute,
     private auctionService: AuctionService,
     private itemService: ItemService,
+    private userService: UserService,
+    private router: Router,
   )
   { }
 
@@ -30,31 +34,30 @@ export class LiveAuctionComponent implements OnInit {
   participants;
   i = 0;
   winnerNum;
+  search: String;
+  searchItem;
+  userDetails = new User();
+  staff: boolean;
   
   ngOnInit() {
     this.getAuctionInfo();
     this.getAuctionItems();
     this.getParticipants();
+    this.getUser();
   }
 
   getAuctionInfo(){
     this.auctionService.getAuctionInfoById(this.auctionID).subscribe(
       res => {
         this.auction = res as Auction;
-      },
-      err => {
-        console.log(err);
       }
-    )
+    );
   }
 
   getAuctionItems(){
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
         this.items = res as Item[];
-      },
-      err => {
-        console.log(err);
       }
     );
   }
@@ -63,11 +66,8 @@ export class LiveAuctionComponent implements OnInit {
     this.auctionService.getAuctionParticipants(this.auctionID).subscribe(
       res => {
         this.participants = res as User[];
-      },
-      err => {
-        console.log(err);
       }
-    )
+    );
   }
 
   onNext(){
@@ -91,10 +91,30 @@ export class LiveAuctionComponent implements OnInit {
   onSubmit(){
     this.items[this.i].buyerID = this.participants[this.winnerNum - 1]._id;
 
-    console.log(this.items[this.i]);
-
     this.itemService.sellItem(this.items[this.i]).subscribe();
+  }
 
-    return true;
+  onSearch(){
+    this.itemService.getItemByItemCode(this.search.toUpperCase()).subscribe(
+      res => {
+        console.log(res);
+      }
+    );
+  }
+
+  getUser(){
+    this.userService.getUserProfile().subscribe(
+      res => {
+        this.userDetails = res['user'];
+        this.isStaff();
+      }
+    );
+  }
+
+  isStaff(){
+    if (this.userDetails.type == 'staff')
+      this.staff = true;
+    else
+      this.router.navigate(['/dashboard']);
   }
 }

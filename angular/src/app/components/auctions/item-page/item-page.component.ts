@@ -26,14 +26,17 @@ export class ItemPageComponent implements OnInit {
 
   ngOnInit() {
     this.getItemInfo();
+    this.getUser();
   }
 
   // Variables
   itemID = this.route.snapshot.paramMap.get('id');
   itemInfo = new Item();
   sellerInfo = new User();
-  showSucessMessage: boolean;
-  serverErrorMessages: string;
+  showSucessMessage : boolean;
+  serverErrorMessages : string;
+  userDetails = new User();
+  staff : boolean;
 
   getItemInfo(){
     this.itemService.getItemInfoById(this.itemID).subscribe(
@@ -41,9 +44,6 @@ export class ItemPageComponent implements OnInit {
         this.itemInfo = res as Item;
         this.getSellerInfo();
       },
-      err => {
-        console.log(err);
-      }
     );
   }
 
@@ -51,9 +51,6 @@ export class ItemPageComponent implements OnInit {
     this.userService.getUserById(this.itemInfo.sellerID).subscribe(
       res => {
         this.sellerInfo = res as User;
-      },
-      err => {
-        console.log(err);
       }
     );
   }
@@ -69,12 +66,33 @@ export class ItemPageComponent implements OnInit {
         setTimeout(() => this.showSucessMessage = false, 4000);
       },
       err => {
-        if (err.status === 422) {
-          this.serverErrorMessages = err.error.join('<br/>');
-        }
-        else
-          this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+       this.serverErrorMessages = 'Error in editing item';
       }
     );
+  }
+
+  onDeleteItem(){
+    if (confirm('Are you sure to delete this item?') === true){
+      this.itemService.deleteItemById(this.itemID).subscribe(() => {
+          this.location.back();
+      });
+    }
+  }
+
+  getUser(){
+    this.userService.getUserProfile().subscribe(
+      res => {
+        this.userDetails = res['user'];
+
+        this.isStaff();
+      },
+    );
+  }
+
+  isStaff(){
+    if (this.userDetails.type == 'staff')
+      this.staff = true;
+    else
+      this.staff = false;
   }
 }

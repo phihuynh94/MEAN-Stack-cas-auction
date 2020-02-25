@@ -76,8 +76,12 @@ auctionRouter.put('/editAuction/:id', (req, res) => {
     
     // Find auction by id and update
     Auction.findByIdAndUpdate(req.params.id, { $set: editAuction }, { new: true }, (err, doc) => {
-        if (!err) { res.send(doc); }
-        else {console.log('Error in updating auction :' + JSON.stringify(err, undefined, 2));}
+        if (!err) { 
+            res.send(doc);
+         }
+        else {
+            res.send('Duplicate auction name.');
+        }
     });
 });
 
@@ -126,7 +130,7 @@ auctionRouter.get('/auctionParticipants/:id', (req, res) => {
             })
         }
         else{
-            console.log(err);
+            res.send(err);
         }
     })
 });
@@ -135,9 +139,30 @@ auctionRouter.get('/auctionParticipants/:id', (req, res) => {
 // delete auction by id on the parameter
 auctionRouter.delete('/deleteAuction/:id', (req, res) => {
     Auction.findByIdAndDelete(req.params.id, (err, auction) => {
-        if (!err) { res.send(auction);}
-        else { res.send(err);}
+        if (!err) { 
+            res.send(auction);
+        }
+        else { 
+            res.send(err);
+        }
     })
+});
+
+// Not participate in auction
+auctionRouter.put('/notParticipate/:id', (req, res) => {
+
+    auctionID = req.params.id;
+    participantID = req.body.participantID;
+
+    Auction.findByIdAndUpdate(auctionID, { $pull: { participantID: participantID }},
+        (err, auction) => {
+            if (!err) {
+                res.send(auction);
+            }
+            else {
+                res.send(err);
+            }
+        });
 });
 
 // return the router

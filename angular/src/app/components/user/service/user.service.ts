@@ -20,10 +20,6 @@ export class UserService {
     return this.http.post(environment.userUrl + '/register', user, this.noAuthHeader);
   }
 
-  addStaff(staff: User){
-    return this.http.post(environment.userUrl + '/addStaff', staff, this.noAuthHeader);
-  }
-
   login(authCredentials){
     return this.http.post(environment.userUrl + '/authenticate', authCredentials, this.noAuthHeader);
   }
@@ -46,6 +42,18 @@ export class UserService {
 
   getUserById(id: String){
     return this.http.get(environment.userUrl + '/getUserById/' + id);
+  }
+
+  resetPassword(token, newPassword: String){
+    return this.http.put(environment.userUrl + '/resetPassword/' + token, { newPassword });
+  }
+
+  getUsers(){
+    return this.http.get(environment.userUrl + '/getUsers');
+  }
+
+  deleteUser(id: String){
+    return this.http.delete(environment.userUrl + '/deleteUser/' + id);
   }
 
   // Helper Methods

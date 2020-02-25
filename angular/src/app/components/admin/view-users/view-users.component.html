@@ -1,0 +1,138 @@
+<div class="container">
+    <h1 class="text-center">View All Users</h1>
+
+    <button class="btn btn-secondary text-center" (click)="onBackBtn()">
+        < Back
+    </button>
+
+    <table class="table mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Email</th>
+                <th scope="col">Alias</th>
+                <th scope="col">Type</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let user of users">
+                <td>
+                    {{ user.firstName }}
+                </td>
+                <td>
+                    {{ user.lastName }}
+                </td>
+                <td>
+                    {{ user.email }}
+                </td>
+                <td>
+                    {{ user.alias }}
+                </td>
+                <td>
+                    {{ user.type }}
+                </td>
+                <td class="text-right">
+                    <img src="../../../../assets/icons/edit-2.svg" class="mr-3" data-toggle="modal" data-target="#editUserModal" (click)="onEditUser(user)">
+                    <img src="../../../../assets/icons/trash-2.svg" (click)="onDelete(user._id)">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form #editUserForm="ngForm" (ngSubmit)="editUserForm.valid && onEditUserSubmit(editUserForm)">
+                    
+                    <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="editUser._id">
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>First Name: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user first name-->
+                            <input type="text" #firstName="ngModel" [(ngModel)]="editUser.firstName" name="firstName" placeholder="First Name"
+                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !firstName.valid }">
+                            <!--Validate user first name input-->
+                            <div *ngIf="editUserForm.submitted && !firstName.valid">
+                                <label class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Last Name: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user last name-->
+                            <input type="text" #lastName="ngModel" [(ngModel)]="editUser.lastName" name="lastName" placeholder="Last Name"
+                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !lastName.valid }">
+                            <!--Validate user last name input-->
+                            <div *ngIf="editUserForm.submitted && !lastName.valid">
+                                <label class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Alias: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user alias-->
+                            <input type="text" #alias="ngModel" [(ngModel)]="editUser.alias" name="alias" placeholder="Alias"
+                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="3">
+                            <!--Validate user alias input-->
+                            <div *ngIf="editUserForm.submitted && !alias.valid">
+                                <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
+                                <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Type: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user type-->
+                            <select id="type" name="type" #type="ngModel" [(ngModel)]="editUser.type">
+                                <option value="member">Member</option>
+                                <option value="staff">Staff</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--Submit button-->
+                    <div class="mt-2 text-center">
+                        <input type="submit" class="btn btn-primary" value="Edit">
+                    </div>
+
+                    <!-- Success message -->
+                    <div class="alert alert-success" *ngIf="showSucessMessage">
+                        Edited successfully
+                    </div>
+
+                    <!-- Error message -->
+                    <div class="alert alert-danger" *ngIf="serverErrorMessages">
+                        {{serverErrorMessages}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

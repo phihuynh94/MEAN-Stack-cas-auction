@@ -9,4 +9,5 @@ export class Item {
     sellerID: String;
     buyerID: String;
     images: File[];
+    type: String;
 }

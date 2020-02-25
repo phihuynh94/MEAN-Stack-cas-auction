@@ -7,10 +7,10 @@
         <header id="header" class="alt">
             <h1><a>Colorado Aquarium Society Auction Portal</a></h1>
             <nav id="nav">
-                <ul>
+                <ul #menu>
                     <li class="special">
-                        <a class="menuToggle" (click)="onMenuClick()"><span>Menu</span></a>
-                        <div *ngIf="toggle" id="menu">
+                        <a  class="menuToggle" (click)="onMenuClick()" ><span>Menu</span></a>
+                        <div *ngIf="toggle" id="menu" >
                             <ul>
                                 <li><a routerLink="/">Home</a></li>
                                 <li><a href="">Contact Us</a></li>
@@ -32,7 +32,7 @@
                 Largest Exotic Fish Auction<br />
                 Built By <a href="https://engineering.ucdenver.edu/academics/undergraduate-programs/undergraduate-programs-in-computer-science/bs-in-computer-science">CU DENVER Computer Engineering Students</a>.</p>
                 <ul class="actions special">
-                    <li><a href="#" class="button primary">Sign In or Join Now!</a></li>
+                    <li><a routerLink="/user/signin" class="button primary">Sign In or Join Now!</a></li>
                 </ul>
             </div>
             <a href="#one" class="more scrolly">Learn More</a>
@@ -44,13 +44,8 @@
                 <header class="major">
                     <h2>Join Us At Our Next Upcoming Auction!<br/>
                     </h2>
-                    <p>Next Auction in on: 01/01/2020 @ 4pm MST</p>
+                    <app-auctions-list></app-auctions-list>
                 </header>
-                <ul class="icons major">
-                    <li><span class="icon fa-gem major style1"><span class="label">Lorem</span></span></li>
-                    <li><span class="icon fa-heart major style2"><span class="label">Ipsum</span></span></li>
-                    <li><span class="icon solid fa-code major style3"><span class="label">Dolor</span></span></li>
-                </ul>
             </div>
         </section>
 

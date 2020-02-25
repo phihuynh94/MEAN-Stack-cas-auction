@@ -25,53 +25,37 @@ export class SignUpComponent implements OnInit {
   aliasRegex = /[A-Za-z]{3}/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
-
-  // New User object
-  user: User = {
-    _id: '',
-    firstName: '',
-    lastName: '',
-    alias: '',
-    email: '',
-    password: '',
-    type: '',
-  }
+  user = new User();
 
   ngOnInit() {
   }
 
   // Submit function
   onSubmit(form : NgForm) {
+
+    form.value.type = 'member';
+
     // Call addUser function from nodejs
     this.userService.addUser(form.value).subscribe(
       res => {
         this.showSucessMessage = true;
-        setTimeout(() => this.showSucessMessage = false, 4000);
+        setTimeout(() => this.showSucessMessage = false, 2000);
         this.resetForm(form);
-        setTimeout(() => this.router.navigateByUrl('/user/signin'), 4000);
+        setTimeout(() => this.router.navigateByUrl('/user/signin'), 2000);
       },
       err => {
         if (err.status === 422) {
           this.serverErrorMessages = err.error.join('<br/>');
         }
         else
-          this.serverErrorMessages = 'Something went wrong. Please contact admin.';
+          this.serverErrorMessages = err.error.text;
       }
     );
   }
 
   // Reset form function
   resetForm(form: NgForm) {
-    this.user = {
-      _id: '',
-      firstName: '',
-      lastName: '',
-      alias: '',
-      email: '',
-      password: '',
-      type: '',
-    };
-
+    this.user = new User();
     form.resetForm();
     this.serverErrorMessages = '';
   }

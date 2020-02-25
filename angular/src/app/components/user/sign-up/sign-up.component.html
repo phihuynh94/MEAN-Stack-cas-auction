@@ -5,6 +5,9 @@
 
 <!--Sign up form-->
 <form #signUpForm="ngForm" (ngSubmit)="signUpForm.valid && onSubmit(signUpForm)">
+
+    <input type="hidden" #type=ngModel [(ngModel)]="user.type" name="type">
+
     <!--Get user first name-->
     <input type="text" #firstName="ngModel" [(ngModel)]="user.firstName" name="firstName" placeholder="First Name"
     required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !firstName.valid }">
@@ -41,11 +44,11 @@
 
     <!--Get user password-->
     <input type="password" #password="ngModel" [(ngModel)]="user.password" name="password" placeholder="Password"
-    minlength="4" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !password.valid }">
+    minlength="6" required [ngClass]="{'invalid-textbox' :signUpForm.submitted && !password.valid }">
     <!--Validate user password-->
     <div *ngIf="signUpForm.submitted && password.errors">
         <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
-        <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 4 characters.</label>
+        <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 6 characters.</label>
     </div>
 
     <!--Submit button-->

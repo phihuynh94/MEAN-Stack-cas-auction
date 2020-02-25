@@ -19,7 +19,9 @@ export class UserProfileComponent implements OnInit {
 
   userDetails = new User;
   showSucessMessage: boolean;
+  showSucessMessage2: boolean;
   serverErrorMessages: string;
+  serverErrorMessages2: string;
   newPassword = '';
   aliasRegex = /[A-Za-z]{3}/;
 
@@ -31,9 +33,6 @@ export class UserProfileComponent implements OnInit {
     this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res['user'];
-      },
-      err => { 
-        console.log(err);
       }
     );
   }
@@ -43,13 +42,10 @@ export class UserProfileComponent implements OnInit {
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
+        this.serverErrorMessages = '';
       },
       err => {
-        if (err.status === 422) {
-          this.serverErrorMessages = err.error.join('<br/>');
-        }
-        else
-          this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+          this.serverErrorMessages = err.error.text;
       }
     );
   }
@@ -59,22 +55,19 @@ export class UserProfileComponent implements OnInit {
       res => {
         this.userService.changePassword(res, this.newPassword).subscribe(
           res => {
-            this.showSucessMessage = true;
-            setTimeout(() => this.showSucessMessage = false, 4000);
+            this.showSucessMessage2 = true;
+            setTimeout(() => this.showSucessMessage2 = false, 4000);
           },
           err => {}
         );
       },
       err => {
-        if (err.status === 422) {
-          this.serverErrorMessages = err.error.join('<br/>');
-        }
-        else if (err.status === 404) {
-          this.serverErrorMessages = 'Wrong password';
-          setTimeout(() => this.serverErrorMessages = '', 4000);
+        if (err.status === 404) {
+          this.serverErrorMessages2 = 'Wrong password';
+          setTimeout(() => this.serverErrorMessages2 = '', 4000);
         }
         else
-          this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+          this.serverErrorMessages2 = 'Something went wrong.Please contact admin.';
       }
     );
   }

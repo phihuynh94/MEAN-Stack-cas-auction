@@ -111,7 +111,7 @@
                             </div>
 
                             <!--Submit button-->
-                            <div class="mt-2 text-center">
+                            <div class="mt-2 mb-2 text-center">
                                 <input type="submit" class="btn btn-primary" value="Edit">
                             </div>
 
@@ -144,10 +144,11 @@
                                 <div class="col">
                                     <!-- Get user current password -->
                                     <input type="password" #password="ngModel" [(ngModel)]="userDetails.password" name="password" placeholder="Current Password"
-                                    required  [ngClass]="{'invalid-textbox': changePasswordForm.submitted && !password.valid }">
+                                    required minlength="6" [ngClass]="{'invalid-textbox': changePasswordForm.submitted && !password.valid }">
                                     <!--Validate user current password input-->
                                     <div *ngIf="changePasswordForm.submitted && !password.valid">
-                                        <label class="text-danger">This field is required.</label>
+                                        <label *ngIf="password.errors.required" class="text-danger">This field is required.</label>
+                                        <label *ngIf="password.errors.minlength" class="text-danger">Enter atleast 6 characters.</label>
                                     </div>
                                 </div>
                             </div>
@@ -159,27 +160,28 @@
                                 <div class="col">
                                     <!-- Get user new password -->
                                     <input type="password" #newPass="ngModel" [(ngModel)]="newPassword" name="newPass" placeholder="New Password"
-                                    required  [ngClass]="{'invalid-textbox': changePasswordForm.submitted && !newPass.valid }">
+                                    required minlength="6" [ngClass]="{'invalid-textbox': changePasswordForm.submitted && !newPass.valid }">
                                     <!-- Validate user new password input -->
                                     <div *ngIf="changePasswordForm.submitted && !newPass.valid">
-                                        <label class="text-danger">This field is required.</label>
+                                        <label *ngIf="newPass.errors.required" class="text-danger">This field is required.</label>
+                                        <label *ngIf="newPass.errors.minlength" class="text-danger">Enter atleast 6 characters.</label>
                                     </div>
                                 </div>
                             </div>
 
                             <!--Submit button-->
-                            <div class="mt-2 text-center">
+                            <div class="mt-2 mb-2 text-center">
                                 <input type="submit" class="btn btn-primary" value="Change Password">
                             </div>
 
                             <!-- Success message -->
-                            <div class="alert alert-success" *ngIf="showSucessMessage">
-                                Edited successfully
+                            <div class="alert alert-success" *ngIf="showSucessMessage2">
+                                Change password successfully
                             </div>
 
                             <!-- Error message -->
-                            <div class="alert alert-danger" *ngIf="serverErrorMessages">
-                                {{serverErrorMessages}}
+                            <div class="alert alert-danger" *ngIf="serverErrorMessages2">
+                                {{serverErrorMessages2}}
                             </div>
                         </form>
                     </div>

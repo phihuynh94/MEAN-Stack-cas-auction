@@ -16,36 +16,42 @@ itemRouter.post('/addItem', (req, res) => {
     item.auctionID = req.body.auctionID;
     item.itemCode = req.body.itemCode;
     item.itemName = req.body.itemName;
+    item.price = req.body.price;
     item.description = req.body.description;
     item.quantity = req.body.quantity;
     item.sellerID = req.body.sellerID;
+    item.type = req.body.type;
 
     // Find the auction to add the item
     Auction.findById(item.auctionID, (err, auction) => {
-
         // If auction is found
         if (auction) {
 
-            // If quantity of the item is more than the max items allow
-            if (item.quantity > auction.maxItems){
-                res.write('Quantity is more than max items allow');
-                console.log('Quantity is more than max items allow');
-            }
-            // Save the item to the database
-            else { 
-                item.save((err, item) => {
-                    if (!err){
-                        res.send(item);
+            // Generate the item code
+            Item.find({ auctionID: item.auctionID, sellerID: item.sellerID },
+                (err, items) => {
+                    if (items) {
+                        if ((items.length + 1) > auction.maxItems){
+                            res.send('Max selling items limit reached!');
+                        }
+                        else {
+                            item.itemCode += (items.length + 1);
+
+                             // Save the item to the database
+                            item.save((err, item) => {
+                                if (!err){
+                                    res.send(item);
+                                }
+                                else {
+                                    res.send(err);
+                                }
+                            });
+                        }
                     }
-                    else {
-                        res.send(err);
-                        console.log(err);
-                    }
-                })
-            }
+                });
         }
         // Display when no auction is found
-        else console.log('No auction found');
+        else res.send('No auction found');
     });
 });
 
@@ -63,23 +69,28 @@ itemRouter.post('/addItem', (req, res) => {
 itemRouter.get('/findItemsInAuction/:auctionID', (req, res) => {
     Item.find({ auctionID: req.params.auctionID },
         (err, item) => {
-        if (!err) res.send(item);
-        else res.send(err);
+        if (!err){
+            res.send(item);
+        } 
+        else {
+            res.send(err);
+        }
     });
 });
 
-// Find item by name route
-// itemRouter.get('/findItem', (req, res) => {
-//     Item.find({ itemName: req.body.itemName }, 
-//         (err, item) => {
-//             if (item) {
-//                 res.send(item);
-//             }
-//             else {
-//                 res.send('No item found');
-//             }
-//         });
-// });
+// Get item by item code
+itemRouter.get('/getItemByItemCode/:itemCode', (req, res) => {
+
+    Item.find({ itemCode: req.params.itemCode.toUpperCase() }, 
+        (err, item) => {
+            if (!err) {
+                res.send(item);
+            }
+            else {
+                res.send(err);
+            }
+        });
+});
 
 // Edit item route
 itemRouter.put('/editItem', (req, res) => {
@@ -96,18 +107,22 @@ itemRouter.put('/editItem', (req, res) => {
     Item.findByIdAndUpdate(req.body._id, { $set: editItem }, { new: true },
         (err, editedItem) => {
             if (!err) { res.send(editedItem); }
-            else { res.send('Error in updating auction :' + JSON.stringify(err, undefined, 2)); }
+            else { res.send('Error in updating item:' + JSON.stringify(err, undefined, 2)); }
     });
 });
 
 // Delete item routes
 // Delete item by id on the params
-// itemRouter.delete('/deleteItem/:id', (req, res) => {
-//     Item.findByIdAndDelete(req.params.id, (err, item) => {
-//         if (!err) { res.send(item);}
-//         else { res.send(err);}
-//     });
-// });
+itemRouter.delete('/deleteItemById/:id', (req, res) => {
+    Item.findByIdAndDelete(req.params.id, (err, item) => {
+        if (!err) { 
+            res.send(item);
+        }
+        else { 
+            res.send(err);
+        }
+    });
+});
 
 // Sell item route
 itemRouter.post('/sellItem/:id', (req, res) => {
@@ -116,7 +131,7 @@ itemRouter.post('/sellItem/:id', (req, res) => {
     buyerID = req.body.buyerID;
 
     Item.findByIdAndUpdate(req.params.id, { $set: { price: price, buyerID: buyerID }}, (err, item) => {
-        if (item){
+        if (!err){
             res.send(item);
         }
         else{
@@ -125,7 +140,7 @@ itemRouter.post('/sellItem/:id', (req, res) => {
     })
 });
 
-// Get item by buyer route
+// Get item by buyerID
 itemRouter.get('/getBuyerItems/:buyerID', (req, res) => {
 
     Item.find({ buyerID: req.params.buyerID },
@@ -133,7 +148,9 @@ itemRouter.get('/getBuyerItems/:buyerID', (req, res) => {
         if (!err) { 
             res.send(items);
         }
-        else { res.send(err);}
+        else { 
+            res.send(err);
+        }
     });
 });
 

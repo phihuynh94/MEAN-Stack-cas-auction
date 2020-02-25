@@ -16,28 +16,30 @@
             <div class="mt-5">
                 <h3><p>{{ itemInfo.itemName }}</p></h3>
                 <p>
-                <label>Item Code:</label>
-                {{ itemInfo.itemCode }}
+                    <label>Item Code:</label>
+                    {{ itemInfo.itemCode }}
                 </p>
                 <p>
-                <label>Quantity:</label>
-                {{ itemInfo.quantity }}
+                    <label>Quantity:</label>
+                    {{ itemInfo.quantity }}
                 </p>
                 <p>
                     <label>Seller:</label>
                     {{ sellerInfo.firstName }} {{ sellerInfo.lastName }}
                 </p>
                 <p>
-                <label>Description:</label><br>
-                {{ itemInfo.description }}
+                    <label>Description:</label><br>
+                    {{ itemInfo.description }}
                 </p>
 
-                <div class="form-row text-center mt-5">
-                    <div class="col">
-                        <button class="btn btn-primary" data-toggle="collapse" href="#editItemCollapse" aria-expanded="false" aria-controls="editItemCollapse">Edit</button>
-                    </div>
-                    <div class="col">
-                        <button class="btn btn-danger">Delete</button>
+                <div *ngIf="staff || (userDetails._id == sellerInfo._id)">
+                    <div class="form-row text-center mt-5">
+                        <div class="col">
+                            <button class="btn btn-primary" data-toggle="collapse" href="#editItemCollapse" aria-expanded="false" aria-controls="editItemCollapse">Edit</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-danger" (click)="onDeleteItem()">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,21 +71,6 @@
 
                     <div class="form-row mt-2 text-center">
                         <div class="col">
-                            <label>Item Code: </label>
-                        </div>
-                        <div class="col">
-                            <!--Get item code-->
-                            <input type="text" #itemCode="ngModel" [(ngModel)]="itemInfo.itemCode" name="itemCode" placeholder="Item Code"
-                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !itemCode.valid }">
-                            <!--Validate item code input-->
-                            <div *ngIf="editItemForm.submitted && !itemCode.valid">
-                                <label class="text-danger">This field is required.</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row mt-2 text-center">
-                        <div class="col">
                             <label>Quantity: </label>
                         </div>
                         <div class="col">
@@ -104,11 +91,7 @@
                         <div class="col">
                             <!--Get item description-->
                             <textarea type="text" #description="ngModel" [(ngModel)]="itemInfo.description" name="description" placeholder="Description"
-                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !description.valid }"></textarea>
-                            <!--Validate item description input-->
-                            <div *ngIf="editItemForm.submitted && !description.valid">
-                                <label class="text-danger">This field is required.</label>
-                            </div>
+                            [ngClass]="{'invalid-textbox': editItemForm.submitted && !description.valid }"></textarea>
                         </div>
                     </div>
 

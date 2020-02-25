@@ -13,21 +13,14 @@ import { AuctionService } from '../../service/auction.service';
 })
 export class CreateAuctionComponent implements OnInit {
 
-  showSucessMessage: boolean;
-  serverErrorMessages: string;
-
   constructor(
     private auctionService: AuctionService
   ) { }
 
-  auction: Auction = {
-    _id: '',
-    auctionName: '',
-    maxItems: null,
-    address: '',
-    dateTime: new Date(),
-    fee: null,
-  }
+  showSucessMessage: boolean;
+  serverErrorMessages: string;
+  auction = new Auction();
+  numRegex = /^[1-9][0-9]*$/;
 
   ngOnInit() {
   }
@@ -50,14 +43,7 @@ export class CreateAuctionComponent implements OnInit {
   }
 
   resetForm(form: NgForm) {
-    this.auction = {
-      _id: '',
-      auctionName: '',
-      maxItems: null,
-      address: '',
-      dateTime: new Date(),
-      fee: null,
-    };
+    this.auction = new Auction();
     form.resetForm();
     this.serverErrorMessages = '';
   } 

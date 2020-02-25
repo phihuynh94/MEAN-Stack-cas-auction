@@ -32,6 +32,10 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
 import { SellerItemsListComponent } from './components/auctions/seller-items-list/seller-items-list.component';
 import { ItemPageComponent } from './components/auctions/item-page/item-page.component';
+import { QuickSellComponent } from './components/admin/quick-sell/quick-sell.component';
+import { ResetPasswordComponent } from './components/user/reset-password/reset-password.component';
+import { ViewUsersComponent } from './components/admin/view-users/view-users.component';
+import { AddMemberComponent } from './components/admin/add-member/add-member.component';
 
 // routes
 const appRoutes: Routes = [
@@ -56,6 +60,10 @@ const appRoutes: Routes = [
   {
     path: 'user', component: UserComponent,
     children: [{ path: 'forgotPassword', component: ForgotPasswordComponent }]
+  },
+  {
+    path: 'user', component: UserComponent,
+    children: [{ path: 'resetPassword/:token', component: ResetPasswordComponent }]
   },
   // url: 'user-profile'
   {
@@ -93,6 +101,10 @@ const appRoutes: Routes = [
   // url: 'item-page'
   {
     path: 'itemPage/:id', component: ItemPageComponent
+  },
+  // url: 'view-users'
+  {
+    path: 'viewUsers', component: ViewUsersComponent
   }
 ]
 
@@ -119,7 +131,11 @@ const appRoutes: Routes = [
     UserProfileComponent,
     ForgotPasswordComponent,
     SellerItemsListComponent,
-    ItemPageComponent
+    ItemPageComponent,
+    QuickSellComponent,
+    ResetPasswordComponent,
+    ViewUsersComponent,
+    AddMemberComponent
   ],
   imports: [
     BrowserModule,

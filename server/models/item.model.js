@@ -32,7 +32,12 @@ var itemSchema = new mongoose.Schema({
     },
     buyerID: {
         type: String
+    },
+    type: {
+        type: String,
+        require: 'Item type can\'t be empty'
     }
+
 });
 
 // create Inventory model schema

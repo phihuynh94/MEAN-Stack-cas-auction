@@ -1,15 +1,33 @@
 // get dependencies
 const express = require('express'); // call express
 const itemRouter = express.Router(); // get an instance of express router
+const multer = require('multer');   // get multer
 
 // get files
 const Auction = require('../models/auction.model'); // get Auction schema
 const Item = require('../models/item.model'); // get Item schema
 
+const fileFilter = (req, file, callBack) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      callBack(null, true);
+    } else {
+      callBack(null, false);
+    }
+  };
+
+const upload = multer({ dest: 'uploads', fileFilter: fileFilter });
+
+// Upload multiple images
+itemRouter.post('/uploadFiles', upload.array('files'), (req, res, next) => {
+    console.log(req.files);
+    //var files = req.files;
+})
+
 // routes for all item routes
 //==========================================
 // Add item route
-itemRouter.post('/addItem', (req, res) => {
+itemRouter.post('/addItem', upload.array('images'), (req, res) => {
 
     // Get item values from the request
     var item = new Item();
@@ -21,6 +39,8 @@ itemRouter.post('/addItem', (req, res) => {
     item.quantity = req.body.quantity;
     item.sellerID = req.body.sellerID;
     item.type = req.body.type;
+    
+    console.log(req.images);
 
     // Find the auction to add the item
     Auction.findById(item.auctionID, (err, auction) => {

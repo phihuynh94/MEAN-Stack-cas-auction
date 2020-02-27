@@ -21,6 +21,7 @@ export class CreateAuctionComponent implements OnInit {
   serverErrorMessages: string;
   auction = new Auction();
   numRegex = /^[1-9][0-9]*$/;
+  currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
 
   ngOnInit() {
   }

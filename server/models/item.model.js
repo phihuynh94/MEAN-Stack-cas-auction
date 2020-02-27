@@ -37,7 +37,7 @@ var itemSchema = new mongoose.Schema({
         type: String,
         require: 'Item type can\'t be empty'
     }
-
+    
 });
 
 // create Inventory model schema

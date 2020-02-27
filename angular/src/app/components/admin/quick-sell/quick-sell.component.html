@@ -36,10 +36,11 @@
                     <label>Price:</label>
                     <!--Get item price-->
                     <input type="number" #price="ngModel" [(ngModel)]="item.price" name="price" placeholder="Price"
-                    required  [ngClass]="{'invalid-textbox' :addItemForm.submitted && !price.valid }" class="form-control">
-                    <!--Validate item name input-->
-                    <div *ngIf="addItemForm.submitted && !price.valid">
-                        <label class="text-danger">This field is required.</label>
+                    required [pattern]="currencyRegex" [ngClass]="{'invalid-textbox': addItemForm.submitted && price.errors }" class="form-control">
+                    <!--Validate item price input-->
+                    <div *ngIf="addItemForm.submitted && price.errors">
+                        <label *ngIf="price.errors.required" class="text-danger">This field is required.</label>
+                        <label *ngIf="price.errors.pattern" class="text-danger">Invalid price input.</label>
                     </div>
                 </div>
                 
@@ -47,10 +48,11 @@
                     <label>Quantity:</label>
                     <!--Get quantity-->
                     <input type="number" #quantity="ngModel" [(ngModel)]="item.quantity" name="quantity" placeholder="Quantity"
-                    required  [ngClass]="{'invalid-textbox' :addItemForm.submitted && !quantity.valid }" class="form-control">
+                    required [pattern]="numRegex" [ngClass]="{'invalid-textbox': addItemForm.submitted && quantity.errors }" class="form-control">
                     <!--Validate quantity input-->
-                    <div *ngIf="addItemForm.submitted && !quantity.valid">
-                        <label class="text-danger">This field is required.</label>
+                    <div *ngIf="addItemForm.submitted && quantity.errors">
+                        <label *ngIf="quantity.errors.required" class="text-danger">This field is required.</label>
+                        <label *ngIf="quantity.errors.pattern" class="text-danger">Invalid quantity input.</label>
                     </div>
                 </div>
                 
@@ -68,7 +70,7 @@
             </form>
            
             <!-- Success message -->
-            <div class="alert alert-success mt-3" *ngIf="showSucessMessage">
+            <div class="alert alert-success mt-3" *ngIf="showSuccessMessage">
                 Saved successfully
             </div>
             

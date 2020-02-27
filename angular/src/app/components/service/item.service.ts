@@ -15,6 +15,7 @@ export class ItemService {
 
   // httpMethods
   addItem(item: Item){
+    console.log(item.images);
     return this.http.post(environment.itemUrl + '/addItem', item);
   }
 

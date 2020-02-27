@@ -32,6 +32,7 @@ export class AuctionEditComponent implements OnInit {
   userDetails = new User();
   numRegex = /^[1-9][0-9]*$/;
   staff: boolean;
+  currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
   
   ngOnInit() {
     this.getUser();

@@ -19,12 +19,14 @@ export class QuickSellComponent implements OnInit {
     private route: ActivatedRoute,
     private userService: UserService) { }
 
-    showSucessMessage: boolean;
-    serverErrorMessages: string;
-    auctionID = this.route.snapshot.paramMap.get('id');
-    userDetails = new User();
-    sellerID: String;
-    item = new Item();
+  showSuccessMessage: boolean;
+  serverErrorMessages: string;
+  auctionID = this.route.snapshot.paramMap.get('id');
+  userDetails = new User();
+  sellerID: String;
+  item = new Item();
+  numRegex = /^[1-9][0-9]*$/;
+  currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
 
   ngOnInit() {
     this.item.auctionID = this.auctionID;
@@ -43,8 +45,8 @@ export class QuickSellComponent implements OnInit {
 
     this.itemService.addItem(this.item).subscribe(
       res => {
-        this.showSucessMessage = true;
-        setTimeout(() => this.showSucessMessage = false, 4000);
+        this.showSuccessMessage = true;
+        setTimeout(() => this.showSuccessMessage = false, 4000);
         this.resetForm(form);
       },
       err => {

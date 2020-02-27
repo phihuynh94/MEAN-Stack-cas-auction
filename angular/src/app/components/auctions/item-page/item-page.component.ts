@@ -37,6 +37,7 @@ export class ItemPageComponent implements OnInit {
   serverErrorMessages : string;
   userDetails = new User();
   staff : boolean;
+  numRegex = /^[1-9][0-9]*$/;
 
   getItemInfo(){
     this.itemService.getItemInfoById(this.itemID).subscribe(

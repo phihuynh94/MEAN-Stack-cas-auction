@@ -38,6 +38,10 @@ export class LiveAuctionComponent implements OnInit {
   searchItem;
   userDetails = new User();
   staff: boolean;
+  currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
+  numRegex = /^[1-9][0-9]*$/;
+  errorMessage: String;
+  successMessage: String;
   
   ngOnInit() {
     this.getAuctionInfo();
@@ -89,9 +93,19 @@ export class LiveAuctionComponent implements OnInit {
   }
 
   onSubmit(){
-    this.items[this.i].buyerID = this.participants[this.winnerNum - 1]._id;
+    if (this.winnerNum > (this.participants.length - 1)){
+      this.errorMessage = 'Invalid winner number.';
+    }
+    else {
+      this.items[this.i].buyerID = this.participants[this.winnerNum - 1]._id;
 
-    this.itemService.sellItem(this.items[this.i]).subscribe();
+      this.itemService.sellItem(this.items[this.i]).subscribe(
+        res => {
+          this.successMessage = 'Sold.';
+          this.errorMessage = '';
+        }
+      );
+    }
   }
 
   onSearch(){

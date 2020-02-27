@@ -8,6 +8,6 @@ export class Item {
     quantity: number;
     sellerID: String;
     buyerID: String;
-    images: File[];
+    images: FormData;
     type: String;
 }

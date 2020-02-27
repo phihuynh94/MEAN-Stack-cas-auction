@@ -76,10 +76,11 @@
                         <div class="col">
                             <!--Get item quantity-->
                             <input type="number" #quantity="ngModel" [(ngModel)]="itemInfo.quantity" name="quantity" placeholder="Quantity"
-                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !quantity.valid }">
+                            required [pattern]="numRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && quantity.errors }">
                             <!--Validate item quantity input-->
-                            <div *ngIf="editItemForm.submitted && !quantity.valid">
-                                <label class="text-danger">This field is required.</label>
+                            <div *ngIf="editItemForm.submitted && quantity.errors">
+                                <label *ngIf="quantity.errors.required" class="text-danger">This field is required.</label>
+                                <label *ngIf="quantity.errors.pattern" class="text-danger">Invalid quantity input.</label>
                             </div>
                         </div>
                     </div>
@@ -90,8 +91,7 @@
                         </div>
                         <div class="col">
                             <!--Get item description-->
-                            <textarea type="text" #description="ngModel" [(ngModel)]="itemInfo.description" name="description" placeholder="Description"
-                            [ngClass]="{'invalid-textbox': editItemForm.submitted && !description.valid }"></textarea>
+                            <textarea type="text" #description="ngModel" [(ngModel)]="itemInfo.description" name="description" placeholder="Description"></textarea>
                         </div>
                     </div>
 

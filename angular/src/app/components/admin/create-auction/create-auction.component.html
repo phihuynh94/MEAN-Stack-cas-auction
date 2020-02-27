@@ -24,7 +24,7 @@
                     <label>Max Items:</label>
                     <!--Get max items-->
                     <input type="number" #maxItems="ngModel" [(ngModel)]="auction.maxItems" name="maxItems" placeholder="Max Items"
-                    required [pattern]="numRegex" [ngClass]="{'invalid-textbox' :createAuctionForm.submitted && !maxItems.valid }" class="form-control">
+                    required [pattern]="numRegex" [ngClass]="{'invalid-textbox' :createAuctionForm.submitted && maxItems.errors }" class="form-control">
                     <!--Validate max items input-->
                     <div *ngIf="createAuctionForm.submitted && maxItems.errors">
                         <label *ngIf="maxItems.errors.required" class="text-danger">This field is required.</label>
@@ -58,7 +58,7 @@
                     <label>Fee:</label>
                     <!--Get fee-->
                     <input type="number" #fee="ngModel" [(ngModel)]="auction.fee" name="fee" placeholder="Fee"
-                    required [pattern]="numRegex" [ngClass]="{'invalid-textbox' :createAuctionForm.submitted && !fee.valid }" class="form-control">
+                    required [pattern]="currencyRegex" [ngClass]="{'invalid-textbox' :createAuctionForm.submitted && fee.errors }" class="form-control">
                     <!--Validate fee input-->
                     <div *ngIf="createAuctionForm.submitted && fee.errors">
                         <label *ngIf="fee.errors.required" class="text-danger">This field is required.</label>

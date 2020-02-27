@@ -30,13 +30,12 @@ export class AddItemComponent implements OnInit {
   serverErrorMessages: string;
   auctionID = this.route.snapshot.paramMap.get('id');
   userDetails = new User();
-  imageSrc: String = "../../../assets/thumbnail.jpg";
-  imageToUpload: File = null;
-  numOfImages = 0;
-  imagesListSrc: String;
+  imageToUpload: File;
   sellerItems;
   auctionDetails = new Auction();
   item = new Item();
+  numRegex = /^[1-9][0-9]*$/;
+  formData = new FormData();
 
   ngOnInit() {
     this.item.auctionID = this.auctionID;
@@ -52,6 +51,16 @@ export class AddItemComponent implements OnInit {
     this.item.quantity = form.value.quantity;
     this.item.sellerID = this.userDetails._id;
     this.item.type = 'auction';
+
+    if (this.imageToUpload){
+      this.formData.append('images', this.imageToUpload);
+      console.log(this.formData);
+      this.item.images = this.formData;
+      console.log(this.item);
+    }
+    else {
+      console.log('No image selected');
+    }
 
     this.itemService.addItem(this.item).subscribe(
       res => {
@@ -96,42 +105,12 @@ export class AddItemComponent implements OnInit {
     if (image.files && image.files[0]){
       this.imageToUpload = image.files[0];
 
-      // Show image preview
       const reader = new FileReader();
 
-      reader.onload = (event:any) => {
-        this.imageSrc = event.target.result;
-      }
       reader.readAsDataURL(this.imageToUpload);
     }
     else {
-      this.imageSrc = "../../../assets/thumbnail.jpg";
       this.imageToUpload = null;
     }
-  }
-
-  uploadImage(){
-    if (this.imageToUpload){
-
-      this.item.images[this.numOfImages] = this.imageToUpload;
-
-      this.numOfImages += 1;
-
-      this.imageSrc = "../../../assets/thumbnail.jpg";
-
-      this.imageToUpload = null;
-    }
-    else {
-      console.log('No image selected');
-    }
-
-    console.log(this.item.images[this.numOfImages - 1]);
-    console.log(this.item.images);
-
-    console.log(this.item.images[0].name);
-
-    this.imagesListSrc = "../../../assets/" + this.item.images[0].name;
-
-    console.log(this.imagesListSrc);
   }
 }

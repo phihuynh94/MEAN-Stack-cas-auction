@@ -10,6 +10,7 @@ var itemSchema = new mongoose.Schema({
     itemCode: {
         type: String,
         require: 'Item code can\'t be empty',
+        unique: true,
     },
     itemName: {
         type: String,
@@ -36,8 +37,11 @@ var itemSchema = new mongoose.Schema({
     type: {
         type: String,
         require: 'Item type can\'t be empty'
-    }
-    
+    },
+    images: [{
+        type: String,
+        max: [5, 'Max 5 images']
+    }]
 });
 
 // create Inventory model schema

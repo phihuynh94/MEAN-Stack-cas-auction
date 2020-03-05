@@ -30,12 +30,16 @@ export class AddItemComponent implements OnInit {
   serverErrorMessages: string;
   auctionID = this.route.snapshot.paramMap.get('id');
   userDetails = new User();
-  imageToUpload: File;
+  imagesToUpload: File [];
   sellerItems;
   auctionDetails = new Auction();
   item = new Item();
   numRegex = /^[1-9][0-9]*$/;
+  currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
   formData = new FormData();
+  imgSrc = [];
+  imgMsg: string;
+  code: string;
 
   ngOnInit() {
     this.item.auctionID = this.auctionID;
@@ -44,26 +48,34 @@ export class AddItemComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
+
     this.item.auctionID = this.auctionID;
-    this.item.itemCode = this.userDetails.alias;
+    this.item.itemCode = this.userDetails.alias + form.value.itemCode;
     this.item.itemName = form.value.itemName;
     this.item.description = form.value.description;
     this.item.quantity = form.value.quantity;
     this.item.sellerID = this.userDetails._id;
-    this.item.type = 'auction';
+    this.item.type = form.value.type;
 
-    if (this.imageToUpload){
-      this.formData.append('images', this.imageToUpload);
-      console.log(this.formData);
-      this.item.images = this.formData;
-      console.log(this.item);
-    }
-    else {
-      console.log('No image selected');
+    if (this.imagesToUpload){
+      
+      var i = 0;
+      this.item.images = [];
+
+      for (let img of this.imagesToUpload){
+        this.item.images[i] = img.name;
+        this.formData.append('images', img);
+        i++;
+      }
     }
 
     this.itemService.addItem(this.item).subscribe(
       res => {
+
+        if (this.imagesToUpload){
+          this.itemService.uploadImages(this.formData).subscribe();
+        }
+        
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
         this.resetForm(form);
@@ -74,6 +86,7 @@ export class AddItemComponent implements OnInit {
         }
         else
           this.serverErrorMessages = err.error.text;
+          this.code = this.item.itemCode.substring(3, 6);
       }
     );
   }
@@ -82,6 +95,9 @@ export class AddItemComponent implements OnInit {
     this.item = new Item();
     form.resetForm();
     this.serverErrorMessages = '';
+    this.imgMsg = '';
+    this.imgSrc = null;
+    this.imagesToUpload = null;
   }
 
   getUser(){
@@ -102,15 +118,31 @@ export class AddItemComponent implements OnInit {
 
   selectImage(image: any){
 
-    if (image.files && image.files[0]){
-      this.imageToUpload = image.files[0];
+    this.imagesToUpload = [];
+    this.imgSrc = [];
+    this.imgMsg = '';
 
-      const reader = new FileReader();
+    if (image.files){
+      if (image.files.length > 5){
+        this.imgMsg = 'Maximum 5 images.';
+      }
+      else {
+        this.imagesToUpload = image.files;
+      }
 
-      reader.readAsDataURL(this.imageToUpload);
+      for (var i = 0; i < this.imagesToUpload.length; i++){
+
+        const reader = new FileReader();
+
+        reader.onload = (event: any) => {
+          this.imgSrc.push(event.target.result);
+        }
+
+        reader.readAsDataURL(image.files[i]);
+      }
     }
     else {
-      this.imageToUpload = null;
+      this.imagesToUpload = null;
     }
   }
 }

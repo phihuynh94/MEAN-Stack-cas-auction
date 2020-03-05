@@ -87,7 +87,8 @@
             </div>
 
             <div class="col">
-                {{ auction.dateTime | date: 'medium' }}
+                {{ auction.dateTime | date: 'mediumDate' }} - 
+                {{ auction.dateTime | date: 'shortTime' }}
             </div>
 
             <div class="col">
@@ -99,7 +100,6 @@
                     <label class="text-danger">This field is required.</label>
                 </div>
             </div>
-            
         </div>
 
         <div class="form-row border">

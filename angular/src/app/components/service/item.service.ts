@@ -15,16 +15,15 @@ export class ItemService {
 
   // httpMethods
   addItem(item: Item){
-    console.log(item.images);
     return this.http.post(environment.itemUrl + '/addItem', item);
+  }
+
+  uploadImages(images: FormData){
+    return this.http.post(environment.itemUrl + '/uploadImages', images);
   }
 
   getItemsInAuction(auctionID: String){
     return this.http.get(environment.itemUrl + '/findItemsInAuction/' + auctionID);
-  }
-
-  sellItem(item: Item){
-    return this.http.post(environment.itemUrl + '/sellItem/' + item._id, item);
   }
 
   getBuyerItems(buyerID: String){
@@ -49,5 +48,9 @@ export class ItemService {
 
   getItemByItemCode(itemCode: String){
     return this.http.get(environment.itemUrl + '/getItemByItemCode/' + itemCode);
+  }
+
+  defineOrder(order: number []){
+    return this.http.post(environment.itemUrl + '/defineOrder', { order });
   }
 }

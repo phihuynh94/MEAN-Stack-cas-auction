@@ -7,11 +7,11 @@ import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/model/user.model';
 
 @Component({
-  selector: 'app-add-member',
-  templateUrl: './add-member.component.html',
-  styleUrls: ['./add-member.component.css']
+  selector: 'app-add-user',
+  templateUrl: './add-user.component.html',
+  styleUrls: ['./add-user.component.css']
 })
-export class AddMemberComponent implements OnInit {
+export class AddUserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
@@ -21,14 +21,12 @@ export class AddMemberComponent implements OnInit {
   aliasRegex = /[A-Za-z]{3}/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
-  member = new User();
+  user = new User();
 
   ngOnInit() {
   }
 
   onSubmit(form : NgForm) {
-    form.value.type = 'member';
-
     this.userService.addUser(form.value).subscribe(
       res => {
         this.showSucessMessage = true;
@@ -46,7 +44,7 @@ export class AddMemberComponent implements OnInit {
   }
 
   resetForm(form: NgForm) {
-    this.member = new User();
+    this.user = new User();
     form.resetForm();
     this.serverErrorMessages = '';
   }

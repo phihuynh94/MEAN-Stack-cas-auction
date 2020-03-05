@@ -53,6 +53,12 @@ app.use((err, req, res, next) => {
     }
 });
 
+app.use('/', express.static(path.join(_dirname, './angular/dist/angular')));
+
+app.use((re, res, next) => {
+    res.sendFile(path.join(_dirname, './angular/dist/angular', 'index.html'));
+});
+
 // START THE SERVER
 //=====================================
 app.listen(config.port, () => console.log('Server started at port: ' + config.port));

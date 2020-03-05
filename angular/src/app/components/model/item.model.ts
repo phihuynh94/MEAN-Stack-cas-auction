@@ -1,13 +1,13 @@
 export class Item {
-    _id: String;
-    auctionID: String;
-    itemCode: String;
-    itemName: String;
-    description: String;
+    _id: string;
+    auctionID: string;
+    itemCode: string;
+    itemName: string;
+    description: string;
     price: number;
     quantity: number;
-    sellerID: String;
-    buyerID: String;
-    images: FormData;
-    type: String;
+    sellerID: string;
+    buyerID: string;
+    type: string;
+    images: string[];
 }

@@ -75,7 +75,7 @@ auctionRouter.put('/editAuction/:id', (req, res) => {
     });
     
     // Find auction by id and update
-    Auction.findByIdAndUpdate(req.params.id, { $set: editAuction }, { new: true }, (err, doc) => {
+    Auction.findByIdAndUpdate(req.params.id, { $set: editAuction }, (err, doc) => {
         if (!err) { 
             res.send(doc);
          }

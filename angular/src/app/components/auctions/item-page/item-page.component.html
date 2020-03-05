@@ -28,20 +28,79 @@
                     {{ sellerInfo.firstName }} {{ sellerInfo.lastName }}
                 </p>
                 <p>
+                    <label>Type:</label>
+                    {{ itemInfo.type }}
+                </p>
+                <div *ngIf="itemInfo.type == 'quick sell'">
+                    <p>
+                        <label>Price:</label>
+                        {{ itemInfo.price | currency }}
+                    </p>
+                </div>
+                <p>
                     <label>Description:</label><br>
                     {{ itemInfo.description }}
                 </p>
 
-                <div *ngIf="staff || (userDetails._id == sellerInfo._id)">
-                    <div class="form-row text-center mt-5">
-                        <div class="col">
-                            <button class="btn btn-primary" data-toggle="collapse" href="#editItemCollapse" aria-expanded="false" aria-controls="editItemCollapse">Edit</button>
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-danger" (click)="onDeleteItem()">Delete</button>
-                        </div>
+                <div class="text-center mt-3">
+                    <div *ngIf="staff || (userDetails._id == sellerInfo._id)" class="mb-2">
+                        <button class="btn btn-primary" data-toggle="collapse" href="#editItemCollapse" aria-expanded="false" aria-controls="editItemCollapse">Edit</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>             
+
+    <div *ngIf="itemInfo.type == 'quick sell' && staff">
+        <div class="lead border mt-3">
+            <div class="card card-body">
+                <h3 class="text-center">Quick Sell</h3>
+                
+                <form #quickSellForm="ngForm" (ngSubmit)="quickSellForm.valid && onQuickSellSubmit(quickSellForm)">
+                    <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="itemInfo._id">
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Price: </label>
+                        </div>
+                        <div class="col">
+                            {{ itemInfo.price | currency }}
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Buyer Alias: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user alias-->
+                            <input type="text" #alias="ngModel" [(ngModel)]="buyerAlias" name="alias" placeholder="Buyer Alias" [pattern]="aliasRegex"
+                            required maxlength="3" [ngClass]="{'invalid-textbox': quickSellForm.submitted && alias.errors }">
+                            <!--Validate user alias input-->
+                            <div *ngIf="quickSellForm.submitted && alias.errors">
+                                <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
+                                <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row text-center mt-3">
+                        <!--Submit button-->
+                        <div class="col">
+                            <input type="submit" class="btn btn-primary mt-3" value="Quick Sell">
+                        </div>
+                    </div>
+
+                    <!-- Success message -->
+                    <div class="alert alert-success mt-3" *ngIf="quickSellSuccessMessage">
+                        Sold
+                    </div>
+
+                    <!-- Error message -->
+                    <div class="alert alert-danger mt-3" *ngIf="quickSellErrorMessage">
+                        {{ quickSellErrorMessage }}
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -71,6 +130,22 @@
 
                     <div class="form-row mt-2 text-center">
                         <div class="col">
+                            <label>Item Code: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get item code-->
+                            <input type="number" #itemCode="ngModel" [(ngModel)]="code" name="itemCode" placeholder="Item Code"
+                            required [pattern]="numRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && itemCode.errors }">
+                            <!--Validate item code input-->
+                            <div *ngIf="editItemForm.submitted && itemCode.errors">
+                                <label *ngIf="itemCode.errors.required" class="text-danger">This field is required.</label>
+                                <label *ngIf="itemCode.errors.pattern" class="text-danger">Invalid item code input.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
                             <label>Quantity: </label>
                         </div>
                         <div class="col">
@@ -85,6 +160,24 @@
                         </div>
                     </div>
 
+                    <div *ngIf="itemInfo.type == 'quick sell'">
+                        <div class="form-row mt-2 text-center">
+                            <div class="col">
+                                <label>Price: </label>
+                            </div>
+                            <div class="col">
+                                <!--Get item price-->
+                                <input type="number" #price="ngModel" [(ngModel)]="itemInfo.price" name="price" placeholder="Price"
+                                required [pattern]="currencyRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && price.errors }">
+                                <!--Validate item price input-->
+                                <div *ngIf="editItemForm.submitted && price.errors">
+                                    <label *ngIf="price.errors.required" class="text-danger">This field is required.</label>
+                                    <label *ngIf="price.errors.pattern" class="text-danger">Invalid price input.</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-row mt-2 text-center">
                         <div class="col">
                             <label>Description: </label>
@@ -95,9 +188,14 @@
                         </div>
                     </div>
 
-                    <!--Submit button-->
-                    <div class="mt-2 text-center">
-                        <input type="submit" class="btn btn-primary mt-3" value="Edit">
+                    <div class="form-row text-center mt-5">
+                        <!--Submit button-->
+                        <div class="col">
+                            <input type="submit" class="btn btn-primary mt-3" value="Edit">
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-danger" (click)="onDeleteItem()">Delete</button>
+                        </div>
                     </div>
 
                     <!-- Success message -->
@@ -106,7 +204,7 @@
                     </div>
 
                     <!-- Error message -->
-                    <div class="alert alert-danger" *ngIf="serverErrorMessages">
+                    <div class="alert alert-danger mt-3" *ngIf="serverErrorMessages">
                         {{serverErrorMessages}}
                     </div>
                 </form>

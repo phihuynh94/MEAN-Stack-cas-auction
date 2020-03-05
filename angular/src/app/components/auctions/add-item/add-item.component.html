@@ -21,6 +21,19 @@
                 </div>
                 
                 <div class="form-group">
+                    <label>Item Code:</label>
+                    <!--Get item code-->
+                    <input type="number" #itemCode="ngModel" [(ngModel)]="code" name="itemCode" placeholder="Item Code"
+                    required [pattern]="numRegex" [ngClass]="{'invalid-textbox': addItemForm.submitted && itemCode.errors }" class="form-control">
+                    Your item code will be: {{ userDetails.alias }}{{ code }}
+                    <!--Validate item code input-->
+                    <div *ngIf="addItemForm.submitted && itemCode.errors">
+                        <label *ngIf="itemCode.errors.required" class="text-danger">This field is required.</label>
+                        <label *ngIf="itemCode.errors.pattern" class="text-danger">Invalid item code input.</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label>Quantity:</label>
                     <!--Get quantity-->
                     <input type="number" #quantity="ngModel" [(ngModel)]="item.quantity" name="quantity" placeholder="Quantity"
@@ -42,6 +55,39 @@
                 <div class="form-group">
                     <label>Upload Images:</label>
                     <input type="file" #image multiple accept="image/*" (change)="selectImage(image)" class="form-control">
+                    <label *ngIf="imgMsg" class="text-danger">{{ imgMsg }}</label>
+                </div>
+
+                <div class="form-group">
+                    <img *ngFor="let img of imgSrc" style="width: 90px; height:90px" [src]="img" class="border">
+                </div>
+                
+                <div class="form-group">
+                    <label>Type:</label>
+                    <!--Get item type-->
+                    <select id="type" name="type" #type="ngModel" [(ngModel)]="item.type" class="form-control"
+                    [ngClass]="{ 'invalid-textbox': addItemForm.submitted && !type.valid }" required>
+                        <option value="auction">Auction</option>
+                        <option value="quick sell">Quick Sell</option>
+                    </select>
+                    <!--Validate item type-->
+                    <div *ngIf="addItemForm.submitted && !type.valid">
+                        <label class="text-danger">This field is required.</label>
+                    </div>
+                </div>
+
+                <div *ngIf="item.type == 'quick sell'">
+                    <div class="form-group">
+                        <label>Price:</label>
+                        <!--Get price-->
+                        <input type="number" #price="ngModel" [(ngModel)]="item.price" name="price" placeholder="Price"
+                        required [pattern]="currencyRegex" [ngClass]="{'invalid-textbox' :addItemForm.submitted && price.errors }" class="form-control">
+                        <!--Validate price input-->
+                        <div *ngIf="addItemForm.submitted && price.errors">
+                            <label *ngIf="price.errors.required" class="text-danger">This field is required.</label>
+                            <label *ngIf="price.errors.pattern" class="text-danger">Invalid price input.</label>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="text-center">

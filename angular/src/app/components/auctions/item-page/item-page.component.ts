@@ -38,11 +38,18 @@ export class ItemPageComponent implements OnInit {
   userDetails = new User();
   staff : boolean;
   numRegex = /^[1-9][0-9]*$/;
+  aliasRegex = /[A-Za-z]{3}/;
+  currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
+  code: string;
+  buyerDetails = new User();
+  quickSellSuccessMessage: boolean;
+  quickSellErrorMessage: string;
 
   getItemInfo(){
     this.itemService.getItemInfoById(this.itemID).subscribe(
       res => {
         this.itemInfo = res as Item;
+        this.code = this.itemInfo.itemCode[3];
         this.getSellerInfo();
       },
     );
@@ -61,13 +68,16 @@ export class ItemPageComponent implements OnInit {
   }
 
   onEditItemSubmit(form: NgForm){
+    form.value.itemCode = this.sellerInfo.alias + this.code;
+
     this.itemService.editItem(form.value).subscribe(
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
+        this.serverErrorMessages = '';
       },
       err => {
-       this.serverErrorMessages = 'Error in editing item';
+       this.serverErrorMessages = 'Duplicate item code.';
       }
     );
   }
@@ -95,5 +105,28 @@ export class ItemPageComponent implements OnInit {
       this.staff = true;
     else
       this.staff = false;
+  }
+
+  onQuickSellSubmit(form: NgForm){
+    this.userService.getUserByAlias(form.value.alias).subscribe(
+      res => {
+        this.buyerDetails = res as User;
+
+        if (this.buyerDetails == null){
+          this.quickSellErrorMessage = 'No user with this alias found.';
+          setTimeout(() => this.quickSellErrorMessage = '', 4000);
+        }
+        else {
+          this.itemInfo.buyerID = this.buyerDetails._id;
+          this.itemService.editItem(this.itemInfo).subscribe(
+            res => {
+              this.quickSellSuccessMessage = true;
+              setTimeout(() => this.quickSellSuccessMessage = false, 4000);
+              this.quickSellErrorMessage = '';
+            }
+          );
+        }
+      }
+    );
   }
 }

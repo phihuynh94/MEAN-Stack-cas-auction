@@ -245,5 +245,18 @@ userRouter.delete('/deleteUser/:id', (req, res) => {
     })
 });
 
+// Get user by alias
+userRouter.get('/getUserByAlias/:alias', (req, res) => {
+
+    User.findOne({ alias: req.params.alias.toUpperCase() }, (err, user) => {
+        if (user){
+            res.send(user);
+        }
+        else {
+            res.send(err);
+        }
+    })
+})
+
 // return the router
 module.exports = userRouter;

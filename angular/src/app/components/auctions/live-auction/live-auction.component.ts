@@ -93,13 +93,13 @@ export class LiveAuctionComponent implements OnInit {
   }
 
   onSubmit(){
-    if (this.winnerNum > (this.participants.length - 1)){
+    if (this.winnerNum > (this.participants.length)){
       this.errorMessage = 'Invalid winner number.';
     }
     else {
       this.items[this.i].buyerID = this.participants[this.winnerNum - 1]._id;
 
-      this.itemService.sellItem(this.items[this.i]).subscribe(
+      this.itemService.editItem(this.items[this.i]).subscribe(
         res => {
           this.successMessage = 'Sold.';
           this.errorMessage = '';

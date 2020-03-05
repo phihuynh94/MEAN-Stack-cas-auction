@@ -1,5 +1,13 @@
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
-    <h3>Items:</h3>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-3 mb-3 border-bottom">
+    <h2>Inventory:</h2>
+
+    <div *ngIf="userDetails.type == 'staff'">
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#defineOrderModal">
+        <img src="../../../assets/icons/list.svg">
+        Define Order
+      </button>
+    </div>
+
     <div class="btn-toolbar mb-2 mb-md-0">
       <div class="btn-group mr-2">
         <!--Refresh button-->
@@ -10,13 +18,66 @@
     </div>
 </div>
 
-<!--Display items in a card container-->
-<div class="card-container">
-  <!--Display each items in the list-->
-    <div class="card" *ngFor="let item of itemInfo">
-        <img src="../../../assets/auction-fish.jpeg" routerLink="/itemPage/{{ item._id }}" class="card-img" >
-        <h5><b>{{ item.itemName }}</b></h5>
-        <p>Qty: {{ item.quantity }}</p>
-        <p>Code: {{ item.itemCode }}</p>
-    </div>
+<h4 class="text-center">Auction Items:</h4>
+<!--Display auction items in a card container-->
+<div class="card-container border-bottom mb-3 pb-3">
+  <!--Display each auction items in the list-->
+  <div class="card" *ngFor="let aucItem of auctionItems" routerLink="/itemPage/{{ aucItem._id }}">
+    <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+    <h5><b>{{ aucItem.itemName }}</b></h5>
+    <p>Qty: {{ aucItem.quantity }}</p>
+    <p>Code: {{ aucItem.itemCode }}</p>
+    <p>Type: {{ aucItem.type }}</p>
+  </div>
+</div>
+
+<h4 class="text-center">Quick Sell Items:</h4>
+<!--Display quick sell items in a card container-->
+<div class="card-container border-bottom mb-3 pb-3">
+  <!--Display each quick sell items in the list-->
+  <div class="card" *ngFor="let quickSellItem of quickSellItems" routerLink="/itemPage/{{ quickSellItem._id }}">
+    <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+    <h5><b>{{ quickSellItem.itemName }}</b></h5>
+    <p>Qty: {{ quickSellItem.quantity }}</p>
+    <p>Code: {{ quickSellItem.itemCode }}</p>
+    <p>Type: {{ quickSellItem.type }}</p>
+    <p>Price: {{ quickSellItem.price | currency }}</p>
+  </div>
+</div>
+
+<h4 class="text-center">My Selling Items:</h4>
+<!--Display seller items in a card container-->
+<div class="card-container mb-3 pb-3">
+  <!--Display each seller items in the list-->
+  <div class="card" *ngFor="let sellerItem of sellerItems" routerLink="/itemPage/{{ sellerItem._id }}">
+    <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+    <h5><b>{{ sellerItem.itemName }}</b></h5>
+    <p>Qty: {{ sellerItem.quantity }}</p>
+    <p>Code: {{ sellerItem.itemCode }}</p>
+    <p>Type: {{ sellerItem.type }}</p>
+  </div>
+</div>
+
+<div class="modal fade" id="defineOrderModal" tabindex="-1" role="dialog" aria-labelledby="defineOrderModal" aria-hidden="true">        
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Define Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- <select id="itemCode" name="itemCode" #itemCode="ngModel" [(ngModel)]="aucItem.itemCode" class="form-control">
+          <option value="auction">Auction</option>
+          <option value="quick sell">Quick Sell</option>
+        </select> -->
+
+        <div *ngFor="let aucItem of auctionItems">
+          <p>{{ aucItem.itemCode }}</p>
+        </div>
+      </div>
+    </div> 
+  </div>
 </div>

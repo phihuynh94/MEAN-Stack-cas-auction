@@ -54,9 +54,13 @@
                             <td>{{ auctionInfo.address }}</td>
                         </tr>
                         <tr>
-                            <td>Date and Time:</td>
-                            <td>{{ auctionInfo.dateTime | date: "medium" }}</td>
+                            <td>Date:</td>
+                            <td>{{ auctionInfo.dateTime | date: "mediumDate" }}</td>
                         </tr>
+                        <tr>
+                          <td>Time:</td>
+                          <td>{{ auctionInfo.dateTime | date: "shortTime" }}</td>
+                      </tr>
                         <tr>
                             <td>Fee:</td>
                             <td>{{ auctionInfo.fee | currency }}</td>
@@ -99,12 +103,6 @@
                   Edit
                 </button>
               </div>
-
-              <div *ngIf="staff">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#quickSellModal">
-                  Quick Sell
-                </button>
-              </div>
              
               <div *ngIf="staff">
                 <button type="button" class="btn btn-primary" routerLink="/live/{{ auctionInfo._id }}">
@@ -117,10 +115,6 @@
             <div class="modal fade" id="sellItemModal" tabindex="-1" role="dialog" aria-labelledby="sellItemModal" aria-hidden="true">        
                 <app-add-item></app-add-item>
             </div>
-
-            <div class="modal fade" id="quickSellModal" tabindex="-1" role="dialog" aria-labelledby="quickSellModalLabel" aria-hidden="true">
-              <app-quick-sell></app-quick-sell>
-            </div>
             
             <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
               <app-item-list></app-item-list>  
@@ -128,10 +122,6 @@
             
             <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
               <app-participants-list></app-participants-list>
-            </div>
-
-            <div class="flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-              <app-seller-items-list></app-seller-items-list>  
             </div>
         </main>
       </div>

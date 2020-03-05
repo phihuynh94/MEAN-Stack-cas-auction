@@ -32,19 +32,19 @@ export class UserService {
     return this.http.put(environment.userUrl + '/editUser', user);
   }
 
-  changePassword(token, newPassword: String){
+  changePassword(token, newPassword: string){
     return this.http.put(environment.userUrl + '/changePassword/' + token, { newPassword });
   }
 
-  forgotPassword(email: String){
+  forgotPassword(email: string){
     return this.http.post(environment.userUrl + '/forgotPassword', email);
   }
 
-  getUserById(id: String){
+  getUserById(id: string){
     return this.http.get(environment.userUrl + '/getUserById/' + id);
   }
 
-  resetPassword(token, newPassword: String){
+  resetPassword(token, newPassword: string){
     return this.http.put(environment.userUrl + '/resetPassword/' + token, { newPassword });
   }
 
@@ -52,8 +52,12 @@ export class UserService {
     return this.http.get(environment.userUrl + '/getUsers');
   }
 
-  deleteUser(id: String){
+  deleteUser(id: string){
     return this.http.delete(environment.userUrl + '/deleteUser/' + id);
+  }
+
+  getUserByAlias(alias: string){
+    return this.http.get(environment.userUrl + '/getUserByAlias/' + alias);
   }
 
   // Helper Methods

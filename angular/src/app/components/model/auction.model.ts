@@ -1,8 +1,8 @@
 export class Auction {
-    _id: String;
-    auctionName: String;
+    _id: string;
+    auctionName: string;
     maxItems: Number;
-    address: String;
+    address: string;
     dateTime: Date;
     fee: Number;
 }

@@ -7,6 +7,17 @@ const multer = require('multer');   // get multer
 const Auction = require('../models/auction.model'); // get Auction schema
 const Item = require('../models/item.model'); // get Item schema
 
+// storage location and file name for upload images
+const storage = multer.diskStorage({
+    destination: function(req, file, callBack){
+        callBack(null, 'images')
+    },
+    filename: function(req, file, callBack){
+        callBack(null, file.originalname);
+    }
+});
+
+// file filter for upload images
 const fileFilter = (req, file, callBack) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -16,18 +27,16 @@ const fileFilter = (req, file, callBack) => {
     }
   };
 
-const upload = multer({ dest: 'uploads', fileFilter: fileFilter });
+// set upload storage and file filter
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-// Upload multiple images
-itemRouter.post('/uploadFiles', upload.array('files'), (req, res, next) => {
-    console.log(req.files);
-    //var files = req.files;
-})
+// upload images route
+itemRouter.post('/uploadImages', upload.array('images'), (req, res) => {});
 
 // routes for all item routes
 //==========================================
 // Add item route
-itemRouter.post('/addItem', upload.array('images'), (req, res) => {
+itemRouter.post('/addItem', (req, res) => {
 
     // Get item values from the request
     var item = new Item();
@@ -39,9 +48,8 @@ itemRouter.post('/addItem', upload.array('images'), (req, res) => {
     item.quantity = req.body.quantity;
     item.sellerID = req.body.sellerID;
     item.type = req.body.type;
+    item.images = req.body.images
     
-    console.log(req.images);
-
     // Find the auction to add the item
     Auction.findById(item.auctionID, (err, auction) => {
         // If auction is found
@@ -55,7 +63,6 @@ itemRouter.post('/addItem', upload.array('images'), (req, res) => {
                             res.send('Max selling items limit reached!');
                         }
                         else {
-                            item.itemCode += (items.length + 1);
 
                              // Save the item to the database
                             item.save((err, item) => {
@@ -63,7 +70,10 @@ itemRouter.post('/addItem', upload.array('images'), (req, res) => {
                                     res.send(item);
                                 }
                                 else {
-                                    res.send(err);
+                                    // If there is a duplicate error
+                                    if (err.code == 11000) {
+                                        res.status(422).send(['Duplicate item code found.']);
+                                    }
                                 }
                             });
                         }
@@ -120,14 +130,21 @@ itemRouter.put('/editItem', (req, res) => {
         _id: req.body._id,
         itemName: req.body.itemName,
         itemCode: req.body.itemCode,
+        price: req.body.price,
         quantity: req.body.quantity,
         description: req.body.description,
+        images: req.body.images,
+        buyerID: req.body.buyerID,
     });
 
-    Item.findByIdAndUpdate(req.body._id, { $set: editItem }, { new: true },
+    Item.findByIdAndUpdate(req.body._id, { $set: editItem },
         (err, editedItem) => {
-            if (!err) { res.send(editedItem); }
-            else { res.send('Error in updating item:' + JSON.stringify(err, undefined, 2)); }
+            if (!err) { 
+                res.send(editedItem);
+            }
+            else { 
+                res.send('Error in updating item:' + JSON.stringify(err, undefined, 2));
+            }
     });
 });
 
@@ -142,22 +159,6 @@ itemRouter.delete('/deleteItemById/:id', (req, res) => {
             res.send(err);
         }
     });
-});
-
-// Sell item route
-itemRouter.post('/sellItem/:id', (req, res) => {
-
-    price = req.body.price;
-    buyerID = req.body.buyerID;
-
-    Item.findByIdAndUpdate(req.params.id, { $set: { price: price, buyerID: buyerID }}, (err, item) => {
-        if (!err){
-            res.send(item);
-        }
-        else{
-            res.send(err);
-        }
-    })
 });
 
 // Get item by buyerID
@@ -199,6 +200,29 @@ itemRouter.get('/getItemInfoById/:id', (req, res) => {
         }
     })
 });
+
+itemRouter.get('/getImage/:imageName', (req, res) => {
+
+    Item.find({ images: req.params.imageName },
+        (err, images) => {
+            if (!err){
+                console.log(images);
+
+            }
+            else {
+                console.log(err);
+            }
+        })
+});
+
+var itemOrder = [String];
+
+itemRouter.post('/defineOrder', (req, res) => {
+
+    itemOrder = req.body.order;
+
+    console.log(itemOrder);
+})
 
 // return the router
 module.exports = itemRouter;

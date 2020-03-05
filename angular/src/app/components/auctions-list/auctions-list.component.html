@@ -19,10 +19,9 @@
  
             <div class="card-body text-center">
               <h4 class="card-title"><b>{{ auc.auctionName }}</b></h4>
-              <p class="card-text"><b>Address:</b></p>
               <p class="card-text">{{ auc.address }}</p>
-              <p class="card-text"><b>Date and Time:</b></p>
-              <p class="card-text">{{ auc.dateTime| date: "medium" }}</p>
+              <p class="card-text">{{ auc.dateTime| date: 'mediumDate' }}</p>
+              <p class="card-text">{{ auc.dateTime| date: 'shortTime' }}</p>
             </div>
           </div>
       </div>

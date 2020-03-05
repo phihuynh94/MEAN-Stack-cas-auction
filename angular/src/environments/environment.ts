@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  userUrl: 'http://localhost:8080/user',
-  auctionUrl: 'http://localhost:8080/auction',
-  itemUrl: 'http://localhost:8080/item',
+  userUrl: '/user',
+  auctionUrl: '/auction',
+  itemUrl: '/item',
 };
 
 /*

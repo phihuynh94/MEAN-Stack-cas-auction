@@ -24,18 +24,15 @@ import { AddItemComponent } from './components/auctions/add-item/add-item.compon
 import { CartComponent } from './components/dashboard/cart/cart.component';
 import { ItemListComponent } from './components/auctions/item-list/item-list.component';
 import { AuctionEditComponent } from './components/auctions/auction-edit/auction-edit.component';
-import { AddStaffComponent } from './components/admin/add-staff/add-staff.component';
 import { ParticipantsListComponent } from './components/auctions/participants-list/participants-list.component';
 import { LiveAuctionComponent } from './components/auctions/live-auction/live-auction.component';
 import { CheckOutComponent } from './components/dashboard/cart/check-out/check-out.component';
 import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
-import { SellerItemsListComponent } from './components/auctions/seller-items-list/seller-items-list.component';
 import { ItemPageComponent } from './components/auctions/item-page/item-page.component';
-import { QuickSellComponent } from './components/admin/quick-sell/quick-sell.component';
 import { ResetPasswordComponent } from './components/user/reset-password/reset-password.component';
 import { ViewUsersComponent } from './components/admin/view-users/view-users.component';
-import { AddMemberComponent } from './components/admin/add-member/add-member.component';
+import { AddUserComponent } from './components/admin/add-user/add-user.component';
 
 // routes
 const appRoutes: Routes = [
@@ -124,18 +121,15 @@ const appRoutes: Routes = [
     CartComponent,
     ItemListComponent,
     AuctionEditComponent,
-    AddStaffComponent,
     ParticipantsListComponent,
     LiveAuctionComponent,
     CheckOutComponent,
     UserProfileComponent,
     ForgotPasswordComponent,
-    SellerItemsListComponent,
     ItemPageComponent,
-    QuickSellComponent,
     ResetPasswordComponent,
     ViewUsersComponent,
-    AddMemberComponent
+    AddUserComponent
   ],
   imports: [
     BrowserModule,

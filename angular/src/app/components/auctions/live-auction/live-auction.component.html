@@ -61,7 +61,7 @@
             <!--Validate winner number input-->
             <div *ngIf="liveAuctionForm.submitted && winner.errors">
               <label *ngIf="winner.errors.required" class="text-danger">This field is required.</label>
-              <label *ngIf="winner.errors.pattern" class="text-danger">Invalid price input.</label>
+              <label *ngIf="winner.errors.pattern" class="text-danger">Invalid winner number.</label>
             </div>
           </div>
           

@@ -6,6 +6,7 @@ const express         = require('express'); // call express
 const bodyParser      = require('body-parser'); // call body-parser
 const cors            = require('cors'); // call cors
 const passport        = require('passport'); // call passport
+const path            = require('path'); // call path
 
 // call the files
 require('./server/config/db'); // call db.js to connect to mongo
@@ -53,7 +54,7 @@ app.use((err, req, res, next) => {
     }
 });
 
-app.use('/', express.static(path.join(_dirname, './angular/dist/angular')));
+app.use('/', express.static(path.join(__dirname, './angular/dist/angular')));
 
 app.use((re, res, next) => {
     res.sendFile(path.join(_dirname, './angular/dist/angular', 'index.html'));

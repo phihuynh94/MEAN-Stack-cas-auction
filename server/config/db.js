@@ -5,7 +5,6 @@ const config = require('../config/config');
 
 // define mongoose
 var mongoose = require('mongoose');
-const MongoClient = require('mongodb');
 
 // this fixed an error with mongoose
 mongoose.set('useCreateIndex', true);
@@ -20,15 +19,3 @@ mongoose.connect(config.database,
     if (!err) {console.log('MongoDB connection successed.');}
     else {console.log('Error in MongoDB connection: ' + JSON.stringify(err, undefined, 2));}
 });
-
-const client = new MongoClient(config.database);
-
-try {
-    await client.connect();
-
-    await listDatabases(client);
-} catch (e) {
-    console.log(e);
-} finally {
-    await client.close();
-}

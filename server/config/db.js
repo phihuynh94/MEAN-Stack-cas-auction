@@ -32,4 +32,5 @@ MongoClient.connect(config.database,
         const collection = client.db('cas-auction');
 
         client.close();
-    }))
+    }
+);

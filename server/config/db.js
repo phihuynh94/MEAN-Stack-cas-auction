@@ -29,7 +29,7 @@ MongoClient.connect(config.database,
 
         console.log("Connected");
 
-        const collection = client.db('cas-auction');
+        const collection = client.db('cas-auction').collection('users');
 
         client.close();
     }

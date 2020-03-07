@@ -22,13 +22,13 @@ mongoose.connect(config.database,
 });
 
 MongoClient.connect(config.database, 
-    (err, client => {
+    (err, client) => {
         if (err) {
             console.log('Error with MongoDB Atlas');
         }
 
         console.log("Connected");
-        
+
         const collection = client.db('cas-auction');
 
         client.close();

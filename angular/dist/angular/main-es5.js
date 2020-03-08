@@ -5492,10 +5492,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
     var environment = {
-      production: false,
-      userUrl: 'http://localhost:8080/user',
-      auctionUrl: 'http://localhost:8080/auction',
-      itemUrl: 'http://localhost:8080/item'
+      production: true,
+      userUrl: '/user',
+      auctionUrl: '/auction',
+      itemUrl: '/item'
     };
     /*
      * For easier debugging in development mode, you can import the following file

@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: true,
+  userUrl: '/user',
+  auctionUrl: '/auction',
+  itemUrl: '/item',
 };

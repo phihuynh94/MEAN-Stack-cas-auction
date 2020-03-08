@@ -5493,9 +5493,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var environment = {
       production: false,
-      userUrl: '/user',
-      auctionUrl: '/auction',
-      itemUrl: '/item'
+      userUrl: 'http://localhost:8080/user',
+      auctionUrl: 'http://localhost:8080/auction',
+      itemUrl: 'http://localhost:8080/item'
     };
     /*
      * For easier debugging in development mode, you can import the following file
@@ -5574,7 +5574,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   /***/
   function _(module, exports, __webpack_require__) {
     module.exports = __webpack_require__(
-    /*! /Users/phihuynh/cas-auction copy/angular/src/main.ts */
+    /*! /Users/phihuynh/cas-auction deploy/angular/src/main.ts */
     "./src/main.ts");
     /***/
   }

@@ -3133,9 +3133,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const environment = {
     production: false,
-    userUrl: '/user',
-    auctionUrl: '/auction',
-    itemUrl: '/item',
+    userUrl: 'http://localhost:8080/user',
+    auctionUrl: 'http://localhost:8080/auction',
+    itemUrl: 'http://localhost:8080/item',
 };
 /*
  * For easier debugging in development mode, you can import the following file
@@ -3184,7 +3184,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/phihuynh/cas-auction copy/angular/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /Users/phihuynh/cas-auction deploy/angular/src/main.ts */"./src/main.ts");
 
 
 /***/ })

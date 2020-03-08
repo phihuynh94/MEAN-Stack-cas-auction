@@ -56,8 +56,8 @@ app.use((err, req, res, next) => {
 
 app.use('/', express.static(path.join(__dirname, './angular/dist/angular')));
 
-app.use((re, res, next) => {
-    res.sendFile(path.join(_dirname, './angular/dist/angular', 'index.html'));
+app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, './angular/dist/angular', 'index.html'));
 });
 
 // START THE SERVER

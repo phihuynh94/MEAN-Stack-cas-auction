@@ -26,7 +26,6 @@ import { ItemListComponent } from './components/auctions/item-list/item-list.com
 import { AuctionEditComponent } from './components/auctions/auction-edit/auction-edit.component';
 import { ParticipantsListComponent } from './components/auctions/participants-list/participants-list.component';
 import { LiveAuctionComponent } from './components/auctions/live-auction/live-auction.component';
-import { CheckOutComponent } from './components/dashboard/cart/check-out/check-out.component';
 import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
 import { ForgotPasswordComponent } from './components/user/forgot-password/forgot-password.component';
 import { ItemPageComponent } from './components/auctions/item-page/item-page.component';
@@ -91,10 +90,6 @@ const appRoutes: Routes = [
   {
     path: 'cart', component: CartComponent
   },
-  // url: 'check-out'
-  {
-    path: 'checkout', component: CheckOutComponent
-  },
   // url: 'item-page'
   {
     path: 'itemPage/:id', component: ItemPageComponent
@@ -123,7 +118,6 @@ const appRoutes: Routes = [
     AuctionEditComponent,
     ParticipantsListComponent,
     LiveAuctionComponent,
-    CheckOutComponent,
     UserProfileComponent,
     ForgotPasswordComponent,
     ItemPageComponent,

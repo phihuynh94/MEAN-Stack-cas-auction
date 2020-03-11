@@ -44,6 +44,7 @@ export class ItemPageComponent implements OnInit {
   buyerDetails = new User();
   quickSellSuccessMessage: boolean;
   quickSellErrorMessage: string;
+  buyerAlias: string;
 
   getItemInfo(){
     this.itemService.getItemInfoById(this.itemID).subscribe(

@@ -5,4 +5,5 @@ export class Auction {
     address: string;
     dateTime: Date;
     fee: Number;
+    participantID: String[];
 }

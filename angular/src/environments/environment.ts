@@ -3,10 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
-  userUrl: '/user',
-  auctionUrl: '/auction',
-  itemUrl: '/item',
+  production: false,
+  userUrl: 'http://localhost:8080/user',
+  auctionUrl: 'http://localhost:8080/auction',
+  itemUrl: 'http://localhost:8080/item',
 };
 
 /*

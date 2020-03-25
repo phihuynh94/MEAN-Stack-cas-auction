@@ -26,6 +26,12 @@ var auctionSchema = new mongoose.Schema({
     participantID: [{
         type: String,
     }],
+    unorderList: [{
+        type: String,
+    }],
+    orderedList: [{
+        type: String,
+    }]
 });
 
 // create Auction model schema

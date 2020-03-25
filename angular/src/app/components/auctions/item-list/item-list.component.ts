@@ -28,23 +28,16 @@ export class ItemListComponent implements OnInit {
     this.getUser();
   }
 
-  defineOrder(){
-    this.order = [3, 4, 1, 8, 9];
-    console.log(this.itemInfo);
-
-    this.itemService.defineOrder(this.order).subscribe();
-  }
-
   // Variables
-  itemInfo;
+  itemsInfo;
   auctionID = this.route.snapshot.paramMap.get('id');
   auctionItems;
   quickSellItems;
   sellerItems;
   sellerDetails = new User();
   item = new Item();
-  order: number [];
   userDetails = new User();
+  isCardView = false; 
 
   // get all of item's info in the Auction
   getItems() {
@@ -53,15 +46,15 @@ export class ItemListComponent implements OnInit {
 
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
-        this.itemInfo = res as Item[];
+        this.itemsInfo = res as Item[];
 
         // split auction and quicksell into 2 array
-        for (var i = 0; i < this.itemInfo.length; i++){
-          if (this.itemInfo[i].type == 'auction'){
-            this.auctionItems.push(this.itemInfo[i]);
+        for (var i = 0; i < this.itemsInfo.length; i++){
+          if (this.itemsInfo[i].type == 'auction'){
+            this.auctionItems.push(this.itemsInfo[i]);
           }
           else {
-            this.quickSellItems.push(this.itemInfo[i]);
+            this.quickSellItems.push(this.itemsInfo[i]);
           }
         }
       }
@@ -100,5 +93,14 @@ export class ItemListComponent implements OnInit {
         this.userDetails = res['user'];
       }
     );
+  }
+
+  changeView(){
+    if (this.isCardView == false){
+      this.isCardView = true;
+    }
+    else {
+      this.isCardView = false;
+    }
   }
 }

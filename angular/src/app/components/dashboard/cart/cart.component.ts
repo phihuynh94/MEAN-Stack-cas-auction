@@ -1,13 +1,13 @@
 // get built in
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-declare var paypal;
-
 // get components
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/model/user.model';
 import { ItemService } from '../../service/item.service';
 import { Item } from '../../model/item.model';
+
+declare var paypal;
 
 @Component({
   selector: 'app-cart',
@@ -24,15 +24,25 @@ export class CartComponent implements OnInit {
   ) { }
 
   userDetails = new User();
-  items;
+  buyingItems;
+  sellingItems;
   showSuccess: boolean = false;
-  totalAmount = 0;
-  paidFor = false;
+  buyingAmount: number = 0;
+  sellingAmount: number = 0;
+  totalAmount: number = 0;
+  purchaseAmount: number = 0;
+  payoutAmount: number = 0;
+  commissionAmount: number = 0;
+  fee: number = 0;
+
+  // paidFor = false;
   
   ngOnInit() {
     this.getUser();
+    this.payPal(); 
+  }
 
-    console.log(this.totalAmount)
+  payPal(){
     paypal
       .Buttons({
         createOrder: (data, actions) => {
@@ -41,7 +51,7 @@ export class CartComponent implements OnInit {
               {
                 amount: {
                   currency_code: 'USD',
-                  value: this.totalAmount
+                  value: this.purchaseAmount
                 }
               }
             ]
@@ -49,8 +59,12 @@ export class CartComponent implements OnInit {
         },
         onApprove: async (data, actions) => {
           const order = await actions.order.capture();
-          this.paidFor = true;
+          const paymentInfo = { "order": order.purchase_units, "user": this.userDetails, "items": this.buyingItems}
+          
+          // this.paidFor = true;
+
           console.log(order);
+          console.log(paymentInfo);
         },
         onError: err => {
           console.log(err);
@@ -59,26 +73,58 @@ export class CartComponent implements OnInit {
       .render(this.paypalElement.nativeElement);
   }
 
-
   getUser(){
     this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res['user'];
-        this.getBuyerItems();
+        this.getBuyingItems();
       }
     );
   }
 
-  getBuyerItems(){
-    this.itemService.getBuyerItems(this.userDetails._id).subscribe(
+  getBuyingItems(){
+    this.itemService.getBuyingItems(this.userDetails._id).subscribe(
       res => {
-        this.items = res as Item[];
+        this.buyingItems = res as Item[];
 
-        for(let i in this.items){
-          this.totalAmount =  this.totalAmount + this.items[i].price
-          
+        for(let i in this.buyingItems){
+          this.buyingAmount =  this.buyingAmount + this.buyingItems[i].price;
         }
+
+        this.getSellingItems();
       }
     )
+  }
+
+  getSellingItems(){
+    this.fee = 0;
+
+    this.itemService.getSellingItems(this.userDetails._id).subscribe(
+      res => {
+        this.sellingItems = res as Item[];
+
+        for (let i in this.sellingItems){
+          this.sellingAmount = this.sellingAmount + this.sellingItems[i].price;
+          this.fee++;
+        }
+
+        this.calculation();
+      }
+    )
+  }
+
+  calculation(){
+    this.totalAmount = 0;
+    this.commissionAmount = 0;
+
+    this.totalAmount = this.buyingAmount - ((this.sellingAmount - this.fee) * 0.8);
+    this.commissionAmount = (this.sellingAmount - this.fee) * 0.2;
+
+    if (this.totalAmount > 0){
+      this.purchaseAmount = this.totalAmount;
+    }
+    else {
+      this.payoutAmount = this.totalAmount * (-1);
+    }
   }
 }

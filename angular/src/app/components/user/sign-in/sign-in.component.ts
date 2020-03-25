@@ -34,6 +34,7 @@ export class SignInComponent implements OnInit {
 
   // Submit function
   onSubmit(form: NgForm){
+    form.value.email = form.value.email.toLowerCase();
     // Call user login function from nodejs
     this.userService.login(form.value).subscribe(
       res => {

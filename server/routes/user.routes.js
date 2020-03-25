@@ -20,7 +20,7 @@ userRouter.post('/register', (req, res, next) => {
     newUser.firstName = req.body.firstName;
     newUser.lastName = req.body.lastName;
     newUser.alias = req.body.alias;
-    newUser.email = req.body.email;
+    newUser.email = req.body.email.toLowerCase();
     newUser.password = req.body.password;
     newUser.type = req.body.type;
 

@@ -6,6 +6,7 @@ const _ = require('lodash');
 // get files
 const Auction = require('../models/auction.model'); // get Auction schema
 const User = require('../models/user.model'); // get User schema
+const Item = require('../models/item.model'); // get Item schema
 
 // routes for all auction routes
 //================================================
@@ -72,6 +73,8 @@ auctionRouter.put('/editAuction/:id', (req, res) => {
         dateTime: req.body.dateTime,
         fee: req.body.fee,
         participantID: req.body.participantID,
+        unorderList: req.body.unorderList,
+        orderedList: req.body.orderedList,
     });
     
     // Find auction by id and update
@@ -101,7 +104,7 @@ auctionRouter.post('/participateAuction/:id', (req, res) => {
             else {
                 res.send(err);
             }
-        })
+        });
     }
     else {
         console.log("Invalid participantID");
@@ -139,7 +142,8 @@ auctionRouter.get('/auctionParticipants/:id', (req, res) => {
 // delete auction by id on the parameter
 auctionRouter.delete('/deleteAuction/:id', (req, res) => {
     Auction.findByIdAndDelete(req.params.id, (err, auction) => {
-        if (!err) { 
+        if (!err) {
+            Item.deleteMany({ auctionID: auction.id }, (err, items) => {});
             res.send(auction);
         }
         else { 

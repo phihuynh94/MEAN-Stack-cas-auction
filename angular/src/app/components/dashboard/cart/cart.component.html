@@ -1,6 +1,6 @@
 <div class="px-4 px-lg-0">
     <div class="container py-5 text-center">
-        <h1 class="display-4">{{ userDetails.firstName }} SHOPPING CART</h1>
+        <h1 class="display-4">AUCTION CART</h1>
     </div>
   
     <div class="pb-5">
@@ -14,7 +14,52 @@
                 <thead>
                   <tr>
                     <th scope="col" class="border-0 bg-light">
-                      <div class="p-2 px-3 text-uppercase">Product</div>
+                      <div class="p-2 px-3 text-uppercase">Buying Items</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                      <div class="py-2 text-uppercase">Item Code</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                      <div class="py-2 text-uppercase">Price</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                      <div class="py-2 text-uppercase">Quantity</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let buyingItem of buyingItems">
+                    <th scope="row" class="border-0">
+                      <div class="p-2">
+                        <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
+                        <div class="ml-3 d-inline-block align-middle">
+                          <h5 class="mb-0">{{ buyingItem.itemName }}</h5>
+                        </div>
+                      </div>
+                    </th>
+                    <td class="border-0 align-middle">
+                      <strong>
+                        <a routerLink="/itemPage/{{ buyingItem._id }}" class="text-dark d-inline-block align-middle">
+                          {{ buyingItem.itemCode }}
+                        </a>
+                      </strong>
+                    </td>
+                    <td class="border-0 align-middle"><strong>{{ buyingItem.price | currency }}</strong></td>
+                    <td class="border-0 align-middle"><strong>{{ buyingItem.quantity }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div *ngIf="(sellingItems && sellingItems[0]) != null" class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" class="border-0 bg-light">
+                      <div class="p-2 px-3 text-uppercase">Selling Items</div>
+                    </th>
+                    <th scope="col" class="border-0 bg-light">
+                      <div class="py-2 text-uppercase">Item Code</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
                       <div class="py-2 text-uppercase">Price</div>
@@ -23,25 +68,30 @@
                       <div class="py-2 text-uppercase">Quantity</div>
                     </th>
                     <th scope="col" class="border-0 bg-light">
-                      <div class="py-2 text-uppercase">Remove</div>
+                      <div class="py-2 text-uppercase">Buyer</div>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let item of items">
+                  <tr *ngFor="let sellingItem of sellingItems">
                     <th scope="row" class="border-0">
                       <div class="p-2">
                         <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
                         <div class="ml-3 d-inline-block align-middle">
-                          <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">{{ item.itemName }}</a></h5>
+                          <h5 class="mb-0">{{ sellingItem.itemName }}</h5>
                         </div>
                       </div>
                     </th>
-                    <td class="border-0 align-middle"><strong>{{ item.price | currency }}</strong></td>
-                    <td class="border-0 align-middle"><strong>{{ item.quantity }}</strong></td>
                     <td class="border-0 align-middle">
-                      <a href="#" class="text-dark"><img src="../../../assets/icons/trash-2.svg"></a>
+                      <strong>
+                        <a routerLink="/itemPage/{{ sellingItem._id }}" class="text-dark d-inline-block align-middle">
+                          {{ sellingItem.itemCode }}
+                        </a>
+                      </strong>
                     </td>
+                    <td class="border-0 align-middle"><strong>{{ sellingItem.price | currency }}</strong></td>
+                    <td class="border-0 align-middle"><strong>{{ sellingItem.quantity }}</strong></td>
+                    <td class="border-0 align-middle"><strong></strong></td>
                   </tr>
                 </tbody>
               </table>
@@ -52,25 +102,47 @@
   
         <div class="row py-5 p-4 bg-white rounded shadow-sm">
           <div class="col-lg-6">
-            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary </div>
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Order summary</div>
             <div class="p-4">
               <ul class="list-unstyled mb-4">
-                <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                  <h5 class="font-weight-bold">{{ totalAmount | currency }}</h5>
+                <div *ngIf="(sellingItems && sellingItems[0]) != null">
+                  <li class="d-flex justify-content-between py-3 border-bottom">
+                    <strong class="text-muted">Buying</strong>
+                    <strong>{{ buyingAmount | currency }}</strong>
+                  </li>
+                  <li class="d-flex justify-content-between py-3 border-bottom">
+                    <strong class="text-muted">Selling</strong>
+                    <strong>{{ sellingAmount | currency }}</strong>
+                  </li>
+                  <li class="d-flex justify-content-between py-3 border-bottom">
+                    <strong class="text-muted">Fee</strong>
+                    <strong>{{ fee | currency }}</strong>
+                  </li>
+                  <li class="d-flex justify-content-between py-3 border-bottom">
+                    <strong class="text-muted">Commission</strong>
+                    <strong>{{ commissionAmount | currency }}</strong>
+                  </li>
+                </div>
+
+                <li *ngIf="totalAmount >= 0" class="d-flex justify-content-between py-3 border-bottom">
+                  <strong class="text-muted">Purchase total</strong>
+                  <h5 class="font-weight-bold">{{ purchaseAmount | currency }}</h5>
+                </li>
+                <li *ngIf="totalAmount < 0" class="d-flex justify-content-between py-3 border-bottom">
+                  <strong class="text-muted">Payout</strong>
+                  <h5 class="font-weight-bold">{{ payoutAmount | currency }}</h5>
                 </li>
               </ul>
             </div>
           </div>
-        </div>
 
-        <div *ngIf="!paidFor">
+          <div class="col-lg-6">
+            <div class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold">Payment method</div>
+            <div class="p-4">
+              <div [hidden]="payoutAmount > 0" #paypal></div>
+            </div>
+          </div>
         </div>
-        
-        <div *ngIf=paidFor>
-          <h1>Yay, you bought a sweet couch!</h1>
-        </div>
-        
-        <div [hidden]="paidFor" #paypal></div>
       </div>
     </div>
   </div>

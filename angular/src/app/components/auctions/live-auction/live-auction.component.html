@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="text-center" style="background-color: grey;">
+  <div class="text-center bg-dark text-white">
       <h1 class="pt-3">LIVE AUCTIONING</h1>
       <h1 class="pb-3">{{ auction.auctionName }}</h1>
   </div>
@@ -11,6 +11,9 @@
       aria-label="Search" [(ngModel)]="search" name="search">
     <button class="btn btn-dark" (click)="onSearch()">Search</button>
   </form>
+  <div *ngIf="searchMsg">
+    <label class="text-danger">{{ searchMsg }}</label>
+  </div>
   
   <div class="row mt-3">
     <div class="col-md-8 border">
@@ -25,25 +28,25 @@
 
     <div class="col-md-4 border text-center">
       <div class="mt-5">
-        <h3><p>{{ items && items[i].itemName }}</p></h3>
+        <h3><p>{{ orderedAuctionItems[i] && orderedAuctionItems[i].itemName }}</p></h3>
         <p>
           <label>Code:</label>
-          {{ items && items[i].itemCode }}
+          {{ orderedAuctionItems[i] && orderedAuctionItems[i].itemCode }}
         </p>
         <p>
           <label>Quantity:</label>
-          {{ items && items[i].quantity }}
+          {{ orderedAuctionItems[i] && orderedAuctionItems[i].quantity }}
         </p>
         <p>
           <label>Description:</label><br>
-          {{ items && items[i].description }}
+          {{ orderedAuctionItems[i] && orderedAuctionItems[i].description }}
         </p>
 
         <form #liveAuctionForm="ngForm" (ngSubmit)="liveAuctionForm.valid && onSubmit()">
             
           <div class="form-group">
             <label>Final Price:</label>
-            <input type="number" placeholder="Final Price" #price="ngModel" [(ngModel)]="items && items[i].price"
+            <input type="number" placeholder="Final Price" #price="ngModel" [(ngModel)]="orderedAuctionItems[i] && orderedAuctionItems[i].price"
             name="price" class="form-control" required [pattern]="currencyRegex"
             [ngClass]="{'invalid-textbox': liveAuctionForm.submitted && price.errors }">
             <!--Validate final price input-->
@@ -61,7 +64,7 @@
             <!--Validate winner number input-->
             <div *ngIf="liveAuctionForm.submitted && winner.errors">
               <label *ngIf="winner.errors.required" class="text-danger">This field is required.</label>
-              <label *ngIf="winner.errors.pattern" class="text-danger">Invalid winner number.</label>
+              <label *ngIf="winner.errors.pattern" class="text-danger">Invalid bidder number.</label>
             </div>
           </div>
           
@@ -81,12 +84,14 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row mt-2">
+    <button class="btn btn-secondary" (click)="goBack()">Back to auction page</button>
+
     <div class="col text-center">
       <button (click)="onPrev()"><img src="../../../assets/icons/chevron-left.svg"></button>
     
-      {{ i + 1 }} / {{ items && items.length }}
+      {{ i + 1 }} / {{ orderedAuctionItems && orderedAuctionItems.length }}
     
       <button (click)="onNext()"><img src="../../../assets/icons/chevron-right.svg"></button>
     </div>

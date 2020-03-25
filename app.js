@@ -60,6 +60,12 @@ app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, './angular/dist/angular', 'index.html'));
 });
 
+app.get("*", (req, res) => {
+    res.redirect("https://" + req.header.host + req.url);
+});
+
+app.enable("trust proxy");
+
 // START THE SERVER
 //=====================================
 app.listen(config.port, () => console.log('Server started at port: ' + config.port));

@@ -48,7 +48,6 @@ export class AddItemComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-
     this.item.auctionID = this.auctionID;
     this.item.itemCode = this.userDetails.alias + form.value.itemCode;
     this.item.itemName = form.value.itemName;

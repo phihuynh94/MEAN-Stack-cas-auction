@@ -22,7 +22,7 @@ export class AuctionService {
     return this.http.get(environment.auctionUrl + '/findAllAuctions');
   }
 
-  getAuctionInfoById(id: String){
+  getAuctionInfoById(id: string){
     return this.http.get(environment.auctionUrl + '/findAuctionById/' + id);
   }
 
@@ -30,19 +30,19 @@ export class AuctionService {
     return this.http.put(environment.auctionUrl + '/editAuction/' + auction._id, auction);
   }
 
-  participateAuction(auctionID: String, participantID: String){
+  participateAuction(auctionID: string, participantID: string){
     return this.http.post(environment.auctionUrl + '/participateAuction/' + auctionID, { participantID });
   }
 
-  deleteAuction(id: String){
+  deleteAuction(id: string){
     return this.http.delete(environment.auctionUrl + '/deleteAuction/' + id);
   }
 
-  getAuctionParticipants(id: String){
+  getAuctionParticipants(id: string){
     return this.http.get(environment.auctionUrl + '/auctionParticipants/' + id);
   }
 
-  notParticipate(auctionID: String, participantID: String){
+  notParticipate(auctionID: string, participantID: string){
     return this.http.put(environment.auctionUrl + '/notParticipate/' + auctionID, { participantID });
   }
 }

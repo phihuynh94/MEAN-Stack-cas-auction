@@ -55,6 +55,10 @@ itemRouter.post('/addItem', (req, res) => {
         // If auction is found
         if (auction) {
 
+            if (item.type == 'auction'){
+                auction.updateOne({ $addToSet: { unorderList: item.itemCode }}, (err, auction) => {});
+            }
+            
             // Generate the item code
             Item.find({ auctionID: item.auctionID, sellerID: item.sellerID },
                 (err, items) => {
@@ -85,16 +89,6 @@ itemRouter.post('/addItem', (req, res) => {
     });
 });
 
-// Find item routes
-// Find all items in database route
-// itemRouter.get('/findAllItems', (req, res) => {
-//     Item.find(
-//         (err, item) => {
-//         if (!err) res.send(item);
-//         else res.send(err);
-//     });
-// });
-
 // Find all items in an Auction route
 itemRouter.get('/findItemsInAuction/:auctionID', (req, res) => {
     Item.find({ auctionID: req.params.auctionID },
@@ -106,20 +100,6 @@ itemRouter.get('/findItemsInAuction/:auctionID', (req, res) => {
             res.send(err);
         }
     });
-});
-
-// Get item by item code
-itemRouter.get('/getItemByItemCode/:itemCode', (req, res) => {
-
-    Item.find({ itemCode: req.params.itemCode.toUpperCase() }, 
-        (err, item) => {
-            if (!err) {
-                res.send(item);
-            }
-            else {
-                res.send(err);
-            }
-        });
 });
 
 // Edit item route
@@ -162,7 +142,7 @@ itemRouter.delete('/deleteItemById/:id', (req, res) => {
 });
 
 // Get item by buyerID
-itemRouter.get('/getBuyerItems/:buyerID', (req, res) => {
+itemRouter.get('/getBuyingItems/:buyerID', (req, res) => {
 
     Item.find({ buyerID: req.params.buyerID },
         (err, items) => {
@@ -175,10 +155,25 @@ itemRouter.get('/getBuyerItems/:buyerID', (req, res) => {
     });
 });
 
+// Get item by sellerID
+itemRouter.get('/getSellingItems/:sellerID', (req, res) => {
+
+    Item.find({ sellerID: req.params.sellerID },
+        (err, items) => {
+            if (!err) {
+                res.send(items);
+            }
+            else {
+                res.send(err);
+            }
+        });
+});
+
 // Get sellers items in an auction
 itemRouter.post('/getSellerItemsInAuction/', (req, res) => {
 
-    Item.find({ sellerID: req.body.sellerID, auctionID: req.body.auctionID }, (err, items) => {
+    Item.find({ sellerID: req.body.sellerID, auctionID: req.body.auctionID },
+        (err, items) => {
         if (!err){
             res.send(items);
         }
@@ -214,15 +209,6 @@ itemRouter.get('/getImage/:imageName', (req, res) => {
             }
         })
 });
-
-var itemOrder = [String];
-
-itemRouter.post('/defineOrder', (req, res) => {
-
-    itemOrder = req.body.order;
-
-    console.log(itemOrder);
-})
 
 // return the router
 module.exports = itemRouter;

@@ -21,7 +21,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Item Code:</label>
+                    <label>Item Code (number only):</label>
                     <!--Get item code-->
                     <input type="number" #itemCode="ngModel" [(ngModel)]="code" name="itemCode" placeholder="Item Code"
                     required [pattern]="numRegex" [ngClass]="{'invalid-textbox': addItemForm.submitted && itemCode.errors }" class="form-control">

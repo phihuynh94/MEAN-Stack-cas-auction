@@ -22,19 +22,23 @@ export class ItemService {
     return this.http.post(environment.itemUrl + '/uploadImages', images);
   }
 
-  getItemsInAuction(auctionID: String){
+  getItemsInAuction(auctionID: string){
     return this.http.get(environment.itemUrl + '/findItemsInAuction/' + auctionID);
   }
 
-  getBuyerItems(buyerID: String){
-    return this.http.get(environment.itemUrl + '/getBuyerItems/' + buyerID);
+  getBuyingItems(buyerID: string){
+    return this.http.get(environment.itemUrl + '/getBuyingItems/' + buyerID);
+  }
+
+  getSellingItems(sellerID: string){
+    return this.http.get(environment.itemUrl + '/getSellingItems/' + sellerID);
   }
 
   getSellerItemsInAuction(item: Item){
     return this.http.post(environment.itemUrl + '/getSellerItemsInAuction/', item);
   }
 
-  getItemInfoById(id: String){
+  getItemInfoById(id: string){
     return this.http.get(environment.itemUrl + '/getItemInfoById/' + id);
   }
 
@@ -42,15 +46,7 @@ export class ItemService {
     return this.http.put(environment.itemUrl + '/editItem', item);
   }
 
-  deleteItemById(id: String){
+  deleteItemById(id: string){
     return this.http.delete(environment.itemUrl + '/deleteItemById/' + id);
-  }
-
-  getItemByItemCode(itemCode: String){
-    return this.http.get(environment.itemUrl + '/getItemByItemCode/' + itemCode);
-  }
-
-  defineOrder(order: number []){
-    return this.http.post(environment.itemUrl + '/defineOrder', { order });
   }
 }

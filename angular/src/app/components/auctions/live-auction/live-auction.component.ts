@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 // get components
 import { Auction } from '../../model/auction.model';
@@ -24,6 +25,7 @@ export class LiveAuctionComponent implements OnInit {
     private itemService: ItemService,
     private userService: UserService,
     private router: Router,
+    private location: Location,
   )
   { }
 
@@ -31,21 +33,22 @@ export class LiveAuctionComponent implements OnInit {
   auctionID = this.route.snapshot.paramMap.get('id');
   auction = new Auction();
   items;
+  orderedAuctionItems = [];
   participants;
   i = 0;
   winnerNum;
-  search: String;
-  searchItem;
+  search: string;
+  searchMsg: string;
+  isSearch: boolean = false;
   userDetails = new User();
   staff: boolean;
   currencyRegex = /^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$/;
   numRegex = /^[1-9][0-9]*$/;
-  errorMessage: String;
-  successMessage: String;
+  errorMessage: string;
+  successMessage: string;
   
   ngOnInit() {
     this.getAuctionInfo();
-    this.getAuctionItems();
     this.getParticipants();
     this.getUser();
   }
@@ -54,6 +57,8 @@ export class LiveAuctionComponent implements OnInit {
     this.auctionService.getAuctionInfoById(this.auctionID).subscribe(
       res => {
         this.auction = res as Auction;
+
+        this.getAuctionItems();
       }
     );
   }
@@ -62,6 +67,14 @@ export class LiveAuctionComponent implements OnInit {
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
         this.items = res as Item[];
+
+        for (var i = 0; i < this.auction.orderedList.length; i++){
+          for (var j = 0; j < this.items.length; j++){
+            if (this.auction.orderedList[i] == this.items[j].itemCode){
+              this.orderedAuctionItems[i] = this.items[j];
+            }
+          }
+        }
       }
     );
   }
@@ -75,7 +88,7 @@ export class LiveAuctionComponent implements OnInit {
   }
 
   onNext(){
-    if (this.i < this.items.length - 1){
+    if (this.i < this.orderedAuctionItems.length - 1){
       this.i += 1;
     }
     else{
@@ -94,26 +107,41 @@ export class LiveAuctionComponent implements OnInit {
 
   onSubmit(){
     if (this.winnerNum > (this.participants.length)){
-      this.errorMessage = 'Invalid winner number.';
+      this.errorMessage = 'Bidder number not found.';
     }
     else {
-      this.items[this.i].buyerID = this.participants[this.winnerNum - 1]._id;
+      this.orderedAuctionItems[this.i].buyerID = this.participants[this.winnerNum - 1]._id;
 
-      this.itemService.editItem(this.items[this.i]).subscribe(
+      this.itemService.editItem(this.orderedAuctionItems[this.i]).subscribe(
         res => {
-          this.successMessage = 'Sold.';
           this.errorMessage = '';
+          this.winnerNum = '';
+
+          if (this.i < this.orderedAuctionItems.length - 1){
+            this.i++;
+          }
+
+          this.getAuctionInfo();
         }
       );
     }
   }
 
   onSearch(){
-    this.itemService.getItemByItemCode(this.search.toUpperCase()).subscribe(
-      res => {
-        console.log(res);
+    for (var i = 0; i < this.orderedAuctionItems.length; i++){
+      if (this.search.toUpperCase() == this.orderedAuctionItems[i].itemCode){
+        this.i = i;
+        this.isSearch = true;
+        this.searchMsg = '';
       }
-    );
+    }
+
+    if (this.isSearch == false) {
+      this.searchMsg = 'No item found.';
+      setTimeout(() => this.searchMsg = '', 4000);
+    }
+
+    this.isSearch = false;
   }
 
   getUser(){
@@ -130,5 +158,9 @@ export class LiveAuctionComponent implements OnInit {
       this.staff = true;
     else
       this.router.navigate(['/dashboard']);
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

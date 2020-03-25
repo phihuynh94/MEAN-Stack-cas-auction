@@ -25,7 +25,7 @@
     </div>
 
     <!--Get user alias-->
-    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias" maxlength="3"
+    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias / Seller Code (3 letters) " maxlength="3"
     required  [ngClass]="{'invalid-textbox': signUpForm.submitted && !alias.valid }" [pattern]="aliasRegex">
     <!--Validate user alias input-->
     <div *ngIf="signUpForm.submitted && !alias.valid">

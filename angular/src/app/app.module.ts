@@ -32,6 +32,7 @@ import { ItemPageComponent } from './components/auctions/item-page/item-page.com
 import { ResetPasswordComponent } from './components/user/reset-password/reset-password.component';
 import { ViewUsersComponent } from './components/admin/view-users/view-users.component';
 import { AddUserComponent } from './components/admin/add-user/add-user.component';
+import { DefineOrderComponent } from './components/auctions/define-order/define-order.component';
 
 // routes
 const appRoutes: Routes = [
@@ -123,7 +124,8 @@ const appRoutes: Routes = [
     ItemPageComponent,
     ResetPasswordComponent,
     ViewUsersComponent,
-    AddUserComponent
+    AddUserComponent,
+    DefineOrderComponent
   ],
   imports: [
     BrowserModule,

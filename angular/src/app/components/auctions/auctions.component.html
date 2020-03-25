@@ -71,43 +71,43 @@
 
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 
-              <button type="button" class="btn btn-primary" routerLink="/dashboard">
+              <button type="button" class="btn btn-primary mb-1" routerLink="/dashboard">
                 <img src="../../../assets/icons/home-white.svg">
                 Dashboard
               </button>
 
               <div *ngIf="!isParticipate">
-                <button type="button" class="btn btn-primary" (click)="onParticipate()">
+                <button type="button" class="btn btn-primary mb-1" (click)="onParticipate()">
                   <img src="../../../assets/icons/check-white.svg">
                   Participate
                 </button>
               </div>
 
               <div *ngIf="isParticipate">
-                <button type="button" class="btn btn-danger" (click)="onNotParticipate()">
+                <button type="button" class="btn btn-danger mb-1" (click)="onNotParticipate()">
                   <img src="../../../assets/icons/x-white.svg">
-                  Not Participate
+                  Stop Participate
                 </button>
               </div>
 
               <div *ngIf="isParticipate">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sellItemModal">
+                <button type="button" class="btn btn-primary mb-1" data-toggle="modal" data-target="#sellItemModal">
                   <img src="../../../assets/icons/tag-white.svg">
                   Sell item
                 </button>
               </div>
 
               <div *ngIf="staff">
-                <button type="button" class="btn btn-primary" routerLink="/editAuction/{{ auctionInfo._id }}">
+                <button type="button" class="btn btn-primary mb-1" routerLink="/editAuction/{{ auctionInfo._id }}">
                   <img src="../../../assets/icons/edit-white.svg">
                   Edit
                 </button>
               </div>
              
               <div *ngIf="staff">
-                <button type="button" class="btn btn-primary" routerLink="/live/{{ auctionInfo._id }}">
+                <button type="button" class="btn btn-primary mb-1" routerLink="/live/{{ auctionInfo._id }}">
                   <img src="../../../assets/icons/play-white.svg">
-                  Start
+                  Start Auction
                 </button>
               </div>
             </div>

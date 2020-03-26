@@ -27,6 +27,14 @@ app.use(cors());
 // passport initialize
 app.use(passport.initialize());
 
+// redirect the website to https and secure it
+app.get('*',function(req,res,next){
+    if(req.headers['x-forwarded-proto']!='https')
+      res.redirect('https://casauction.org' + req.url)
+    else
+      next() /* Continue to other routes if we're not redirecting */
+})
+
 // get users routes
 const userRoutes = require('./server/routes/user.routes');
 
@@ -59,12 +67,6 @@ app.use('/', express.static(path.join(__dirname, './angular/dist/angular')));
 app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, './angular/dist/angular', 'index.html'));
 });
-
-app.get("*", (req, res) => {
-    res.redirect("https://" + req.header.host + req.url);
-});
-
-app.enable("trust proxy");
 
 // START THE SERVER
 //=====================================

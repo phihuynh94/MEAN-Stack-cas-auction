@@ -5,13 +5,15 @@
         < Back
     </button>
 
+    <div class="table-responsive">
     <table class="table mt-3">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Email</th>
+                <th scope="col">Name</th>
                 <th scope="col">Alias</th>
+                <th scope="col">Email</th>
+                <th scope="col">Address</th>
+                <th scope="col">Phone</th>
                 <th scope="col">Type</th>
                 <th scope="col"></th>
             </tr>
@@ -20,16 +22,19 @@
         <tbody>
             <tr *ngFor="let user of users">
                 <td>
-                    {{ user.firstName }}
+                    {{ user.firstName }} {{ user.lastName }}
                 </td>
                 <td>
-                    {{ user.lastName }}
+                    {{ user.alias }}
                 </td>
                 <td>
                     {{ user.email }}
                 </td>
                 <td>
-                    {{ user.alias }}
+                    {{ user.address }}
+                </td>
+                <td>
+                    {{ user.phoneNum }}
                 </td>
                 <td>
                     {{ user.type }}
@@ -41,6 +46,7 @@
             </tr>
         </tbody>
     </table>
+    </div>
 </div>
 
 <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
@@ -94,12 +100,59 @@
                         </div>
                         <div class="col">
                             <!--Get user alias-->
-                            <input type="text" #alias="ngModel" [(ngModel)]="editUser.alias" name="alias" placeholder="Alias"
-                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="3">
+                            <input type="text" #alias="ngModel" [(ngModel)]="editUser.alias" name="alias" placeholder="Alias / Seller Code (3 to 10 letters)"
+                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="10" minlength="3">
                             <!--Validate user alias input-->
                             <div *ngIf="editUserForm.submitted && !alias.valid">
                                 <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
                                 <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Email: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user email-->
+                            <input type="text" #email="ngModel" [(ngModel)]="editUser.email" name="email" placeholder="Email" required
+                            [pattern]="emailRegex" [ngClass]="{'invalid-textbox': editUserForm.submitted && !email.valid }">
+                            <!--Validate user email-->
+                            <div *ngIf="editUserForm.submitted && !email.valid">
+                                <label *ngIf="email.errors.required" class="text-danger">This field is required.</label>
+                                <label *ngIf="email.errors.pattern" class="text-danger">Invalid email address.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Address: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user address-->
+                            <input type="text" #address="ngModel" [(ngModel)]="editUser.address" name="address" placeholder="Address"
+                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !address.valid }">
+                            <!--Validate user address input-->
+                            <div *ngIf="editUserForm.submitted && !address.valid">
+                                <label *ngIf="address.errors.required" class="text-danger">This field is required.</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Phone Number: </label>
+                        </div>
+                        <div class="col">
+                            <!--Get user phone number-->
+                            <input type="tel" #phoneNum="ngModel" [(ngModel)]="editUser.phoneNum" name="phoneNum" placeholder="Phone Number" [pattern]="phoneRegex"
+                            required  [ngClass]="{'invalid-textbox': editUserForm.submitted && !phoneNum.valid }" minlength="10" maxlength="10">
+                            <!--Validate user phone number input-->
+                            <div *ngIf="editUserForm.submitted && !phoneNum.valid">
+                                <label *ngIf="phoneNum.errors.required" class="text-danger">This field is required.</label>
+                                <label *ngIf="phoneNum.errors.pattern" class="text-danger">Phone number must be 10 digits</label>
                             </div>
                         </div>
                     </div>
@@ -118,17 +171,17 @@
                     </div>
 
                     <!--Submit button-->
-                    <div class="mt-2 text-center">
+                    <div class="mt-2 text-center mt-2">
                         <input type="submit" class="btn btn-primary" value="Edit">
                     </div>
 
                     <!-- Success message -->
-                    <div class="alert alert-success" *ngIf="showSucessMessage">
+                    <div class="alert alert-success mt-2" *ngIf="showSucessMessage">
                         Edited successfully
                     </div>
 
                     <!-- Error message -->
-                    <div class="alert alert-danger" *ngIf="serverErrorMessages">
+                    <div class="alert alert-danger mt-2" *ngIf="serverErrorMessages">
                         {{serverErrorMessages}}
                     </div>
                 </form>

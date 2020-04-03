@@ -1,5 +1,6 @@
 // get built in
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Location } from '@angular/common';
 
 // get components
 import { UserService } from '../../user/service/user.service';
@@ -21,6 +22,7 @@ export class CartComponent implements OnInit {
   constructor(
     private userService: UserService,
     private itemService: ItemService,
+    private location: Location,
   ) { }
 
   userDetails = new User();
@@ -39,7 +41,7 @@ export class CartComponent implements OnInit {
   
   ngOnInit() {
     this.getUser();
-    this.payPal(); 
+    this.payPal();
   }
 
   payPal(){
@@ -104,8 +106,10 @@ export class CartComponent implements OnInit {
         this.sellingItems = res as Item[];
 
         for (let i in this.sellingItems){
-          this.sellingAmount = this.sellingAmount + this.sellingItems[i].price;
-          this.fee++;
+          if (this.sellingItems[i].price > 0){
+            this.sellingAmount += + this.sellingItems[i].price;
+            this.fee++;
+          }
         }
 
         this.calculation();
@@ -126,5 +130,13 @@ export class CartComponent implements OnInit {
     else {
       this.payoutAmount = this.totalAmount * (-1);
     }
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  onCheckout(){
+    
   }
 }

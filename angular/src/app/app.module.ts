@@ -33,6 +33,7 @@ import { ResetPasswordComponent } from './components/user/reset-password/reset-p
 import { ViewUsersComponent } from './components/admin/view-users/view-users.component';
 import { AddUserComponent } from './components/admin/add-user/add-user.component';
 import { DefineOrderComponent } from './components/auctions/define-order/define-order.component';
+import { CheckoutComponent } from './components/admin/checkout/checkout.component';
 
 // routes
 const appRoutes: Routes = [
@@ -98,6 +99,10 @@ const appRoutes: Routes = [
   // url: 'view-users'
   {
     path: 'viewUsers', component: ViewUsersComponent
+  },
+  // url: 'checkout'
+  {
+    path: 'checkout', component: CheckoutComponent
   }
 ]
 
@@ -125,7 +130,8 @@ const appRoutes: Routes = [
     ResetPasswordComponent,
     ViewUsersComponent,
     AddUserComponent,
-    DefineOrderComponent
+    DefineOrderComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,

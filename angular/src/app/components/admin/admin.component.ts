@@ -13,7 +13,10 @@ import { User } from '../user/model/user.model';
 })
 export class AdminComponent implements OnInit {
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    ) { }
 
   userDetails = new User;
   staff: boolean;

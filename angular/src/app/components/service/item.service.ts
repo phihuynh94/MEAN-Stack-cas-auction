@@ -22,6 +22,10 @@ export class ItemService {
     return this.http.post(environment.itemUrl + '/uploadImages', images);
   }
 
+  getItemImages(filename: string){
+    return this.http.get(environment.itemUrl + '/getItemImages/' + filename);
+  }
+
   getItemsInAuction(auctionID: string){
     return this.http.get(environment.itemUrl + '/findItemsInAuction/' + auctionID);
   }

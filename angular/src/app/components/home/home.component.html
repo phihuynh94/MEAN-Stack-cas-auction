@@ -1,5 +1,5 @@
 <body class="landing is-preload">
-    
+
     <!-- Page Wrapper -->
     <div id="page-wrapper">
 
@@ -13,8 +13,6 @@
                         <div *ngIf="toggle" id="menu" >
                             <ul>
                                 <li><a routerLink="/">Home</a></li>
-                                <li><a href="">Contact Us</a></li>
-                                <li><a href="">Auction Schedule</a></li>
                                 <li><a routerLink="/user/signup">Sign Up</a></li>
                                 <li><a routerLink="/user/signin">Sign In</a></li>
                             </ul>
@@ -29,7 +27,7 @@
             <div class="inner">
                 <h2>COLORADO AQUARIUM SOCIETY LIVE AUCTION</h2>
                 <p>Dive Into Colorado's <br />
-                Largest Exotic Fish Auction<br />
+                Largest Exotic Fish Auction!<br />
                 Built By <a href="https://engineering.ucdenver.edu/academics/undergraduate-programs/undergraduate-programs-in-computer-science/bs-in-computer-science">CU DENVER Computer Engineering Students</a>.</p>
                 <ul class="actions special">
                     <li><a routerLink="/user/signin" class="button primary">Sign In or Join Now!</a></li>
@@ -54,20 +52,19 @@
             <section class="spotlight">
                 <div class="image"><img src="assets/home/images/clownFish.jpg" alt="" /></div><div class="content">
                     <h2>Welcome to Colorado Aquarium Society!<br /> </h2>
-                    <p>We host monthy local exotic fish and aquarium related auctions.Bi-Annually we host 2 large-scale auctions for the public. Join Our Club!</p>
+                    <p>We host monthy local exotic fish and aquarium related auctions for the publis. Bi-Annually we host 2 large-scale auctions for the public. Join us at our next Auction!</p>
                 </div>
             </section>
             <section class="spotlight">
                 <div class="image"><img src="assets/home/images/stripedFish.jpg" alt="" /></div><div class="content">
-                    <h2>Learn More about which items can be used in the auction here<br />
-                    Click Below</h2>
-                    <p>In order to participate in our auction(s), please follow our guidelines on accepted items.</p>
+                    <h2>In order to participate in our auction(s), you must sign up & follow our guidelines on accepted items.<br /></h2>
+                    <p>People from all over Colorado participate in our monthly gatherings to auction their aquarium, marine and related items</p>
                 </div>
             </section>
             <section class="spotlight">
                 <div class="image"><img src="assets/home/images/blueStringRay.jpg" alt="" /></div><div class="content">
-                    <h2>Reach Out To Us Directly<br /></h2>
-                    <p>Interested in learning more about us? Contact Us today!</p>
+                    <h2>Reach Out To Us Directly!<br /></h2>
+                    <p>Interested in learning more about our amazing community? Contact Us today at our email: "info@coloradoaquarium.com" </p>
                 </div>
             </section>
         </section>
@@ -76,37 +73,43 @@
         <section id="three" class="wrapper style3 special">
             <div class="inner">
                 <header class="major">
-                    <h2>Am I ready to participate in the auction?.</h2>
-                    <p>Use the checklist below to make sure your are prepared and ready for the auction.</p><br/>
+                    <h2>Am I ready to participate in the auction?</h2>
+                    <p>The Frequently Asked Questions outlined below will help make sure you are prepared and ready for participating in a CAS auction.</p><br/>
                 </header>
                 <ul class="features">
-                    <li class="icon fa-brain">
-                        <h3>1. Remember/Find your UserID</h3>
-                        <p>Your userID is unique and assigned to you when you sign up for our club. Do not lose this. You will use the userID number to participate in the Auction and also sign into this website. <br />
-                        You will use the userID to upload items for the auction and also to checkout and purchase items you've won.</p>
+                    <li>
+                        <h3>1. How do I Sign Up?</h3>
+                        <p>In order to participate in our auctions you must first <a routerLink="/user/signup">Sign Up</a>. The sign up form will require you to create an ALIAS which is a 3 letter phrase
+                        we will use to identify items that you upload and items that you've won in the auction. This alias is assigned uniquely to you and it is encouraged you use your
+                        3 initials. An example name and alias pair: If your name is "John Michael Smith" your alias would be "JMS". After signing up, you can participate in auctions, upload items, and
+                        personalize your account.</p>
                     </li>
-                    <li class="icon fab-cc-paypal">
-                        <h3>2. I want to sell items in the CAS auction.</h3>
-                        <p>To sell at our auctions please follow the auction guidlines before uploading your products in order to avoid having your items be rejected. Please have a title, minimum bid price, image, and description for each of your items.<br />
-                        Sign in using your userID and Sell Items to begin the process.</p>
+                    <li>
+                        <h3>2. How do I Sell items in the CAS auction?</h3>
+                        <p>To sell at our auctions please upload appropriate items in order to avoid having your items be rejected. Please have a title, image, and description for each of your items.<br />
+                        After signing in, select an auction and press "Participate". Now you are added to the auction. After joining, click "Sell Item". You can now upload your items for other participants to bid on OR you can choose
+                      to add your item as a quick sale item. Quick Sale items are not used in the auction, rather they are sold direct to participants at a set price.</p>
                     </li>
-                    <li class="icon solid fa-code">
+                    <li>
                         <h3>3. How do I checkout and pay for my items?</h3>
-                        <p>In order to purchase and checkout the items you've won, you must sign in to our dashboard. There you can access a list of the items you've won and also <br />
-                        purchase them using PayPal. Staff will assign your quick sale items to this same dashboard for you to checkout and purchase.</p>
+                        <p>First sign in to our dashboard. After an auction has completed, your "Cart" will be updated with the items you've won. Once in the dashboard, press "Cart". Now you can see a list of the items you've won and also <br />
+                        will be prompted to purchase them using PayPal or your Credit/Debit Card. CAS Staff will assign your quick sale items to this same dashboard for you to checkout and purchase allowing you to easily transact on the go and conveniently from your perosonal device.</p>
                     </li>
-                    <li class="icon solid fa-computer">
+                    <li>
                         <h3>4. If my item does not get sold, how do I get it back?</h3>
-                        <p>In our system we will know which items were sold and which were not. We will return the items to the people who did not have their item sold.<br />
-                        Please contact our staff after the auction.</p>
+                        <p>In our system we will know which items were sold and which were not. When you upload your items to the auction they are tied to your unique 3 character alias. We can see the specific items marked as unsold using your Alias. We will return the items to the participants who did not have their item sold before they leave the auction.<br />
+                        After the auction completes, please speak to a CAS staff memeber directly and we will return your item to you.</p>
                     </li>
-                    <li class="icon fa-schedule">
-                        <h3>5. Where can I view the Auction Schedule?</h3>
-                        <p>The auction schedule is available here: Auction Schedule 2019. The auctions are held at 1111 Apple Road Denver, CO at 5pm.</p>
+                    <li>
+                        <h3>5. How will CAS Auction pay me for the products I've sold?</h3>
+                        <p>CAS Auction charges a small $1 fee per item added to the auction. After this we use 20% of the "Final Price" to continue funding our monthly auctions and community gathering and provide 80% of the final price to the original seller of the item. This structure allows our auctions
+                          to stay sustainable and continuous. After the auction completes, we mail a check to the particants whom we owe the money to directly so they can then deposit their earnings at their bank.
+                        </p>
+
                     </li>
-                    <li class="icon fa-flag">
-                        <h3>6.When can I upload items to the next upcoming auction?</h3>
-                        <p>You can upload your auction items as soon as the previous auction ends. They will be reviewed by our team if they dont follow our guidelines, please view those here: CAS Auction Items Guidelines.</p>
+                    <li>
+                      <h3>6. Where can I view the Auction Schedule?</h3>
+                      <p>The auction schedule is available at the top of our homepage and also once you sign in you can view a list of all the upcoming auctions with their respective Day, Time, and Location details. The auctions are usually held at 	4500 E Hampden Ave, Cherry Hills Village, CO 80113 unless otherwise specified.</p>
                     </li>
                 </ul>
             </div>
@@ -132,7 +135,6 @@
                 <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
                 <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
                 <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-                <li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
                 <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
             </ul>
             <ul class="copyright">

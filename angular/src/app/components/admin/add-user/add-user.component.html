@@ -35,8 +35,8 @@
                 <div class="form-group">
                     <label>Alias or Seller Code (3 letters):</label>
                     <!--Get user alias-->
-                    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias" class="form-control"
-                    required  [ngClass]="{'invalid-textbox': addUserForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="3">
+                    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias / Seller Code (3 to 10 letters)" class="form-control"
+                    required  [ngClass]="{'invalid-textbox': addUserForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="10" minlength="3">
                     <!--Validate user alias input-->
                     <div *ngIf="addUserForm.submitted && !alias.valid">
                         <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
@@ -68,6 +68,29 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label>Address:</label>
+                    <!--Get address-->
+                    <input type="text" #address="ngModel" [(ngModel)]="user.address" name="address" placeholder="Address"
+                    required [ngClass]="{ 'invalid-textbox': addUserForm.submitted && !address.valid }" class="form-control">
+                    <!--Validate user address input-->
+                    <div *ngIf="addUserForm.submitted && !address.valid">
+                        <label class="text-danger">This field is required.</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone number:</label>
+                    <!--Get phone number-->
+                    <input type="tel" #phoneNum="ngModel" [(ngModel)]="user.phoneNum" name="phoneNum" placeholder="Phone number" [pattern]="phoneRegex"
+                    required [ngClass]="{ 'invalid-textbox': addUserForm.submitted && !phoneNum.valid }" class="form-control" minlength="10" maxlength="10">
+                    <!--Validate user phone number input-->
+                    <div *ngIf="addUserForm.submitted && !phoneNum.valid">
+                        <label *ngIf="phoneNum.errors.required" class="text-danger">This field is required.</label>
+                        <label *ngIf="phoneNum.errors.pattern" class="text-danger">Phone number must be 10 digits</label>
+                    </div>
+                </div>
+                
                 <div class="form-group">
                     <label>Type:</label>
                     <!--Get user type-->

@@ -9,12 +9,10 @@ var userSchema = new mongoose.Schema({
         type: String, 
         required: 'First name can\'t be empty'
     },
-    
     lastName: {
         type: String,
         required: 'Last name can\'t be empty'
     },
-    
     alias: {
         type: String,
         required: 'Alias can\'t be empty',
@@ -23,19 +21,26 @@ var userSchema = new mongoose.Schema({
         maxlength: [3, 'Alias must be 3 characters!'],
         uppercase: true,
     },
-
     email: {
         type: String,
         required: 'Email can\'t be empty',
         unique: true
     },
-    
     password: {
         type: String, 
         required: 'Password can\'t be empty',
         minlength: [6, 'Password must be atleast 6 characters!'],
     },
-
+    address: {
+        type: String,
+        required: 'Address can\'t be empty',
+    },
+    phoneNum: {
+        type: Number,
+        required: 'Phone number can\'t be empty',
+        minlength: [10, 'Phone number must be 10 digits!'],
+        maxlength: [10, 'Phone number must be 10 digits!'],
+    },
     type: {
         type: String,
         required: 'User type can\'t be empty',

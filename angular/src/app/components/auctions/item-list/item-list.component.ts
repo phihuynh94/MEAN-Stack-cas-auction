@@ -103,4 +103,8 @@ export class ItemListComponent implements OnInit {
       this.isCardView = false;
     }
   }
+
+  getItemImages(imageName: string){
+    return this.itemService.getItemImages(imageName);
+  }
 }

@@ -122,7 +122,7 @@ input[type=submit]:disabled{
   color: white;
 }
 
-input[type=text],input[type=password] {
+input[type=text],input[type=password], input[type=tel] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
@@ -143,7 +143,7 @@ input[type=text],input[type=password] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus,input[type=password]:focus {
+input[type=text]:focus,input[type=password]:focus, input[type=tel]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
@@ -152,7 +152,7 @@ input[type=text]:placeholder {
   color: #cccccc;
 }
 
-input[type=text].invalid-textbox,input[type=password].invalid-textbox{
+input[type=text].invalid-textbox,input[type=password].invalid-textbox, input[type=tel].invalid-textbox{
 border-bottom: 2px solid #ed5558;
 }
 

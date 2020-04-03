@@ -1,4 +1,4 @@
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">Define Order</h5>
@@ -79,16 +79,22 @@
 
             <div class="row">
                 <div class="col">
-                    <select id="unItem" name="unItem" #unItem="ngModel" [(ngModel)]="unorderItem.itemCode" class="form-control" multiple="multiple" size="10">
-                        <option *ngFor="let unorderItem of unorderList" value="{{ unorderItem.itemCode }}" (click)="selectItemCode(unorderItem)">
-                        {{ unorderItem.itemCode }}
+                    <select id="unItem" name="unItem" #unItem="ngModel" [(ngModel)]="unorderItem.itemCode" class="form-control" multiple="multiple" size="20">
+                        <option *ngFor="let unorderItem of unorderList" value="{{ unorderItem.itemCode }}" (click)="selectUnorderItem(unorderItem)">
+                            {{ unorderItem.itemCode }}
                         </option>
                     </select>
                 </div>
+                <div class="btn-group-vertical">
+                    <button class="btn-dark mb-1" (click)="topBtn()"><img src='../../../../assets/icons/chevrons-up.svg'></button>
+                    <button class="btn-dark mb-1" (click)="upBtn()"><img src='../../../../assets/icons/chevron-up.svg'></button>
+                    <button class="btn-dark mb-1" (click)="downBtn()"><img src='../../../../assets/icons/chevron-down.svg'></button>
+                    <button class="btn-dark" (click)="bottomBtn()"><img src='../../../../assets/icons/chevrons-down.svg'></button>
+                </div>
                 <div class="col">
-                    <select id="orItem" name="orItem" #orItem="ngModel" [(ngModel)]="orderedItem.itemCode" class="form-control" multiple="multiple" size="10">
-                        <option *ngFor="let orderedItem of orderedList" value="{{ orderedItem.itemCode }}" (click)="selectItemCode(orderedItem)">
-                        {{ orderedItem.itemCode }}
+                    <select id="orItem" name="orItem" #orItem="ngModel" [(ngModel)]="orderedItem.itemCode" class="form-control" multiple="multiple" size="20">
+                        <option *ngFor="let orderedItem of orderedList, let i = index" value="{{ orderedItem.itemCode }}" (click)="selectOrderedItem(orderedItem, i)">
+                            {{ orderedItem.itemCode }}
                         </option>
                     </select>
                 </div>

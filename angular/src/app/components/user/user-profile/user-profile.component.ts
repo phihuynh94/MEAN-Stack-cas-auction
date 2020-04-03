@@ -17,13 +17,15 @@ export class UserProfileComponent implements OnInit {
     private userService: UserService, 
   ) { }
 
-  userDetails = new User;
+  userDetails = new User();
   showSucessMessage: boolean;
   showSucessMessage2: boolean;
   serverErrorMessages: string;
   serverErrorMessages2: string;
   newPassword = '';
-  aliasRegex = /[A-Za-z]{3}/;
+  aliasRegex = /[A-Za-z]{3,10}/;
+  phoneRegex = /[0-9]{3}[0-9]{3}[0-9]{4}/;
+  emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   ngOnInit() {
     this.getUser();

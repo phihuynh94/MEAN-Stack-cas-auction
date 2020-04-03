@@ -2,19 +2,45 @@
 const express = require('express'); // call express
 const itemRouter = express.Router(); // get an instance of express router
 const multer = require('multer');   // get multer
+const crypto = require('crypto');
+const GridFsStorage = require('multer-gridfs-storage');
+const config = require('../config/config');
+const Grid = require('gridfs-stream');
+const mongoose = require('mongoose');
+
+const connection = mongoose.createConnection(config.database);
+
+// Init gfs
+let gfs;
+
+connection.once('open', () => {
+  // Init stream
+  gfs = Grid(connection.db, mongoose.mongo);
+  gfs.collection('images');
+});
 
 // get files
 const Auction = require('../models/auction.model'); // get Auction schema
 const Item = require('../models/item.model'); // get Item schema
 
 // storage location and file name for upload images
-const storage = multer.diskStorage({
-    destination: function(req, file, callBack){
-        callBack(null, 'images')
+const storage = new GridFsStorage({
+    url: config.database,
+    file: (req, file) => {
+        return new Promise((resolve, reject) => {
+          crypto.randomBytes(16, (err, buf) => {
+            if (err) {
+              return reject(err);
+            }
+            const filename = file.originalname;
+            const fileInfo = {
+              filename: filename,
+              bucketName: 'images'
+            };
+            resolve(fileInfo);
+          });
+        });
     },
-    filename: function(req, file, callBack){
-        callBack(null, file.originalname);
-    }
 });
 
 // file filter for upload images
@@ -28,10 +54,37 @@ const fileFilter = (req, file, callBack) => {
   };
 
 // set upload storage and file filter
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ 
+    storage: storage, 
+    fileFilter: fileFilter,
+    // limits: { fileSize: 10 }
+});
 
 // upload images route
-itemRouter.post('/uploadImages', upload.array('images'), (req, res) => {});
+itemRouter.post('/uploadImages', upload.array('images', 5), (req, res) => {});
+
+itemRouter.get('/getItemImages/:filename', (req, res) => {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+        // Check if file
+        if (!file || file.length === 0) {
+            return res.status(404).json({
+            err: 'No file exists'
+          });
+        }
+    
+        // Check if image
+        if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
+            // Read output to browser
+            const readstream = gfs.createReadStream(file.filename);
+            readstream.pipe(res);
+        } else {
+            console.log("not an image")
+            res.status(404).json({
+            err: 'Not an image'
+          });
+        }
+      });
+});
 
 // routes for all item routes
 //==========================================
@@ -56,7 +109,7 @@ itemRouter.post('/addItem', (req, res) => {
         if (auction) {
 
             if (item.type == 'auction'){
-                auction.updateOne({ $addToSet: { unorderList: item.itemCode }}, (err, auction) => {});
+                auction.updateOne({ $addToSet: { unorderList: item.id }}, (err, auction) => {});
             }
             
             // Generate the item code
@@ -134,6 +187,12 @@ itemRouter.delete('/deleteItemById/:id', (req, res) => {
     Item.findByIdAndDelete(req.params.id, (err, item) => {
         if (!err) { 
             res.send(item);
+
+            Auction.findOneAndUpdate({ unorderList: item.itemCode }, { $pull: { unorderList: item.itemCode }},
+                (err, auction) => {});
+
+            Auction.findOneAndUpdate({ orderedList: item.itemCode }, { $pull: { orderedList: item.itemCode }},
+                (err, auction) => {});
         }
         else { 
             res.send(err);
@@ -146,12 +205,12 @@ itemRouter.get('/getBuyingItems/:buyerID', (req, res) => {
 
     Item.find({ buyerID: req.params.buyerID },
         (err, items) => {
-        if (!err) { 
-            res.send(items);
-        }
-        else { 
-            res.send(err);
-        }
+            if (!err) { 
+                res.send(items);
+            }
+            else { 
+                res.send(err);
+            }
     });
 });
 
@@ -194,20 +253,6 @@ itemRouter.get('/getItemInfoById/:id', (req, res) => {
             res.send(err);
         }
     })
-});
-
-itemRouter.get('/getImage/:imageName', (req, res) => {
-
-    Item.find({ images: req.params.imageName },
-        (err, images) => {
-            if (!err){
-                console.log(images);
-
-            }
-            else {
-                console.log(err);
-            }
-        })
 });
 
 // return the router

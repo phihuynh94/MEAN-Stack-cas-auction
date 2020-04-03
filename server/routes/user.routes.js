@@ -22,6 +22,8 @@ userRouter.post('/register', (req, res, next) => {
     newUser.alias = req.body.alias;
     newUser.email = req.body.email.toLowerCase();
     newUser.password = req.body.password;
+    newUser.address = req.body.address;
+    newUser.phoneNum = req.body.phoneNum;
     newUser.type = req.body.type;
 
     // Save to the database
@@ -73,7 +75,7 @@ userRouter.get('/dashboard', jwt.verifyJwtToken, (req, res, next) => {
             if (!user)
                 return res.status(404).json({ status: false, message: 'User record not found.' });
             else
-                return res.status(200).json({ status: true, user: _.pick(user, ['_id', 'firstName', 'lastName', 'alias', 'email', 'type']) });
+                return res.status(200).json({ status: true, user: _.pick(user, ['_id', 'firstName', 'lastName', 'alias', 'email', 'address', 'phoneNum', 'type']) });
         });
 });
 
@@ -98,6 +100,9 @@ userRouter.put('/editUser', (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         alias: req.body.alias,
+        email: req.body.email,
+        address: req.body.address,
+        phoneNum: req.body.phoneNum,
     })
 
     // Find user by id and update

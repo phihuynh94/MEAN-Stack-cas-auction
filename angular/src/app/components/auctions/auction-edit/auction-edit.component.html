@@ -4,6 +4,8 @@
     <form #editAuctionForm="ngForm" (ngSubmit)="editAuctionForm.valid && onSubmit(editAuctionForm)" class="mt-3">
         <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="auction._id">
         <input type="hidden" name="participantID" #participantID="ngModel" [(ngModel)]="auction.participantID">
+        <input type="hidden" name="unorderList" #unorderList="ngModel" [(ngModel)]="auction.unorderList">
+        <input type="hidden" name="orderedList" #orderedList="ngModel" [(ngModel)]="auction.orderedList">
 
         <div class="form-row border">
             <div class="col">

@@ -86,7 +86,7 @@ export class ItemPageComponent implements OnInit {
   onDeleteItem(){
     if (confirm('Are you sure to delete this item?') === true){
       this.itemService.deleteItemById(this.itemID).subscribe(() => {
-          this.location.back();
+        this.location.back();
       });
     }
   }

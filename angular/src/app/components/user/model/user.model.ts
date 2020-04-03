@@ -5,5 +5,7 @@ export class User {
     alias: string;
     email: string;
     password: string;
+    address: string;
+    phoneNum: number;
     type: string;
 }

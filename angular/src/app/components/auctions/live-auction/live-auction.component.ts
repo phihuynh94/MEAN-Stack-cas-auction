@@ -70,7 +70,7 @@ export class LiveAuctionComponent implements OnInit {
 
         for (var i = 0; i < this.auction.orderedList.length; i++){
           for (var j = 0; j < this.items.length; j++){
-            if (this.auction.orderedList[i] == this.items[j].itemCode){
+            if (this.auction.orderedList[i] == this.items[j]._id){
               this.orderedAuctionItems[i] = this.items[j];
             }
           }

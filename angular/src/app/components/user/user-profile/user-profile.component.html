@@ -3,6 +3,11 @@
         <div class="container">
             <h1 class="mt-4 text-center">User Profile</h1>
 
+            <button class="btn btn-secondary text-center mb-3" routerLink="/dashboard">
+                <img src="../../../assets/icons/home-black.svg">
+                < Dashboard
+            </button>
+
             <div class="lead border">
                 <div class="form-row mt-3 text-center">
                     <div class="col">
@@ -41,6 +46,26 @@
 
                     <div class="col">
                         {{ userDetails.email }}
+                    </div>
+                </div>
+
+                <div class="form-row text-center">
+                    <div class="col">
+                        <label>Address: </label>
+                    </div>
+
+                    <div class="col">
+                        {{ userDetails.address }}
+                    </div>
+                </div>
+
+                <div class="form-row text-center">
+                    <div class="col">
+                        <label>Phone Number: </label>
+                    </div>
+
+                    <div class="col">
+                        {{ userDetails.phoneNum }}
                     </div>
                 </div>
 
@@ -100,12 +125,59 @@
                                 </div>
                                 <div class="col">
                                     <!--Get user alias-->
-                                    <input type="text" #alias="ngModel" [(ngModel)]="userDetails.alias" name="alias" placeholder="Alias"
-                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="3">
+                                    <input type="text" #alias="ngModel" [(ngModel)]="userDetails.alias" name="alias" placeholder="Alias / Seller Code (3 to 10 letters)"
+                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !alias.valid }" [pattern]="aliasRegex" maxlength="10" minlength="3">
                                     <!--Validate user alias input-->
                                     <div *ngIf="editProfileForm.submitted && !alias.valid">
                                         <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
                                         <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>Email: </label>
+                                </div>
+                                <div class="col">
+                                    <!--Get user email-->
+                                    <input type="text" #email="ngModel" [(ngModel)]="userDetails.email" name="email" placeholder="Email" required
+                                    [pattern]="emailRegex" [ngClass]="{'invalid-textbox': editProfileForm.submitted && !email.valid }">
+                                    <!--Validate user email-->
+                                    <div *ngIf="editProfileForm.submitted && !email.valid">
+                                        <label *ngIf="email.errors.required" class="text-danger">This field is required.</label>
+                                        <label *ngIf="email.errors.pattern" class="text-danger">Invalid email address.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>Address: </label>
+                                </div>
+                                <div class="col">
+                                    <!--Get user addresss-->
+                                    <input type="text" #address="ngModel" [(ngModel)]="userDetails.address" name="address" placeholder="Address"
+                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !address.valid }">
+                                    <!--Validate user address input-->
+                                    <div *ngIf="editProfileForm.submitted && !address.valid">
+                                        <label *ngIf="address.errors.required" class="text-danger">This field is required.</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-2 text-center">
+                                <div class="col">
+                                    <label>Phone Number: </label>
+                                </div>
+                                <div class="col">
+                                    <!--Get user phone number-->
+                                    <input type="tel" #phoneNum="ngModel" [(ngModel)]="userDetails.phoneNum" name="phoneNum" placeholder="Phone Number" [pattern]="phoneRegex"
+                                    required  [ngClass]="{'invalid-textbox': editProfileForm.submitted && !phoneNum.valid }" minlength="10" maxlength="10">
+                                    <!--Validate user phone number input-->
+                                    <div *ngIf="editProfileForm.submitted && !phoneNum.valid">
+                                        <label *ngIf="phoneNum.errors.required" class="text-danger">This field is required.</label>
+                                        <label *ngIf="phoneNum.errors.pattern" class="text-danger">Phone number must be 10 digits</label>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +209,7 @@
                         <form #changePasswordForm="ngForm" (ngSubmit)="changePasswordForm.valid && changePasswordSubmit(changePasswordForm)">
 
                             <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="userDetails._id">
-                            <input type="hidden" name="email" #email="ngModel" [(ngModel)]="userDetails.email">
+                            <input type="hidden" name="editEmailPass" #editEmailPass="ngModel" [(ngModel)]="userDetails.email">
 
                             <div class="form-row mt-2 text-center">
                                 <div class="col">
@@ -190,10 +262,5 @@
                 </div>
             </div>
         </div>
-
-        <button class="btn btn-secondary text-center" routerLink="/dashboard">
-            <img src="../../../assets/icons/home-black.svg">
-            < Dashboard
-        </button>
     </main>
 </body>

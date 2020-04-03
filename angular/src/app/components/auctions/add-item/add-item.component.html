@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     <label>Upload Images:</label>
-                    <input type="file" #image multiple accept="image/*" (change)="selectImage(image)" class="form-control">
+                    <input type="file" #image multiple accept="image/*" (change)="selectImage(image)" name="images" class="form-control">
                     <label *ngIf="imgMsg" class="text-danger">{{ imgMsg }}</label>
                 </div>
 

@@ -1,26 +1,26 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-3 mb-3 border-bottom">
-    <h2>Inventory:</h2>
+  <h2>Inventory:</h2>
 
-    <div *ngIf="userDetails.type == 'staff'">
-      <button type="button" class="btn btn-primary mb-1" data-toggle="modal" data-target="#defineOrderModal">
-        <img src="../../../assets/icons/list.svg">
-        Define Order
-      </button>
-    </div>
-
-    <button (click)="changeView()" class="btn btn-dark mb-1">
-      <img src="../../../assets/icons/eye.svg">
-      Change view
+  <div *ngIf="userDetails.type == 'staff'">
+    <button type="button" class="btn btn-primary mb-1" data-toggle="modal" data-target="#defineOrderModal">
+      <img src="../../../assets/icons/list.svg">
+      Define Order
     </button>
+  </div>
 
-    <!--Refresh button-->
-    <button (click)="refresh()" class="btn btn-dark mb-1">
-      <img src="../../../assets/icons/refresh-cw.svg">
-      Refresh
-    </button>
+  <button (click)="changeView()" class="btn btn-dark mb-1">
+    <img src="../../../assets/icons/eye.svg">
+    Change view
+  </button>
+
+  <!--Refresh button-->
+  <button (click)="refresh()" class="btn btn-dark mb-1">
+    <img src="../../../assets/icons/refresh-cw.svg">
+    Refresh
+  </button>
 </div>
 
-<div class="mb-3">
+<div class="mb-3 border-bottom">
   <h4 class="text-center">My Selling Items:</h4>
 
   <div *ngIf="!isCardView" class="table-responsive">
@@ -30,22 +30,18 @@
               <th scope="col">Items</th>
               <th scope="col">Item Name</th>
               <th scope="col">Item Code</th>
-              <th scope="col">Quantity</th>
           </tr>
       </thead>
       <tbody>
         <tr *ngFor="let sellerItem of sellerItems" routerLink="/itemPage/{{ sellerItem._id }}">
           <td>
-            <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+            <img src="/item/getItemImages/{{sellerItem.images[0]}}" width="70" height="70" class="img-fluid rounded shadow-sm">
           </td>
           <td>
             {{ sellerItem.itemName }}
           </td>
           <td>
             {{ sellerItem.itemCode }}
-          </td>
-          <td>
-            {{ sellerItem.quantity }}
           </td>
         </tr>
       </tbody>
@@ -55,10 +51,9 @@
   <div *ngIf="isCardView">
     <div class="card-container mb-3 pb-3">
       <div class="card" *ngFor="let sellerItem of sellerItems" routerLink="/itemPage/{{ sellerItem._id }}">
-        <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+        <img src="/item/getItemImages/{{sellerItem.images[0]}}" class="card-img">
         <h5><b>{{ sellerItem.itemName }}</b></h5>
         <p>Code: {{ sellerItem.itemCode }}</p>
-        <p>Qty: {{ sellerItem.quantity }}</p>
       </div>
     </div>
   </div>
@@ -71,25 +66,21 @@
     <table class="table">
       <thead class="thead-dark">
           <tr>
-              <th scope="col">Image</th>
+              <th scope="col">Items</th>
               <th scope="col">Item Name</th>
               <th scope="col">Item Code</th>
-              <th scope="col">Quantity</th>
           </tr>
       </thead>
       <tbody>
         <tr *ngFor="let aucItem of auctionItems" routerLink="/itemPage/{{ aucItem._id }}">
           <td>
-            <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+            <img src="/item/getItemImages/{{aucItem.images[0]}}" width="70" height="70" class="img-fluid rounded shadow-sm">
           </td>
           <td>
               {{ aucItem.itemName }}
           </td>
           <td>
             {{ aucItem.itemCode }}
-          </td>
-          <td>
-              {{ aucItem.quantity }}
           </td>
         </tr>
       </tbody>
@@ -99,16 +90,15 @@
   <div *ngIf="isCardView">
     <div class="card-container mb-3 pb-3">
       <div class="card" *ngFor="let aucItem of auctionItems" routerLink="/itemPage/{{ aucItem._id }}">
-        <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+        <img src="/item/getItemImages/{{aucItem.images[0]}}" class="card-img">
         <h5><b>{{ aucItem.itemName }}</b></h5>
         <p>Code: {{ aucItem.itemCode }}</p>
-        <p>Qty: {{ aucItem.quantity }}</p>
       </div>
     </div>
   </div>
 </div>
 
-<div class="border-bottom mb-3">
+<div class="mb-3">
   <h4 class="text-center">Quick Sell Items:</h4>
 
   <div *ngIf="!isCardView" class="table-responsive">
@@ -118,23 +108,19 @@
               <th scope="col">Items</th>
               <th scope="col">Item Name</th>
               <th scope="col">Item Code</th>
-              <th scope="col">Quantity</th>
               <th scope="col">Price</th>
           </tr>
       </thead>
       <tbody>
         <tr *ngFor="let quickSellItem of quickSellItems" routerLink="/itemPage/{{ quickSellItem._id }}">
           <td>
-            <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+            <img src="../../../assets/auction-fish.jpeg" width="70" height="70" class="img-fluid rounded shadow-sm">
           </td>
           <td>
               {{ quickSellItem.itemName }}
           </td>
           <td>
             {{ quickSellItem.itemCode }}
-          </td>
-          <td>
-              {{ quickSellItem.quantity }}
           </td>
           <td>
             {{ quickSellItem.price | currency }}
@@ -147,10 +133,9 @@
   <div *ngIf="isCardView">
     <div class="card-container mb-3 pb-3">
       <div class="card" *ngFor="let quickSellItem of quickSellItems" routerLink="/itemPage/{{ quickSellItem._id }}">
-        <img src="../../../assets/auction-fish.jpeg" class="card-img" >
+        <img src="../../../assets/auction-fish.jpeg" class="card-img">
         <h5><b>{{ quickSellItem.itemName }}</b></h5>
         <p>Code: {{ quickSellItem.itemCode }}</p>
-        <p>Qty: {{ quickSellItem.quantity }}</p>
         <p>Price: {{ quickSellItem.price | currency }}</p>
       </div>
     </div>

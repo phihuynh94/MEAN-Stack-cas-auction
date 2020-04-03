@@ -25,12 +25,12 @@
     </div>
 
     <!--Get user alias-->
-    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias / Seller Code (3 letters) " maxlength="3"
+    <input type="text" #alias="ngModel" [(ngModel)]="user.alias" name="alias" placeholder="Alias / Seller Code (3 to 10 letters)" maxlength="10" minlength="3"
     required  [ngClass]="{'invalid-textbox': signUpForm.submitted && !alias.valid }" [pattern]="aliasRegex">
     <!--Validate user alias input-->
     <div *ngIf="signUpForm.submitted && !alias.valid">
         <label *ngIf="alias.errors.required" class="validation-message">This field is required.</label>
-        <label *ngIf="alias.errors.pattern" class="validation-message">Invalid alias, must be 3 letters.</label>
+        <label *ngIf="alias.errors.pattern" class="validation-message">Invalid alias, must be 3 to 10 letters.</label>
     </div>
 
     <!--Get user email-->
@@ -49,6 +49,23 @@
     <div *ngIf="signUpForm.submitted && password.errors">
         <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
         <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 6 characters.</label>
+    </div>
+
+    <!--Get address-->
+    <input type="text" #address="ngModel" [(ngModel)]="user.address" name="address" placeholder="Address"
+    required [ngClass]="{ 'invalid-textbox': signUpForm.submitted && !address.valid }">
+    <!--Validate user address input-->
+    <div *ngIf="signUpForm.submitted && !address.valid">
+        <label class="validation-message">This field is required.</label>
+    </div>
+
+    <!--Get phone number-->
+    <input type="tel" #phoneNum="ngModel" [(ngModel)]="user.phoneNum" name="phoneNum" placeholder="Phone Number" [pattern]="phoneRegex"
+    required [ngClass]="{ 'invalid-textbox': signUpForm.submitted && !phoneNum.valid }" minlength="10" maxlength="10">
+    <!--Validate user number input-->
+    <div *ngIf="signUpForm.submitted && !phoneNum.valid">
+        <label *ngIf="phoneNum.errors.required" class="validation-message">This field is required.</label>
+        <label *ngIf="phoneNum.errors.pattern" class="validation-message">Phone number must be 10 digits</label>
     </div>
 
     <!--Submit button-->

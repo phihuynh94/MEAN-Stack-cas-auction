@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'cas.liveauction@gmail.com',
-      pass: process.env.GOOGLE_PASS || 'CASliveauction2020.',
+      pass: process.env.GOOGLE_PASS,
     }
 });
 

@@ -60,6 +60,10 @@ export class UserService {
     return this.http.get(environment.userUrl + '/getUserByAlias/' + alias);
   }
 
+  sendPaymentInfo(paymentInfo){
+    return this.http.post(environment.userUrl + '/sendPaymentInfo', paymentInfo);
+  }
+
   // Helper Methods
   setToken(token: string){
     localStorage.setItem('token', token);

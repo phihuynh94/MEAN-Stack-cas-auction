@@ -4,11 +4,19 @@ const userRouter = express.Router(); // get an instance of express router
 const passport = require('passport'); // call passport
 const _ = require('lodash'); // call lodash
 const bcrypt = require('bcryptjs'); // call bcrypt
-var nodemailer = require('nodemailer'); // call nodemailer
+const nodemailer = require('nodemailer'); // call nodemailer
 
 // get files
 const User = require('../models/user.model'); // get User schema
 const jwt = require('../config/jwt');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'cas.liveauction@gmail.com',
+      pass: process.env.GOOGLE_PASS || 'CASliveauction2020.',
+    }
+});
 
 // routes for all user routes
 //================================================
@@ -75,7 +83,7 @@ userRouter.get('/dashboard', jwt.verifyJwtToken, (req, res, next) => {
             if (!user)
                 return res.status(404).json({ status: false, message: 'User record not found.' });
             else
-                return res.status(200).json({ status: true, user: _.pick(user, ['_id', 'firstName', 'lastName', 'alias', 'email', 'address', 'phoneNum', 'type']) });
+                return res.status(200).json({ status: true, user: _.pick(user, ['_id', 'firstName', 'lastName', 'alias', 'email', 'address', 'phoneNum', 'type', 'payout', 'payoutAmount']) });
         });
 });
 
@@ -94,6 +102,8 @@ userRouter.get('/getUserById/:id', (req, res) => {
 // Edit User
 userRouter.put('/editUser', (req, res) => {
 
+    req.body.payout;
+    
     // Get new user details
     var editUser = new User({
         _id: req.body._id,
@@ -103,6 +113,9 @@ userRouter.put('/editUser', (req, res) => {
         email: req.body.email,
         address: req.body.address,
         phoneNum: req.body.phoneNum,
+        type: req.body.type,
+        payout: req.body.payout,
+        payoutAmount: req.body.payoutAmount,
     })
 
     // Find user by id and update
@@ -138,14 +151,6 @@ userRouter.put('/changePassword/:token', jwt.verifyJwtToken, (req, res, next) =>
 userRouter.post('/forgotPassword', (req, res) => {
 
     userEmail = req.body.email;
-
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'cas.liveauction@gmail.com',
-          pass: 'CASliveauction2020'
-        }
-    });
 
     User.findOne({ email: userEmail },
         (err, user) => {
@@ -252,7 +257,6 @@ userRouter.delete('/deleteUser/:id', (req, res) => {
 
 // Get user by alias
 userRouter.get('/getUserByAlias/:alias', (req, res) => {
-
     User.findOne({ alias: req.params.alias.toUpperCase() }, (err, user) => {
         if (user){
             res.send(user);
@@ -261,7 +265,74 @@ userRouter.get('/getUserByAlias/:alias', (req, res) => {
             res.send(err);
         }
     })
-})
+});
+
+userRouter.post('/sendPaymentInfo', (req, res) => {
+    user = req.body.user;
+    buyingItems = req.body.buyingItems;
+    sellingItems = req.body.sellingItems;
+    buyingAmount = req.body.buyingAmount;
+    sellingAmount = req.body.sellingAmount;
+    commission = req.body.commission;
+    fee = req.body.fee;
+    purchaseAmount = req.body.purchaseAmount;
+    payoutAmount = req.body.payoutAmount;
+
+    var emailText = '';
+    
+    if (buyingItems[0] != null){
+        emailText += '<container><table style="border:solid;" cellpadding="30"><thead><tr><th style="border:solid;">Buying Items</th>' +
+        '<th style="border:solid;">Item Code</th><th style="border:solid;">Price</th></tr></thead><tbody>';
+
+        for (buyingItem of buyingItems){
+            emailText = emailText + '<tr><td style="text-align:center;">' + buyingItem.itemName + 
+            '</td><td style="text-align:center;">' + buyingItem.itemCode + '</td><td style="text-align:center">$' + buyingItem.price.toFixed(2) + '</td></tr>';
+        }
+
+        emailText += '</tbody></table><container><br><br>';
+    }
+    
+    if (sellingItems[0] != null){
+        emailText += '<table style="border:solid;" cellpadding="30"><thead><tr><th style="border:solid;">Selling Items</th>' +
+        '<th style="border:solid;">Item Code</th><th style="border:solid;">Price</th></tr></thead><tbody>';
+
+        for (sellingItem of sellingItems){
+            if (sellingItem.price > 0){
+                emailText = emailText + '<tr><td style="text-align:center;">' + sellingItem.itemName + 
+                '</td><td style="text-align:center;">' + sellingItem.itemCode + '</td><td style="text-align:center">$' + sellingItem.price.toFixed(2) + '</td></tr>';
+            }
+        }
+
+        emailText += '</tbody></table><br><br>Buying amount: $' + buyingAmount.toFixed(2) + '<br>Selling amount: $' + sellingAmount.toFixed(2) +
+        '<br>Fee: $' + fee.toFixed(2) + '<br>Commission: $' + commission.toFixed(2) + '<br><br>';
+
+    }    
+
+    if (purchaseAmount > 0){
+        emailText += 'Purchase amount: $' + purchaseAmount.toFixed(2);
+    }
+    else if (payoutAmount > 0){
+        emailText += 'Payout amount: $' + payoutAmount.toFixed(2);
+    }
+
+    var mailOptions = {
+        from: 'cas.liveauction@gmail.com',
+        to: user.email,
+        subject: 'CAS payment information',
+        html: 'Hi ' + user.firstName + ',<br><br>Here is the payment information from the Colorado Aquarium Society auction:<br><br>' + emailText +
+        '<br><br>Thank you for participating in our auction!<br><br>The Colorado Aquarium Society club.',
+    };
+
+    transporter.sendMail(mailOptions, function(err, info){
+        if (err){
+            return res.status(404).json({ status: false, message: 'coudld not send email' });
+        }
+        else {
+            console.log('Email sent: ' + info.response);
+            return res.status(200).json({ "message": "sent" });
+        }
+    });
+});
 
 // return the router
 module.exports = userRouter;

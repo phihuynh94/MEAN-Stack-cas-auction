@@ -7,6 +7,8 @@ import { ItemService } from '../../service/item.service';
 import { Item } from '../../model/item.model';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/model/user.model';
+import { AuctionService } from '../../service/auction.service';
+import { Auction } from '../../model/auction.model';
 
 @Component({
   selector: 'app-item-list',
@@ -19,6 +21,7 @@ export class ItemListComponent implements OnInit {
     private itemService: ItemService,
     private route: ActivatedRoute,
     private userService: UserService,
+    private auctionService: AuctionService,
   ) 
   {}
 
@@ -38,6 +41,11 @@ export class ItemListComponent implements OnInit {
   item = new Item();
   userDetails = new User();
   isCardView = false; 
+  imgUrl = this.itemService.imgUrl;
+  searchMsg: string;
+  searchInput: string;
+  searchItems;
+  participants;
 
   // get all of item's info in the Auction
   getItems() {
@@ -47,6 +55,20 @@ export class ItemListComponent implements OnInit {
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
         this.itemsInfo = res as Item[];
+
+        this.auctionService.getAuctionParticipants(this.auctionID).subscribe(
+          res => {
+            this.participants = res as User[];
+
+            for(let i in this.itemsInfo){
+              this.participants.forEach(participant => {
+                if(this.itemsInfo[i].buyerID == participant._id){
+                  this.itemsInfo[i].buyerID = participant.alias
+                }
+              });
+            }
+          }
+        )
 
         // split auction and quicksell into 2 array
         for (var i = 0; i < this.itemsInfo.length; i++){
@@ -83,6 +105,20 @@ export class ItemListComponent implements OnInit {
     this.itemService.getSellerItemsInAuction(this.item).subscribe(
       res => {
         this.sellerItems = res as Item[];
+
+        this.auctionService.getAuctionParticipants(this.auctionID).subscribe(
+          res => {
+            this.participants = res as User[];
+
+            for(let i in this.sellerItems){
+              this.participants.forEach(participant => {
+                if(this.sellerItems[i].buyerID == participant._id){
+                  this.sellerItems[i].buyerID = participant.alias
+                }
+              });
+            }
+          }
+        )
       }
     );
   }
@@ -104,7 +140,26 @@ export class ItemListComponent implements OnInit {
     }
   }
 
-  getItemImages(imageName: string){
-    return this.itemService.getItemImages(imageName);
+  onSearch(){
+    this.searchItems = [];
+
+    if (this.searchInput != null && this.searchInput != ''){
+      for (let item of this.itemsInfo){
+        if (item.itemCode.search(this.searchInput.toUpperCase()) != -1 ||
+            item.itemName.toUpperCase().search(this.searchInput.toUpperCase()) != -1){
+            this.searchItems.push(item);
+          }
+      }
+
+      if (this.searchItems[0] == null){
+        this.searchMsg = 'Item not found.';
+      }
+      else {
+        this.searchMsg = '';
+      }
+    }
+    else {
+      this.searchMsg = '';
+    }
   }
 }

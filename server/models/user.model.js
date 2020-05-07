@@ -17,8 +17,8 @@ var userSchema = new mongoose.Schema({
         type: String,
         required: 'Alias can\'t be empty',
         unique: true,
-        minlength: [3, 'Alias must be 3 characters!'],
-        maxlength: [3, 'Alias must be 3 characters!'],
+        minlength: [3, 'Alias must be 3 to 10 characters!'],
+        maxlength: [10, 'Alias must be 3 to 10 characters!'],
         uppercase: true,
     },
     email: {
@@ -44,6 +44,14 @@ var userSchema = new mongoose.Schema({
     type: {
         type: String,
         required: 'User type can\'t be empty',
+    },
+    payout: {
+        type: Boolean,
+        default: false,
+    },
+    payoutAmount: {
+        type: Number,
+        default: 0,
     },
 
     saltSecret: String,
@@ -84,7 +92,7 @@ userSchema.methods.generateJwt = function() {
     return jwt.sign({ _id: this._id },
         process.env.JWT_SECRET || "SECRET#123",
         {
-            expiresIn: process.env.JWT_EXP || "30m"
+            expiresIn: process.env.JWT_EXP || "120m"
         });
 };
 

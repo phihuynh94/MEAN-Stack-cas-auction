@@ -8,4 +8,6 @@ export class User {
     address: string;
     phoneNum: number;
     type: string;
+    payout: boolean;
+    payoutAmount: number;
 }

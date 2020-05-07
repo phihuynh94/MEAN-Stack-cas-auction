@@ -46,6 +46,9 @@ export class LiveAuctionComponent implements OnInit {
   numRegex = /^[1-9][0-9]*$/;
   errorMessage: string;
   successMessage: string;
+  imgUrl = this.itemService.imgUrl;
+  isSubmit: boolean = false;
+  auctionMsg: string;
   
   ngOnInit() {
     this.getAuctionInfo();
@@ -64,13 +67,15 @@ export class LiveAuctionComponent implements OnInit {
   }
 
   getAuctionItems(){
+    this.orderedAuctionItems = [];
+
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
         this.items = res as Item[];
 
         for (var i = 0; i < this.auction.orderedList.length; i++){
           for (var j = 0; j < this.items.length; j++){
-            if (this.auction.orderedList[i] == this.items[j]._id){
+            if (this.auction.orderedList[i] == this.items[j]._id && this.items[j].paid == false){
               this.orderedAuctionItems[i] = this.items[j];
             }
           }
@@ -88,20 +93,26 @@ export class LiveAuctionComponent implements OnInit {
   }
 
   onNext(){
+    this.getAuctionInfo();
+
     if (this.i < this.orderedAuctionItems.length - 1){
       this.i += 1;
+      this.auctionMsg = '';
     }
     else{
-      console.log('This is the last item');
+      this.auctionMsg = 'This is the last item';
     }
   }
 
   onPrev(){
+    this.getAuctionInfo();
+
     if (this.i != 0){
       this.i -= 1;
+      this.auctionMsg = '';
     }
     else {
-      console.log('This is the first item');
+      this.auctionMsg = 'This is the first item';
     }
   }
 
@@ -116,9 +127,15 @@ export class LiveAuctionComponent implements OnInit {
         res => {
           this.errorMessage = '';
           this.winnerNum = '';
+          this.isSubmit = false;
 
           if (this.i < this.orderedAuctionItems.length - 1){
             this.i++;
+            this.isSubmit = false;
+            this.auctionMsg = '';
+          }
+          else {
+            this.auctionMsg = 'This is the last item';
           }
 
           this.getAuctionInfo();
@@ -128,20 +145,22 @@ export class LiveAuctionComponent implements OnInit {
   }
 
   onSearch(){
-    for (var i = 0; i < this.orderedAuctionItems.length; i++){
-      if (this.search.toUpperCase() == this.orderedAuctionItems[i].itemCode){
-        this.i = i;
-        this.isSearch = true;
-        this.searchMsg = '';
+    if (this.search != null && this.search != ''){
+      for (var i = 0; i < this.orderedAuctionItems.length; i++){
+        if (this.search.toUpperCase() == this.orderedAuctionItems[i].itemCode){
+          this.i = i;
+          this.isSearch = true;
+          this.searchMsg = '';
+        }
       }
-    }
-
-    if (this.isSearch == false) {
-      this.searchMsg = 'No item found.';
-      setTimeout(() => this.searchMsg = '', 4000);
-    }
-
-    this.isSearch = false;
+  
+      if (this.isSearch == false) {
+        this.searchMsg = 'No item found.';
+        setTimeout(() => this.searchMsg = '', 4000);
+      }
+  
+      this.isSearch = false;
+    }    
   }
 
   getUser(){
@@ -162,5 +181,9 @@ export class LiveAuctionComponent implements OnInit {
 
   goBack() {
     this.location.back();
+  }
+
+  onRefresh(){
+    this.getAuctionInfo();
   }
 }

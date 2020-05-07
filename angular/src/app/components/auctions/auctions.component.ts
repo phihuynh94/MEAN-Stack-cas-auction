@@ -20,7 +20,7 @@ export class AuctionsComponent implements OnInit {
   auctionInfo = new Auction();
   userDetails = new User();
   participantList;
-  isParticipate = false;
+  isParticipate: boolean;
   staff: boolean;
 
   constructor(
@@ -79,14 +79,6 @@ export class AuctionsComponent implements OnInit {
     this.auctionService.participateAuction(this.auctionId, this.userDetails._id).subscribe(
       res => {
         this.isParticipate = true;
-      }
-    );
-  }
-
-  onNotParticipate(){
-    this.auctionService.notParticipate(this.auctionId, this.userDetails._id).subscribe(
-      res => {
-        this.isParticipate = false;
       }
     );
   }

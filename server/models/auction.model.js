@@ -31,7 +31,10 @@ var auctionSchema = new mongoose.Schema({
     }],
     orderedList: [{
         type: String,
-    }]
+    }],
+    images: [{
+        type: String,
+    }],
 });
 
 // create Auction model schema

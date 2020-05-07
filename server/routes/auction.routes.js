@@ -2,11 +2,28 @@
 const express = require('express'); // call express
 const auctionRouter = express.Router(); // get an instance of express router
 const _ = require('lodash');
+const Grid = require('gridfs-stream');
+const mongoose = require('mongoose');
+const config = require('../config/config');
 
 // get files
 const Auction = require('../models/auction.model'); // get Auction schema
 const User = require('../models/user.model'); // get User schema
 const Item = require('../models/item.model'); // get Item schema
+
+const connection = mongoose.createConnection(
+    config.database,
+    { useNewUrlParser: true, useUnifiedTopology: true }
+);
+
+// Init gfs
+let gfs;
+
+connection.once('open', () => {
+  // Init stream
+  gfs = Grid(connection.db, mongoose.mongo);
+  gfs.collection('images');
+});
 
 // routes for all auction routes
 //================================================
@@ -75,6 +92,7 @@ auctionRouter.put('/editAuction/:id', (req, res) => {
         participantID: req.body.participantID,
         unorderList: req.body.unorderList,
         orderedList: req.body.orderedList,
+        images: req.body.images,
     });
     
     // Find auction by id and update
@@ -144,29 +162,13 @@ auctionRouter.delete('/deleteAuction/:id', (req, res) => {
     Auction.findByIdAndDelete(req.params.id, (err, auction) => {
         if (!err) {
             Item.deleteMany({ auctionID: auction.id }, (err, items) => {});
+
             res.send(auction);
         }
         else { 
             res.send(err);
         }
     })
-});
-
-// Not participate in auction
-auctionRouter.put('/notParticipate/:id', (req, res) => {
-
-    auctionID = req.params.id;
-    participantID = req.body.participantID;
-
-    Auction.findByIdAndUpdate(auctionID, { $pull: { participantID: participantID }},
-        (err, auction) => {
-            if (!err) {
-                res.send(auction);
-            }
-            else {
-                res.send(err);
-            }
-        });
 });
 
 // return the router

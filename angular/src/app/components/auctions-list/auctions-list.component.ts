@@ -1,5 +1,6 @@
 // get built in
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 // get components
 import { AuctionService } from '../service/auction.service';
@@ -14,11 +15,14 @@ export class AuctionsListComponent implements OnInit {
 
   constructor(
     private auctionService: AuctionService,
+    private router:Router,
   ) { }
 
   auctionsInfo;
+  currentUrl;
   
   ngOnInit() {
+    this.currentUrl = this.router.url;
     this.getAuctions();
   }
 

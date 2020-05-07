@@ -56,10 +56,10 @@ export class AddItemComponent implements OnInit {
     this.item.sellerID = this.userDetails._id;
     this.item.type = form.value.type;
 
-    if (this.imagesToUpload){
-      
+    if (this.imagesToUpload){      
       var i = 0;
       this.item.images = [];
+      this.formData = new FormData();
 
       for (let img of this.imagesToUpload){
         this.item.images[i] = img.name;

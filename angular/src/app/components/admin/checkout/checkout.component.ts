@@ -38,6 +38,10 @@ export class CheckoutComponent implements OnInit {
   purchaseAmount: number = 0;
   payoutAmount: number = 0;
   commissionAmount: number = 0;
+  users;
+  isPaid: boolean;
+  buyerAlias;
+  imgUrl = this.itemService.imgUrl;
 
   @ViewChild('paypal', { static: true }) paypalElement: ElementRef;
 
@@ -122,6 +126,7 @@ export class CheckoutComponent implements OnInit {
 
   getSellingItems(){
     this.fee = 0;
+    this.buyerAlias = [];
 
     this.itemService.getSellingItems(this.checkoutUser._id).subscribe(
       res => {
@@ -136,6 +141,20 @@ export class CheckoutComponent implements OnInit {
           }
         }
 
+        this.userService.getUsers().subscribe(
+          res => {
+            this.users = res as User[];
+
+            for(let i in this.sellingItems){
+              this.users.forEach(user => {
+                if(this.sellingItems[i].buyerID == user._id){
+                  this.buyerAlias[i] = user.alias;
+                }
+              });
+            }
+          }
+        );
+
         this.calculation();
       }
     )
@@ -143,15 +162,19 @@ export class CheckoutComponent implements OnInit {
 
   calculation(){
     this.totalAmount = 0;
+    this.isPaid = false;
 
-    this.totalAmount = this.buyingAmount - ((this.sellingAmount - this.fee) * 0.8);
-    this.commissionAmount = (this.sellingAmount - this.fee) * 0.2;
-
+    this.commissionAmount = (this.sellingAmount - this.fee) * 0.8;
+    this.totalAmount = this.buyingAmount - this.commissionAmount;
+    
     if (this.totalAmount > 0){
       this.purchaseAmount = this.totalAmount;
     }
-    else {
+    else if (this.totalAmount < 0){
       this.payoutAmount = this.totalAmount * (-1);
+      this.checkoutUser.payout = true;
+      this.checkoutUser.payoutAmount = this.payoutAmount;
+      this.userService.editUser(this.checkoutUser).subscribe();
     }
   }
 
@@ -176,12 +199,8 @@ export class CheckoutComponent implements OnInit {
         },
         onApprove: async (data, actions) => {
           const order = await actions.order.capture();
-          const paymentInfo = { "order": order.purchase_units, "user": this.checkoutUser, "items": this.buyingItems}
           
-          // this.paidFor = true;
-
-          console.log(order);
-          console.log(paymentInfo);
+          this.sendPaymentInfo();
         },
         onError: err => {
           console.log(err);
@@ -191,6 +210,38 @@ export class CheckoutComponent implements OnInit {
   }
 
   onPayout(){
-    
+    this.checkoutUser.payout = false;
+    this.checkoutUser.payoutAmount = 0;
+    this.userService.editUser(this.checkoutUser).subscribe();
+    this.sendPaymentInfo();
+  }
+
+  onPayByCash(){
+    this.sendPaymentInfo();
+  }
+
+  sendPaymentInfo(){
+    const paymentInfo = { 
+      "user": this.checkoutUser, "buyingItems": this.buyingItems, "sellingItems": this.sellingItems,
+      "buyingAmount": this.buyingAmount, "sellingAmount": this.sellingAmount, "fee": this.fee, "commission": this.commissionAmount,
+      "purchaseAmount": this.purchaseAmount, "payoutAmount": this.payoutAmount
+    }
+
+    this.userService.sendPaymentInfo(paymentInfo).subscribe();
+
+    for (let i in this.buyingItems){
+      this.buyingItems[i].paid = true;
+      this.itemService.editItem(this.buyingItems[i]).subscribe();
+      this.itemService.removePaidItem(this.buyingItems[i]).subscribe();
+    }
+
+    for (let i in this.sellingItems){
+      if (this.sellingItems[i].paid == true){
+        this.sellingItems[i].payout = true;
+        this.itemService.editItem(this.sellingItems[i]).subscribe();
+      }
+    }
+
+    this.isPaid = true;
   }
 }

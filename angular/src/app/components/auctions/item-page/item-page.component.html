@@ -7,9 +7,33 @@
 
     <div class="row mt-3">
         <div class="col-md-8 border">
-          <div class="text-center">
-              <img class="img-fluid" src="../../../assets/auction-fish.jpeg" width="350">
-          </div>
+            <div class="text-center">
+                <div id="imagesCarousel" class="carousel slide border mb-1" data-ride="carousel">
+                    <div *ngIf="itemInfo.images">
+                        <ol class="carousel-indicators">
+                            <li *ngFor="let image of itemInfo.images; let j = index" data-target="#imagesCarousel" data-slide-to="j" class="active"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img *ngIf="itemInfo.images[0]" class="img-fluid" [src]="imgUrl + itemInfo.images[0]" width="1000">
+                                <img *ngIf="!itemInfo.images[0]" class="img-fluid" src="../../../assets/placeholder.png" width="500">
+                            </div>
+                            <div *ngFor="let img of itemInfo.images | slice:1; let k = index" class="carousel-item">
+                                <img class="img-fluid" [src]="imgUrl + img" width="1000">
+                            </div>
+                        </div>
+                    </div>
+        
+                    <a class="carousel-control-prev" href="#imagesCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#imagesCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
         </div>
     
         <div class="col-md-4 border text-center">
@@ -26,6 +50,10 @@
                 <p>
                     <label>Seller:</label>
                     {{ sellerInfo.firstName }} {{ sellerInfo.lastName }}
+                </p>
+                <p>
+                    <label>Buyer:</label>
+                    {{ buyerAlias }} (bidder# {{ bidderNum }})
                 </p>
                 <p>
                     <label>Type:</label>
@@ -57,29 +85,27 @@
                 <h3 class="text-center">Quick Sell</h3>
                 
                 <form #quickSellForm="ngForm" (ngSubmit)="quickSellForm.valid && onQuickSellSubmit(quickSellForm)">
-                    <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="itemInfo._id">
 
                     <div class="form-row mt-2 text-center">
                         <div class="col">
                             <label>Price: </label>
                         </div>
-                        <div class="col">
+                        <div class="col form-control">
                             {{ itemInfo.price | currency }}
                         </div>
                     </div>
 
                     <div class="form-row mt-2 text-center">
                         <div class="col">
-                            <label>Buyer Alias: </label>
+                            <label>Buyer #Bidder/Alias: </label>
                         </div>
                         <div class="col">
-                            <!--Get user alias-->
-                            <input type="text" #alias="ngModel" [(ngModel)]="buyerAlias" name="alias" placeholder="Buyer Alias" [pattern]="aliasRegex"
-                            required maxlength="3" [ngClass]="{'invalid-textbox': quickSellForm.submitted && alias.errors }">
-                            <!--Validate user alias input-->
-                            <div *ngIf="quickSellForm.submitted && alias.errors">
-                                <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
-                                <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                            <!--Get buyer-->
+                            <input type="text" #buyer="ngModel" [(ngModel)]="buyerInput" name="buyer" placeholder="Buyer #Bidder / Alias"
+                            required maxlength="10" [ngClass]="{'invalid-textbox': quickSellForm.submitted && buyer.errors }" class="form-control">
+                            <!--Validate buyer input-->
+                            <div *ngIf="quickSellForm.submitted && buyer.errors">
+                                <label *ngIf="buyer.errors.required" class="text-danger">This field is required.</label>
                             </div>
                         </div>
                     </div>
@@ -92,12 +118,12 @@
                     </div>
 
                     <!-- Success message -->
-                    <div class="alert alert-success mt-3" *ngIf="quickSellSuccessMessage">
+                    <div class="alert alert-success mt-3 text-center" *ngIf="quickSellSuccessMessage">
                         Sold
                     </div>
 
                     <!-- Error message -->
-                    <div class="alert alert-danger mt-3" *ngIf="quickSellErrorMessage">
+                    <div class="alert alert-danger mt-3 text-center" *ngIf="quickSellErrorMessage">
                         {{ quickSellErrorMessage }}
                     </div>
                 </form>
@@ -112,6 +138,7 @@
 
                 <form #editItemForm="ngForm" (ngSubmit)="editItemForm.valid && onEditItemSubmit(editItemForm)">
                     <input type="hidden" name="_id" #_id="ngModel" [(ngModel)]="itemInfo._id">
+                    <input type="hidden" name="auctionID" #auctionID="ngModel" [(ngModel)]="itemInfo.auctionID">
 
                     <div class="form-row mt-2 text-center">
                         <div class="col">
@@ -120,7 +147,7 @@
                         <div class="col">
                             <!--Get item name-->
                             <input type="text" #itemName="ngModel" [(ngModel)]="itemInfo.itemName" name="itemName" placeholder="Item Name"
-                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !itemName.valid }">
+                            required  [ngClass]="{'invalid-textbox': editItemForm.submitted && !itemName.valid }" class="form-control">
                             <!--Validate item name input-->
                             <div *ngIf="editItemForm.submitted && !itemName.valid">
                                 <label class="text-danger">This field is required.</label>
@@ -134,7 +161,7 @@
                         </div>
                         <div class="col">
                             <!--Get item code-->
-                            <input type="number" #itemCode="ngModel" [(ngModel)]="code" name="itemCode" placeholder="Item Code"
+                            <input type="number" #itemCode="ngModel" [(ngModel)]="code" name="itemCode" placeholder="Item Code" class="form-control"
                             required [pattern]="numRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && itemCode.errors }">
                             <!--Validate item code input-->
                             <div *ngIf="editItemForm.submitted && itemCode.errors">
@@ -151,7 +178,7 @@
                         <div class="col">
                             <!--Get item quantity-->
                             <input type="number" #quantity="ngModel" [(ngModel)]="itemInfo.quantity" name="quantity" placeholder="Quantity"
-                            required [pattern]="numRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && quantity.errors }">
+                            required [pattern]="numRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && quantity.errors }" class="form-control">
                             <!--Validate item quantity input-->
                             <div *ngIf="editItemForm.submitted && quantity.errors">
                                 <label *ngIf="quantity.errors.required" class="text-danger">This field is required.</label>
@@ -160,19 +187,36 @@
                         </div>
                     </div>
 
-                    <div *ngIf="itemInfo.type == 'quick sell'">
+                    <div *ngIf="userDetails.type == 'staff'">
                         <div class="form-row mt-2 text-center">
                             <div class="col">
                                 <label>Price: </label>
                             </div>
                             <div class="col">
                                 <!--Get item price-->
-                                <input type="number" #price="ngModel" [(ngModel)]="itemInfo.price" name="price" placeholder="Price"
-                                required [pattern]="currencyRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && price.errors }">
+                                <input type="number" #price="ngModel" [(ngModel)]="itemInfo.price" name="price" placeholder="Price" class="form-control"
+                                [pattern]="currencyRegex" [ngClass]="{'invalid-textbox': editItemForm.submitted && price.errors }">
                                 <!--Validate item price input-->
                                 <div *ngIf="editItemForm.submitted && price.errors">
                                     <label *ngIf="price.errors.required" class="text-danger">This field is required.</label>
                                     <label *ngIf="price.errors.pattern" class="text-danger">Invalid price input.</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="userDetails.type == 'staff'">
+                        <div class="form-row mt-2 text-center">
+                            <div class="col">
+                                <label>Buyer #Bidder/Alias: </label>
+                            </div>
+                            <div class="col">
+                                <!--Get buyer-->
+                                <input type="text" #buyer="ngModel" [(ngModel)]="buyerInput" name="buyer" placeholder="{{ buyerAlias }} (bidder# {{ bidderNum }})"
+                                maxlength="10" [ngClass]="{'invalid-textbox': editItemForm.submitted && buyer.errors }" class="form-control">
+                                <!--Validate buyer input-->
+                                <div *ngIf="editItemForm.submitted && buyer.errors">
+                                    <label *ngIf="buyer.errors.required" class="text-danger">This field is required.</label>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +228,35 @@
                         </div>
                         <div class="col">
                             <!--Get item description-->
-                            <textarea type="text" #description="ngModel" [(ngModel)]="itemInfo.description" name="description" placeholder="Description"></textarea>
+                            <textarea type="text" #description="ngModel" [(ngModel)]="itemInfo.description" name="description" placeholder="Description" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <div *ngIf="imgAmount > 0" class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Images: </label>
+                        </div>
+                        <div class="col">
+                            <img *ngFor="let image of itemInfo.images" [src]="imgUrl + image" width="100" height="100" class="rounded shadow-sm mb-1" >
+                           
+                            <select type="file" name="images" class="form-control mt-1" #image="ngModel" [(ngModel)]="selectImage">
+                                <option *ngFor="let image of images" value="{{ image._id }}">{{ image.filename }}</option>
+                            </select>
+
+                            <button class="btn btn-secondary mt-2 form-control" (click)="onDeleteImage(selectImage)">Delete image</button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="imgAmount < 5" class="form-row mt-2 text-center">
+                        <div class="col">
+                            <label>Upload Images:</label>
+                        </div>
+                        <div class="col">
+                            <input type="file" #image multiple accept="image/*" (change)="onSelectImage(image)" name="images" class="form-control">
+
+                            <button class="btn btn-secondary mt-2 form-control" (click)="onAddImage()">Add new image</button>
+
+                            <div *ngIf="imgMsg" class="text-danger mt-2">{{ imgMsg }}</div>
                         </div>
                     </div>
 
@@ -199,7 +271,7 @@
                     </div>
 
                     <!-- Success message -->
-                    <div class="alert alert-success mt-3" *ngIf="showSucessMessage">
+                    <div class="alert alert-success mt-3" *ngIf="showSuccessMessage">
                         Edited successfully
                     </div>
 

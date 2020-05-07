@@ -41,7 +41,15 @@ var itemSchema = new mongoose.Schema({
     images: [{
         type: String,
         max: [5, 'Max 5 images']
-    }]
+    }],
+    paid: {
+        type: Boolean,
+        default: false,
+    },
+    payout: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 // create Inventory model schema

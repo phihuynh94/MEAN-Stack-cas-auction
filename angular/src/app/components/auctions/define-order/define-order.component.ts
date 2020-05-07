@@ -34,12 +34,16 @@ export class DefineOrderComponent implements OnInit {
   showEnqueueBtn: boolean = false;
   searchMsg: string;
   index: number;
+  imgUrl: string;
 
   ngOnInit() {
     this.getItems();
   }
 
   getItems() {
+    this.unorderList = [];
+    this.orderedList = [];
+
     // Get all items in auction
     this.itemService.getItemsInAuction(this.auctionID).subscribe(
       res => {
@@ -76,7 +80,13 @@ export class DefineOrderComponent implements OnInit {
     this.selectItem = selectUnorderItem;
     this.searchItemCode = selectUnorderItem.itemCode;
     this.searchMsg = '';
-
+    if (this.selectItem.images[0] != null){
+      this.imgUrl = this.itemService.imgUrl + this.selectItem.images[0];
+    }
+    else {
+      this.imgUrl = null;
+    }
+    
     if (this.selectItem.itemCode == this.unorderItem.itemCode){
       this.showQueueBtn = true;
       this.showEnqueueBtn = false;
@@ -94,6 +104,12 @@ export class DefineOrderComponent implements OnInit {
     this.searchItemCode = selectOrderedItem.itemCode;
     this.searchMsg = '';
     this.index = i;
+    if (this.selectItem.images[0] != null){
+      this.imgUrl = this.itemService.imgUrl + this.selectItem.images[0];
+    }
+    else {
+      this.imgUrl = null;
+    }
 
     if (this.selectItem.itemCode == this.unorderItem.itemCode){
       this.showQueueBtn = true;
@@ -109,6 +125,7 @@ export class DefineOrderComponent implements OnInit {
   onQueue(){
     // Find the selected item
     for (var i = 0; i < this.unorderList.length; i++){
+
       if (this.unorderItem.itemCode == this.unorderList[i].itemCode){
 
         // Queue item into ordered list from unorder list
@@ -116,13 +133,13 @@ export class DefineOrderComponent implements OnInit {
 
         // Remove item from unorder list
         this.unorderList.splice(i, 1);
+
+        // Send the lists to backend to save in auction collection
+        this.auctionDetails.unorderList = this.unorderList;
+        this.auctionDetails.orderedList = this.orderedList;
+        this.auctionService.editAuction(this.auctionDetails).subscribe();
       }
     }
-
-    // Send the lists to backend to save in auction collection
-    this.auctionDetails.unorderList = this.unorderList;
-    this.auctionDetails.orderedList = this.orderedList;
-    this.auctionService.editAuction(this.auctionDetails).subscribe();
 
     this.showQueueBtn = false;
     this.unorderItem = new Item();
@@ -138,13 +155,13 @@ export class DefineOrderComponent implements OnInit {
 
         // Remove item from ordered list
         this.orderedList.splice(i, 1);
+
+        // Send the lists to backend to save in auction collection
+        this.auctionDetails.unorderList = this.unorderList;
+        this.auctionDetails.orderedList = this.orderedList;
+        this.auctionService.editAuction(this.auctionDetails).subscribe();
       }
     }
-
-    // Send the lists to backend to save in auction collection
-    this.auctionDetails.unorderList = this.unorderList;
-    this.auctionDetails.orderedList = this.orderedList;
-    this.auctionService.editAuction(this.auctionDetails).subscribe();
 
     this.showEnqueueBtn = false;
     this.orderedItem = new Item();
@@ -153,28 +170,36 @@ export class DefineOrderComponent implements OnInit {
   onSearch(){
     this.selectItem = new Item();
 
-    for (let i in this.unorderList){
-      if (this.searchItemCode.toUpperCase() == this.unorderList[i].itemCode){
-        this.selectItem = this.unorderList[i];
-        this.unorderItem.itemCode = this.selectItem.itemCode;
-        this.showQueueBtn = true;
-        this.showEnqueueBtn = false;
+    if (this.searchItemCode != null && this.searchItemCode != ''){
+      for (let i in this.unorderList){
+        if (this.searchItemCode.toUpperCase() == this.unorderList[i].itemCode){
+          this.selectItem = this.unorderList[i];
+          this.unorderItem.itemCode = this.selectItem.itemCode;
+          this.showQueueBtn = true;
+          this.showEnqueueBtn = false;
+          this.searchMsg = '';
+        }
+      }
+  
+      for (let i in this.orderedList){
+        if (this.searchItemCode.toUpperCase() == this.orderedList[i].itemCode){
+          this.selectItem = this.orderedList[i];
+          this.orderedItem.itemCode = this.selectItem.itemCode;
+          this.showEnqueueBtn = true;
+          this.showQueueBtn = false;
+          this.searchMsg = '';
+        }
+      }
+  
+      if (this.selectItem.itemCode == null){
+        this.searchMsg = 'Item code not found.';
+      }
+      else {
         this.searchMsg = '';
       }
     }
-
-    for (let i in this.orderedList){
-      if (this.searchItemCode.toUpperCase() == this.orderedList[i].itemCode){
-        this.selectItem = this.orderedList[i];
-        this.orderedItem.itemCode = this.selectItem.itemCode;
-        this.showEnqueueBtn = true;
-        this.showQueueBtn = false;
-        this.searchMsg = '';
-      }
-    }
-
-    if (this.selectItem.itemCode == null){
-      this.searchMsg = 'Item code not found.';
+    else {
+      this.searchMsg = '';
     }
   }
 
@@ -234,5 +259,9 @@ export class DefineOrderComponent implements OnInit {
 
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr;
+  }
+
+  onRefresh(){
+    this.ngOnInit();
   }
 }

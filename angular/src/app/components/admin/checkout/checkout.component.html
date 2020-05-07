@@ -10,7 +10,7 @@
         </div>
 
         <input class="form-control ml-3 mr-3" type="text" placeholder="Search Alias / Seller Code"
-        aria-label="Search" [(ngModel)]="searchAlias" name="search">
+        aria-label="Search" [(ngModel)]="searchAlias" name="search" maxlength="10">
 
         <div class="input-group-append">
             <button class="btn btn-dark" (click)="onSearch()">Search</button>
@@ -66,7 +66,8 @@
             <tr *ngFor="let buyingItem of buyingItems">
                 <th scope="row">
                 <div class="p-2">
-                    <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
+                    <img *ngIf="buyingItem.images[0]" [src]="imgUrl + buyingItem.images[0]" width="70" class="img-fluid rounded shadow-sm">
+                    <img *ngIf="!buyingItem.images[0]" src="../../../assets/placeholder.png" width="70" class="img-fluid rounded shadow-sm">
                     <div class="ml-3 d-inline-block align-middle">
                     <h5>{{ buyingItem.itemName }}</h5>
                     </div>
@@ -101,13 +102,17 @@
                     <th scope="col">
                         <div class="py-2 text-uppercase">Buyer</div>
                     </th>
+                    <th scope="col">
+                        <div class="py-2 text-uppercase">Paid</div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let sellingItem of sellingItems">
+                <tr *ngFor="let sellingItem of sellingItems; let i = index">
                     <th scope="row">
                     <div class="p-2">
-                        <img src="https://res.cloudinary.com/mhmd/image/upload/v1556670479/product-1_zrifhn.jpg" alt="" width="70" class="img-fluid rounded shadow-sm">
+                        <img *ngIf="sellingItem.images[0]" [src]="imgUrl + sellingItem.images[0]" width="70" class="img-fluid rounded shadow-sm">
+                        <img *ngIf="!sellingItem.images[0]" src="../../../assets/placeholder.png" width="70" class="img-fluid rounded shadow-sm">
                         <div class="ml-3 d-inline-block align-middle">
                         <h5>{{ sellingItem.itemName }}</h5>
                         </div>
@@ -121,7 +126,9 @@
                     </strong>
                     </td>
                     <td class="align-middle"><strong>{{ sellingItem.price | currency }}</strong></td>
-                    <td class="align-middle"><strong></strong></td>
+                    <td class="align-middle"><strong>{{ buyerAlias[i] }}</strong></td>
+                    <td class="align-middle" *ngIf="sellingItem.paid"><strong>PAID</strong></td>
+                    <td class="align-middle" *ngIf="!sellingItem.paid && sellingItem.price > 0"><strong>UNPAID</strong></td>
                 </tr>
             </tbody>
         </table>
@@ -147,7 +154,7 @@
                   <strong>{{ fee | currency }}</strong>
                 </li>
                 <li class="d-flex justify-content-between py-3 border-bottom">
-                  <strong class="text-muted">Commission (20%)</strong>
+                  <strong class="text-muted">Commission (80%)</strong>
                   <strong>{{ commissionAmount | currency }}</strong>
                 </li>
               </div>
@@ -165,17 +172,20 @@
         </div>
 
         <div class="col-lg-6">
-          <div class="bg-dark text-light px-4 py-3 text-uppercase font-weight-bold">Payment method</div>
-          <div class="p-4">
-            <div [hidden]="totalAmount <= 0 || !checkoutUser" #paypal></div>
+            <div class="bg-dark text-light px-4 py-3 text-uppercase font-weight-bold">Payment method</div>
+            <div class="p-4">
+                <button *ngIf="totalAmount > 0 && !isPaid" (click)="onPayByCash()" class="form-control btn-success mb-3">Pay By Cash</button>
+                <div [hidden]="totalAmount <= 0 || !checkoutUser || isPaid" #paypal></div>
 
-            <div *ngIf="totalAmount < 0" class="alert alert-success text-center" role="alert">
-                THIS USER HAS A PAYOUT AMOUNT<br>
-                CHECK THEM OUT:<br>
+                <div *ngIf="totalAmount < 0 && checkoutUser.payout == true" class="alert alert-success text-center" role="alert">
+                    THIS USER HAS A PAYOUT AMOUNT<br>
+                    PAY THEM OUT:<br>
 
-                <button class="btn btn-primary mt-3" (click)="onPayout()">YES</button>
+                    <button class="btn btn-primary mt-3" (click)="onPayout()">YES</button>
+                </div>
+
+                <div *ngIf="isPaid" class="alert alert-success text-center">PAYMENT ACCEPTED</div>
             </div>
-          </div>
         </div>
     </div>
 </div>

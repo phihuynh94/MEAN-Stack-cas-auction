@@ -13,6 +13,8 @@ export class ItemService {
 
   constructor(private http: HttpClient) { }
 
+  imgUrl = 'http://localhost:8080/item/getItemImages/';
+  
   // httpMethods
   addItem(item: Item){
     return this.http.post(environment.itemUrl + '/addItem', item);
@@ -22,8 +24,20 @@ export class ItemService {
     return this.http.post(environment.itemUrl + '/uploadImages', images);
   }
 
-  getItemImages(filename: string){
-    return this.http.get(environment.itemUrl + '/getItemImages/' + filename);
+  deleteImage(imageID: string){
+    return this.http.delete(environment.itemUrl + '/deleteImage/' + imageID);
+  }
+
+  deleteImageByName(imageName: string){
+    return this.http.delete(environment.itemUrl + '/deleteImageByName/' + imageName);
+  }
+
+  getImage(imageName: string){
+    return this.http.get(environment.itemUrl + '/getImage/' + imageName);
+  }
+
+  getAllItems(){
+    return this.http.get(environment.itemUrl + '/getAllItems');
   }
 
   getItemsInAuction(auctionID: string){
@@ -52,5 +66,9 @@ export class ItemService {
 
   deleteItemById(id: string){
     return this.http.delete(environment.itemUrl + '/deleteItemById/' + id);
+  }
+
+  removePaidItem(item){
+    return this.http.put(environment.itemUrl + '/removePaidItem', item);
   }
 }

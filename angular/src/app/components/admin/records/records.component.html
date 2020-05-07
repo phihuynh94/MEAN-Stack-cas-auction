@@ -1,0 +1,146 @@
+<div class="container">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-3 mt-3">
+        <button class="btn btn-secondary" (click)="goBack()">< Go Back</button>
+        <button class="btn btn-secondary" onclick="window.print()">
+            <img src="../../../assets/icons/printer.svg">
+            Print
+        </button>
+    </div>
+    
+    <h1 class="text-center">Auction Records</h1>
+
+    <div *ngIf="!auctionID" class="d-flex justify-content-center mb-3">
+        <select (change)="onChange($event)" class="form-control">
+            <option [value]="0">Select Auction</option>
+            <option *ngFor="let auc of auctions" [value]="auc._id">{{auc.auctionName}}</option>
+        </select>
+    </div>
+    <hr>
+
+    <h2>Auction Details</h2>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <table class="table table-striped table-sm">
+            <tbody>
+                <tr>
+                    <th>Auction Name:</th>
+                    <th>{{ auctionDetails.auctionName }}</th>
+                </tr>
+                <tr>
+                    <td>Max Items:</td>
+                    <td>{{ auctionDetails.maxItems }}</td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td>{{ auctionDetails.address }}</td>
+                </tr>
+                <tr>
+                    <td>Date:</td>
+                    <td>{{ auctionDetails.dateTime | date: "mediumDate" }}</td>
+                </tr>
+                <tr>
+                  <td>Time:</td>
+                  <td>{{ auctionDetails.dateTime | date: "shortTime" }}</td>
+                </tr>
+                <tr>
+                    <td>Fee:</td>
+                    <td>{{ auctionDetails.fee | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Auction Results</h2>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <table class="table table-striped table-sm">
+            <tbody>
+                <tr>
+                    <td>Sale Total:</td>
+                    <td>{{ saleTotal | currency }}</td>
+                </tr>
+                <tr>
+                    <td>Total fee:</td>
+                    <td>{{ totalFee | currency }}</td>
+                </tr>
+                <tr>
+                    <td>Club Revenue (20%):</td>
+                    <td>{{ clubRevenue | currency }}</td>
+                </tr>
+                <tr>
+                    <td>Commission (80%):</td>
+                    <td>{{ commission | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+        <h2 class="col">Auction Items</h2>
+        <div class="col">Number of Items: {{ items && items.length }}</div>
+        <div class="col">Auction Items: {{ auctionItems && auctionItems.length }}</div>
+        <div class="col">Quick Sale Items: {{ quickSaleItems && quickSaleItems.length }}</div>
+    </div>
+   
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Item Code</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Winner</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of items">
+                    <td>{{ item.itemCode }}</td>
+                    <td>{{ item.itemName }}</td>
+                    <td>{{ item.buyerID }}</td>
+                    <td>{{ item.price | currency }}</td>
+                    <td *ngIf="item.paid">paid</td>
+                    <td *ngIf="!item.paid && item.price > 0">unpaid</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+        <h3>Participants</h3>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Bidder #</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Alias</th>
+                    <th scope="col">Payout</th>
+                    <th scope="col">Payout Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let participant of participants; let i = index">
+                    <th scope="row">
+                        {{ i + 1 }}
+                    </th>
+                    <td>
+                        {{ participant.firstName }} {{ participant.lastName }}
+                    </td>
+                    <td>
+                        {{ participant.alias }}
+                    </td>
+                    <td *ngIf="participant.payout == true">
+                        unpaid
+                    </td>
+                    <td *ngIf="participant.payout == false">
+                        none
+                    </td>
+                    <td>
+                        {{ participant.payoutAmount | currency }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

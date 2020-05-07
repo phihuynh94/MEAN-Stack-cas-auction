@@ -23,11 +23,14 @@ export class ViewUsersComponent implements OnInit {
   editUser = new User();
   showSucessMessage: boolean;
   serverErrorMessages: string;
-  aliasRegex = /[A-Za-z]{3,10}/;
+  aliasRegex = /^[A-Za-z]{3,10}$/;
   userDetails = new User();
   staff: boolean;
   emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   phoneRegex = /[0-9]{3}[0-9]{3}[0-9]{4}/;
+  searchMsg: string;
+  searchInput: string;
+  searchUsers;
 
   ngOnInit() {
     this.getUser();
@@ -63,6 +66,7 @@ export class ViewUsersComponent implements OnInit {
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
+        // window.location.reload();
       },
       err => {
         if (err.status === 422) {
@@ -88,5 +92,30 @@ export class ViewUsersComponent implements OnInit {
       this.staff = true;
     else
       this.router.navigate(['/dashboard']);
+  }
+
+  onSearch(){
+    this.searchUsers = [];
+
+    if (this.searchInput != null && this.searchInput != ''){
+      for (let user of this.users){
+        if (user.firstName.toUpperCase().search(this.searchInput.toUpperCase()) != -1 ||
+            user.lastName.toUpperCase().search(this.searchInput.toUpperCase()) != -1 ||
+            user.email.toUpperCase().search(this.searchInput.toUpperCase()) != -1 ||
+            user.alias.toUpperCase().search(this.searchInput.toUpperCase()) != -1){
+            this.searchUsers.push(user);
+          }
+      }
+
+      if (this.searchUsers[0] == null){
+        this.searchMsg = 'Users not found.';
+      }
+      else {
+        this.searchMsg = '';
+      }
+    }
+    else {
+      this.searchMsg = '';
+    }
   }
 }

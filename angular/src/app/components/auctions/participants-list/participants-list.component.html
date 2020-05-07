@@ -10,25 +10,27 @@
     </div>
 </div>
 
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Bidder #</th>
-            <th scope="col">Name</th>
-            <th scope="col">Alias</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let participant of participantsInfo; let i = index">
-            <th scope="row">
-                {{ i + 1 }}
-            </th>
-            <td>
-                {{ participant.firstName }} {{ participant.lastName }}
-            </td>
-            <td>
-                {{ participant.alias }}
-            </td>
-        </tr>
-    </tbody>
-</table>
+<div class="table-responseive">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Bidder #</th>
+                <th scope="col">Name</th>
+                <th scope="col">Alias</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let participant of participantsInfo; let i = index">
+                <th scope="row">
+                    {{ i + 1 }}
+                </th>
+                <td>
+                    {{ participant.firstName }} {{ participant.lastName }}
+                </td>
+                <td>
+                    {{ participant.alias }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

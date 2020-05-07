@@ -8,4 +8,5 @@ export class Auction {
     participantID: string[];
     unorderList: string[];
     orderedList: string[];
+    images: string[];
 }

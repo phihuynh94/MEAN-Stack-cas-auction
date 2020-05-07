@@ -10,7 +10,8 @@
         <div class="modal-body">
             <div class="row mb-3">
                 <div class="col-md-6 border">
-
+                    <img *ngIf="imgUrl" [src]="imgUrl" class="card-img mb-1"  width="300" height="200">
+                    <img *ngIf="!imgUrl" src="../../../../assets/placeholder.png" class="card-img mb-1"  width="300" height="200">
                 </div>
 
                 <div class="col-md-6 border text-center">
@@ -49,7 +50,7 @@
                 </div>
             </div>
             <div *ngIf="searchMsg" class="text-center">
-                <label class="text-danger">{{ searchMsg }}</label>
+                <label class="alert alert-danger">{{ searchMsg }}</label>
             </div> 
 
             <div class="row mb-2">
@@ -64,6 +65,13 @@
 
                     <h4>Unorder list:</h4>
                 </div>
+                
+                <div class="col text-center">
+                    <button class="btn btn-dark form-control mb-2" (click)="onRefresh()">
+                        <img src="../../../assets/icons/refresh-cw.svg">Refresh
+                    </button>
+                </div>
+                
                 <div class="col text-center">
                     <div *ngIf="!showEnqueueBtn">
                         <button class="btn btn-danger form-control mb-2" (click)="onEnqueue()" disabled><< Remove</button>

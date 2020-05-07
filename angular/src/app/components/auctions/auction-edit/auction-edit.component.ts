@@ -9,6 +9,7 @@ import { Auction } from '../../model/auction.model';
 import { AuctionService } from '../../service/auction.service';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/model/user.model';
+import { ItemService } from '../../service/item.service';
 
 @Component({
   selector: 'app-auction-edit',
@@ -23,6 +24,7 @@ export class AuctionEditComponent implements OnInit {
     private router: Router,
     private location: Location,
     private userService: UserService,
+    private itemService: ItemService,
   ) { }
 
   id = this.route.snapshot.paramMap.get('id');
@@ -63,6 +65,10 @@ export class AuctionEditComponent implements OnInit {
 
   deleteAuction() {
     if (confirm('Are you sure to delete this record?') === true){
+      for (let imageName of this.auction.images){
+        this.itemService.deleteImageByName(imageName).subscribe();
+      }
+
       this.auctionService.deleteAuction(this.id).subscribe(() => {
         this.router.navigate(['/dashboard']);
       });

@@ -11,22 +11,50 @@
       aria-label="Search" [(ngModel)]="search" name="search">
     <button class="btn btn-dark" (click)="onSearch()">Search</button>
   </form>
-  <div *ngIf="searchMsg">
-    <label class="text-danger">{{ searchMsg }}</label>
+  <div *ngIf="searchMsg" class="text-center">
+    <label class="alert alert-danger">{{ searchMsg }}</label>
   </div>
   
   <div class="row mt-3">
-    <div class="col-md-8 border">
-      <div class="text-center">
-          <img class="img-fluid" src="../../../assets/auction-fish.jpeg" width="350">
-
-          <div class="border pt-3 pb-3">
-            Image List
+    <div class="col-lg-8 border text-center">
+      <div *ngIf="orderedAuctionItems[i]">
+        <div id="imagesCarousel" class="carousel slide border mb-1" data-ride="carousel">
+          <ol class="carousel-indicators">
+              <li *ngIf="orderedAuctionItems[i].images[0]" data-target="#imagesCarousel" data-slide-to="0" class="active"></li>
+              <li *ngFor="let image of orderedAuctionItems[i].images | slice: 1; let j = index" data-target="#imagesCarousel" data-slide-to="j + 1" class="active"></li>
+          </ol>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img *ngIf="orderedAuctionItems[i].images[0]" class="img-fluid" [src]="imgUrl + orderedAuctionItems[i].images[0]" width="1000" height="1000">
+              <img *ngIf="!orderedAuctionItems[i].images[0]" class="img-fluid" src="../../../assets/placeholder.png" width="500">
+            </div>
+            <div *ngIf="orderedAuctionItems[i].images">
+              <div *ngFor="let img of orderedAuctionItems[i].images | slice:1" class="carousel-item">
+                <img class="img-fluid" [src]="imgUrl + img" width="1000" height="1000">
+              </div>
+            </div>
           </div>
+
+          <a class="carousel-control-prev" href="#imagesCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#imagesCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+          
+        <div class="border mt-1" *ngIf="orderedAuctionItems[i].images">
+          <img *ngFor="let image of orderedAuctionItems[i].images" [src]="imgUrl + image" width="100" height="100" class="rounded shadow-sm">
+        </div>
+        <div class="border mt-1" *ngIf="!orderedAuctionItems[i].images">
+          <img *ngFor="let image of orderedAuctionItems[i].images" [src]="imgUrl + image" width="100" height="100" class="rounded shadow-sm">
+        </div>
       </div>
     </div>
 
-    <div class="col-md-4 border text-center">
+    <div class="col-lg-4 border text-center">
       <div class="mt-5">
         <h3><p>{{ orderedAuctionItems[i] && orderedAuctionItems[i].itemName }}</p></h3>
         <p>
@@ -51,8 +79,8 @@
             [ngClass]="{'invalid-textbox': liveAuctionForm.submitted && price.errors }">
             <!--Validate final price input-->
             <div *ngIf="liveAuctionForm.submitted && price.errors">
-              <label *ngIf="price.errors.required" class="text-danger">This field is required.</label>
-              <label *ngIf="price.errors.pattern" class="text-danger">Invalid price input.</label>
+              <label *ngIf="price.errors.required && isSubmit" class="text-danger">This field is required.</label>
+              <label *ngIf="price.errors.pattern && isSubmit" class="text-danger">Invalid price input.</label>
             </div>
           </div>
 
@@ -63,13 +91,13 @@
             [ngClass]="{'invalid-textbox' :liveAuctionForm.submitted && winner.errors }">
             <!--Validate winner number input-->
             <div *ngIf="liveAuctionForm.submitted && winner.errors">
-              <label *ngIf="winner.errors.required" class="text-danger">This field is required.</label>
-              <label *ngIf="winner.errors.pattern" class="text-danger">Invalid bidder number.</label>
+              <label *ngIf="winner.errors.required && isSubmit" class="text-danger">This field is required.</label>
+              <label *ngIf="winner.errors.pattern && isSubmit" class="text-danger">Invalid bidder number.</label>
             </div>
           </div>
           
             <!-- <div class="col-md-4 border text-center pt-3 pb-3"> -->
-              <input class="btn btn-primary" type="submit" value="Submit">
+              <input class="btn btn-primary mb-3" (click)="isSubmit = true" type="submit" value="Submit">
         </form>
 
         <!-- Success message -->
@@ -86,7 +114,7 @@
   </div>
 
   <div class="row mt-2">
-    <button class="btn btn-secondary" (click)="goBack()">Back to auction page</button>
+    <button class="btn btn-secondary form-control" (click)="goBack()">< Back to auction</button>
 
     <div class="col text-center">
       <button (click)="onPrev()"><img src="../../../assets/icons/chevron-left.svg"></button>
@@ -95,6 +123,14 @@
     
       <button (click)="onNext()"><img src="../../../assets/icons/chevron-right.svg"></button>
     </div>
+
+    <button class="btn btn-secondary form-control" (click)="onRefresh()">
+      <img src="../../../assets/icons/refresh-cw.svg">Refresh
+    </button>
+  </div>
+
+  <div class="text-center text-info">
+    {{ auctionMsg }}
   </div>
   
 

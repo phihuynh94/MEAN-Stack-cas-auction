@@ -7,6 +7,7 @@ const bodyParser      = require('body-parser'); // call body-parser
 const cors            = require('cors'); // call cors
 const passport        = require('passport'); // call passport
 const path            = require('path'); // call path
+const sslRedirect     = require('heroku-ssl-redirect');
 
 // call the files
 require('./server/config/db'); // call db.js to connect to mongo
@@ -26,6 +27,8 @@ app.use(cors());
 
 // passport initialize
 app.use(passport.initialize());
+
+app.use(sslRedirect());
 
 // get users routes
 const userRoutes = require('./server/routes/user.routes');
@@ -59,12 +62,6 @@ app.use('/', express.static(path.join(__dirname, './angular/dist/angular')));
 app.use((req, res, next) => {
     res.sendFile(path.join(__dirname, './angular/dist/angular', 'index.html'));
 });
-
-app.get("*", (req, res) => {
-    res.redirect("https://" + req.header.host + req.url);
-});
-
-app.enable("trust proxy");
 
 // START THE SERVER
 //=====================================

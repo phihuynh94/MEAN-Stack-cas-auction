@@ -10,4 +10,6 @@ export class Item {
     buyerID: string;
     type: string;
     images: string[];
+    paid: boolean;
+    payout: boolean;
 }

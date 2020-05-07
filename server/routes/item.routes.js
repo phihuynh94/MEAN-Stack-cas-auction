@@ -7,8 +7,12 @@ const GridFsStorage = require('multer-gridfs-storage');
 const config = require('../config/config');
 const Grid = require('gridfs-stream');
 const mongoose = require('mongoose');
+const dateFormat = require('dateformat');
 
-const connection = mongoose.createConnection(config.database);
+const connection = mongoose.createConnection(
+    config.database,
+    { useNewUrlParser: true, useUnifiedTopology: true }
+);
 
 // Init gfs
 let gfs;
@@ -32,7 +36,10 @@ const storage = new GridFsStorage({
             if (err) {
               return reject(err);
             }
-            const filename = file.originalname;
+
+            var date = dateFormat(new Date(), "yyyy-mm-dd h:MM");
+
+            const filename = (file.originalname + ' ' + date);
             const fileInfo = {
               filename: filename,
               bucketName: 'images'
@@ -61,15 +68,15 @@ const upload = multer({
 });
 
 // upload images route
-itemRouter.post('/uploadImages', upload.array('images', 5), (req, res) => {});
+itemRouter.post('/uploadImages', upload.array('images', 5), (req, res) => {
+    res.send();
+});
 
 itemRouter.get('/getItemImages/:filename', (req, res) => {
     gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
         // Check if file
         if (!file || file.length === 0) {
-            return res.status(404).json({
-            err: 'No file exists'
-          });
+            return res.status(404).json({err: 'No file exists'});
         }
     
         // Check if image
@@ -78,12 +85,52 @@ itemRouter.get('/getItemImages/:filename', (req, res) => {
             const readstream = gfs.createReadStream(file.filename);
             readstream.pipe(res);
         } else {
-            console.log("not an image")
-            res.status(404).json({
-            err: 'Not an image'
-          });
+            res.status(404).json({err: 'Not an image'});
         }
       });
+});
+
+itemRouter.get('/getImage/:filename', (req, res) => {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+        // Check if file
+        if (!file || file.length === 0) {
+            return res.status(404).json({err: 'No file exists'});
+        }
+    
+        // Check if image
+        if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
+            res.send(file);
+        } else {
+            res.status(404).json({err: 'Not an image'});
+        }
+      });
+})
+
+//delete image
+itemRouter.delete('/deleteImage/:imageID', (req, res) => {
+    gfs.remove({ _id: req.params.imageID, root: 'images' }, (err, file) => {
+        if (!err){
+            console.log('deleted image');
+            res.send('deleted image');
+        }
+        else {
+            console.log(err);
+            res.send(err);
+        }
+    })
+});
+
+itemRouter.delete('/deleteImageByName/:imageName', (req, res) => {
+    gfs.remove({ filename: req.params.imageName, root: 'images' }, (err, file) => {
+        if (!err){
+            console.log('delete image');
+            res.send('deleted image');
+        }
+        else {
+            console.log(err);
+            res.send(err);
+        }
+    })
 });
 
 // routes for all item routes
@@ -101,8 +148,16 @@ itemRouter.post('/addItem', (req, res) => {
     item.quantity = req.body.quantity;
     item.sellerID = req.body.sellerID;
     item.type = req.body.type;
-    item.images = req.body.images
-    
+    item.images = req.body.images;
+
+    if (item.images != null){
+        var date = dateFormat(new Date(), "yyyy-mm-dd h:MM");
+
+        for (var i = 0; i < item.images.length; i++){
+            item.images[i] = item.images[i] + ' ' + date;
+        }
+    }
+
     // Find the auction to add the item
     Auction.findById(item.auctionID, (err, auction) => {
         // If auction is found
@@ -110,6 +165,10 @@ itemRouter.post('/addItem', (req, res) => {
 
             if (item.type == 'auction'){
                 auction.updateOne({ $addToSet: { unorderList: item.id }}, (err, auction) => {});
+            }
+
+            if (item.images != null){
+                auction.updateOne({ $addToSet: { images: item.images }}, (err, auction) => {});
             }
             
             // Generate the item code
@@ -155,19 +214,48 @@ itemRouter.get('/findItemsInAuction/:auctionID', (req, res) => {
     });
 });
 
+// Get all items
+itemRouter.get('/getAllItems', (req, res) => {
+    Item.find((err, items) => {
+        if (!err){
+            res.send(items);
+        } 
+        else {
+            res.send(err);
+        }
+    });
+});
+
 // Edit item route
 itemRouter.put('/editItem', (req, res) => {
-
     // Get new edit item info
-    var editItem = new Item({
-        _id: req.body._id,
-        itemName: req.body.itemName,
-        itemCode: req.body.itemCode,
-        price: req.body.price,
-        quantity: req.body.quantity,
-        description: req.body.description,
-        images: req.body.images,
-        buyerID: req.body.buyerID,
+    var editItem = new Item();
+
+    editItem._id = req.body._id;
+    editItem.itemName = req.body.itemName;
+    editItem.itemCode = req.body.itemCode;
+    editItem.price = req.body.price;
+    editItem.quantity = req.body.quantity;
+    editItem.description = req.body.description;
+    editItem.buyerID = req.body.buyerID;
+    editItem.paid = req.body.paid;
+    editItem.payout = req.body.payout;
+    editItem.images = req.body.images;
+
+    if (editItem.images != null){
+        var date = dateFormat(new Date(), "yyyy-mm-dd h:MM");
+
+        for (var i = 0; i < editItem.images.length; i++){
+            if (!editItem.images[i].includes(':')){
+                editItem.images[i] = editItem.images[i] + ' ' + date;
+            }
+        }
+    }
+
+    Auction.findById(req.body.auctionID, (err, auction) => {
+        if (!err){
+            auction.updateOne({ $addToSet: { images: editItem.images }}, (err, auction) => {});
+        }
     });
 
     Item.findByIdAndUpdate(req.body._id, { $set: editItem },
@@ -185,16 +273,14 @@ itemRouter.put('/editItem', (req, res) => {
 // Delete item by id on the params
 itemRouter.delete('/deleteItemById/:id', (req, res) => {
     Item.findByIdAndDelete(req.params.id, (err, item) => {
-        if (!err) { 
+        if (!err){
             res.send(item);
 
-            Auction.findOneAndUpdate({ unorderList: item.itemCode }, { $pull: { unorderList: item.itemCode }},
-                (err, auction) => {});
+            Auction.findOneAndUpdate({ unorderList: item.id }, { $pull: { unorderList: item.id }}, (err, auction) => {});
 
-            Auction.findOneAndUpdate({ orderedList: item.itemCode }, { $pull: { orderedList: item.itemCode }},
-                (err, auction) => {});
+            Auction.findOneAndUpdate({ orderedList: item.id }, { $pull: { orderedList: item.id }}, (err, auction) => {});
         }
-        else { 
+        else {
             res.send(err);
         }
     });
@@ -202,8 +288,7 @@ itemRouter.delete('/deleteItemById/:id', (req, res) => {
 
 // Get item by buyerID
 itemRouter.get('/getBuyingItems/:buyerID', (req, res) => {
-
-    Item.find({ buyerID: req.params.buyerID },
+    Item.find({ buyerID: req.params.buyerID, paid: false },
         (err, items) => {
             if (!err) { 
                 res.send(items);
@@ -217,7 +302,7 @@ itemRouter.get('/getBuyingItems/:buyerID', (req, res) => {
 // Get item by sellerID
 itemRouter.get('/getSellingItems/:sellerID', (req, res) => {
 
-    Item.find({ sellerID: req.params.sellerID },
+    Item.find({ sellerID: req.params.sellerID, payout: false },
         (err, items) => {
             if (!err) {
                 res.send(items);
@@ -253,6 +338,22 @@ itemRouter.get('/getItemInfoById/:id', (req, res) => {
             res.send(err);
         }
     })
+});
+
+// Remove item in ordered list when paid
+itemRouter.put('/removePaidItem/', (req, res) => {
+    auctionID = req.body.auctionID;
+    itemID = req.body._id;
+
+    Auction.findByIdAndUpdate(auctionID, { $pull: { orderedList: itemID }},
+        (err, auction) => {
+            if (!err){
+                res.send(auction);
+            }
+            else {
+                res.send(err);
+            }
+        });
 });
 
 // return the router

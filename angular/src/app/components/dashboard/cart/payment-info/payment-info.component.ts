@@ -1,31 +1,21 @@
-// get built in
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
-import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 
 // get components
-import { UserService } from '../../user/service/user.service';
-import { User } from '../../user/model/user.model';
-import { ItemService } from '../../service/item.service';
-import { Item } from '../../model/item.model';
-
-declare var paypal;
+import { UserService } from '../../../user/service/user.service';
+import { User } from '../../../user/model/user.model';
+import { ItemService } from '../../../service/item.service';
+import { Item } from '../../../model/item.model';
 
 @Component({
-  selector: 'app-cart',
-  templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css']
+  selector: 'app-payment-info',
+  templateUrl: './payment-info.component.html',
+  styleUrls: ['./payment-info.component.css']
 })
-export class CartComponent implements OnInit {
-
-  @ViewChild('paypal', { static: true }) paypalElement: ElementRef;
+export class PaymentInfoComponent implements OnInit {
 
   constructor(
     private userService: UserService,
     private itemService: ItemService,
-    private location: Location,
-    private router: Router,
-    private ngZone: NgZone,
   ) { }
 
   userDetails = new User();
@@ -42,43 +32,15 @@ export class CartComponent implements OnInit {
   users;
   imgUrl = this.itemService.imgUrl;
 
-  // paidFor = false;
-  
   ngOnInit() {
     this.getUser();
-    this.payPal();
-  }
-
-  payPal(){
-    paypal
-      .Buttons({
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [
-              {
-                amount: {
-                  currency_code: 'USD',
-                  value: this.purchaseAmount.toFixed(2),
-                }
-              }
-            ]
-          });
-        },
-        onApprove: async (data, actions) => {
-          const order = await actions.order.capture();
-          this.sendPaymentInfo();
-        },
-        onError: err => {
-          console.log(err);
-        }
-      })
-      .render(this.paypalElement.nativeElement);
   }
 
   getUser(){
     this.userService.getUserProfile().subscribe(
       res => {
         this.userDetails = res['user'];
+
         this.getBuyingItems();
       }
     );
@@ -91,6 +53,9 @@ export class CartComponent implements OnInit {
 
         for(let i in this.buyingItems){
           this.buyingAmount =  this.buyingAmount + this.buyingItems[i].price;
+          this.buyingItems[i].paid = true;
+          this.itemService.editItem(this.buyingItems[i]).subscribe();
+          this.itemService.removePaidItem(this.buyingItems[i]).subscribe();
         }
 
         this.getSellingItems();
@@ -107,8 +72,10 @@ export class CartComponent implements OnInit {
 
         for (let i in this.sellingItems){
           if (this.sellingItems[i].price > 0){
-            this.sellingAmount += + this.sellingItems[i].price;
+            this.sellingAmount += this.sellingItems[i].price;
             this.fee++;
+            this.sellingItems[i].payout = true;
+            this.itemService.editItem(this.sellingItems[i]).subscribe();
           }
         }
 
@@ -137,7 +104,7 @@ export class CartComponent implements OnInit {
 
     this.commissionAmount = (this.sellingAmount - this.fee) * 0.8;
     this.totalAmount = this.buyingAmount - this.commissionAmount;
-
+    
     if (this.totalAmount > 0){
       this.purchaseAmount = this.totalAmount;
     }
@@ -145,20 +112,5 @@ export class CartComponent implements OnInit {
       this.payoutAmount = this.totalAmount * (-1);
     }
   }
-
-  goBack() {
-    this.location.back();
-  }
-
-  sendPaymentInfo(){
-    const paymentInfo = { 
-      "user": this.userDetails, "buyingItems": this.buyingItems, "sellingItems": this.sellingItems,
-      "buyingAmount": this.buyingAmount, "sellingAmount": this.sellingAmount, "fee": this.fee, "commission": this.commissionAmount,
-      "purchaseAmount": this.purchaseAmount, "payoutAmount": this.payoutAmount
-    }
-
-    this.userService.sendPaymentInfo(paymentInfo).subscribe();
-
-    this.ngZone.run(() => this.router.navigate(['/paymentInfo']));
-  }
 }
+

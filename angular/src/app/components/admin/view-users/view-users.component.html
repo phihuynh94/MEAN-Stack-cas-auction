@@ -1,51 +1,115 @@
 <div class="container">
-    <h1 class="text-center">View All Users</h1>
-
-    <button class="btn btn-secondary text-center" (click)="onBackBtn()">
-        < Back
+    <button class="btn btn-secondary mt-3" (click)="onBackBtn()">
+        < Go Back
     </button>
 
-    <div class="table-responsive">
-    <table class="table mt-3">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Alias</th>
-                <th scope="col">Email</th>
-                <th scope="col">Address</th>
-                <th scope="col">Phone</th>
-                <th scope="col">Type</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
+    <h1 class="text-center">View All Users</h1>
 
-        <tbody>
-            <tr *ngFor="let user of users">
-                <td>
-                    {{ user.firstName }} {{ user.lastName }}
-                </td>
-                <td>
-                    {{ user.alias }}
-                </td>
-                <td>
-                    {{ user.email }}
-                </td>
-                <td>
-                    {{ user.address }}
-                </td>
-                <td>
-                    {{ user.phoneNum }}
-                </td>
-                <td>
-                    {{ user.type }}
-                </td>
-                <td class="text-right">
-                    <img src="../../../../assets/icons/edit-2.svg" class="mr-3" data-toggle="modal" data-target="#editUserModal" (click)="onEditUser(user)">
-                    <img src="../../../../assets/icons/trash-2.svg" (click)="onDelete(user._id)">
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Search form -->
+    <div class="input-group text-center mb-3 border-bottom pb-2">
+        <div class="input-group-prepend">
+            <img src="../../../assets/icons/search.svg">
+        </div>
+    
+        <input class="form-control ml-3 mr-3" type="text" placeholder="Search User Name / Alias / Email"
+        aria-label="Search" [(ngModel)]="searchInput" name="search">
+    
+        <div class="input-group-append">
+            <button class="btn btn-dark" (click)="onSearch()">Search</button>
+        </div>
+    </div>
+    <div *ngIf="searchMsg" class="text-center">
+        <label class="alert alert-danger">{{ searchMsg }}</label>
+    </div>
+
+    <div *ngIf="(searchUsers && searchUsers[0]) != null && searchInput != ''" class="mb-3 border-bottom">
+        <h4 class="text-center">Searched Users</h4>
+
+        <div class="table-responsive">
+            <table class="table mt-3">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Alias</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let searchUser of searchUsers">
+                        <td>
+                            {{ searchUser.firstName }} {{ searchUser.lastName }}
+                        </td>
+                        <td>
+                            {{ searchUser.alias }}
+                        </td>
+                        <td>
+                            {{ searchUser.email }}
+                        </td>
+                        <td>
+                            {{ searchUser.address }}
+                        </td>
+                        <td>
+                            {{ searchUser.phoneNum }}
+                        </td>
+                        <td>
+                            {{ searchUser.type }}
+                        </td>
+                        <td class="text-right">
+                            <img src="../../../../assets/icons/edit-2.svg" class="mr-3" data-toggle="modal" data-target="#editUserModal" (click)="onEditUser(searchUser)">
+                            <img src="../../../../assets/icons/trash-2.svg" (click)="onDelete(searchUser._id)">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table mt-3">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Alias</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Type</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let user of users">
+                    <td>
+                        {{ user.firstName }} {{ user.lastName }}
+                    </td>
+                    <td>
+                        {{ user.alias }}
+                    </td>
+                    <td>
+                        {{ user.email }}
+                    </td>
+                    <td>
+                        {{ user.address }}
+                    </td>
+                    <td>
+                        {{ user.phoneNum }}
+                    </td>
+                    <td>
+                        {{ user.type }}
+                    </td>
+                    <td class="text-right">
+                        <img src="../../../../assets/icons/edit-2.svg" class="mr-3" data-toggle="modal" data-target="#editUserModal" (click)="onEditUser(user)">
+                        <img src="../../../../assets/icons/trash-2.svg" (click)="onDelete(user._id)">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -105,7 +169,7 @@
                             <!--Validate user alias input-->
                             <div *ngIf="editUserForm.submitted && !alias.valid">
                                 <label *ngIf="alias.errors.required" class="text-danger">This field is required.</label>
-                                <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 letters.</label>
+                                <label *ngIf="alias.errors.pattern" class="text-danger">Invalid alias, must be 3 to 10 letters.</label>
                             </div>
                         </div>
                     </div>
@@ -163,10 +227,14 @@
                         </div>
                         <div class="col">
                             <!--Get user type-->
-                            <select id="type" name="type" #type="ngModel" [(ngModel)]="editUser.type">
+                            <select id="type" name="type" #type="ngModel" [(ngModel)]="editUser.type" required>
                                 <option value="member">Member</option>
                                 <option value="staff">Staff</option>
                             </select>
+                        </div>
+                        <!--Validate user phone number input-->
+                        <div *ngIf="editUserForm.submitted && !type.valid">
+                            <label class="text-danger">This field is required.</label>
                         </div>
                     </div>
 

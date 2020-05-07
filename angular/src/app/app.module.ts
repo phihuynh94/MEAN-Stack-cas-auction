@@ -34,6 +34,8 @@ import { ViewUsersComponent } from './components/admin/view-users/view-users.com
 import { AddUserComponent } from './components/admin/add-user/add-user.component';
 import { DefineOrderComponent } from './components/auctions/define-order/define-order.component';
 import { CheckoutComponent } from './components/admin/checkout/checkout.component';
+import { PaymentInfoComponent } from './components/dashboard/cart/payment-info/payment-info.component';
+import { RecordsComponent } from './components/admin/records/records.component';
 
 // routes
 const appRoutes: Routes = [
@@ -103,6 +105,17 @@ const appRoutes: Routes = [
   // url: 'checkout'
   {
     path: 'checkout', component: CheckoutComponent
+  },
+  // url: 'paymentInfo'
+  {
+    path: 'paymentInfo', component: PaymentInfoComponent
+  },
+  // url: 'records'
+  {
+    path: 'records', component: RecordsComponent
+  },
+  {
+    path: 'records/:id', component: RecordsComponent
   }
 ]
 
@@ -131,7 +144,9 @@ const appRoutes: Routes = [
     ViewUsersComponent,
     AddUserComponent,
     DefineOrderComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    PaymentInfoComponent,
+    RecordsComponent
   ],
   imports: [
     BrowserModule,
